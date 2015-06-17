@@ -3,3 +3,4 @@ node_modules
 .yo-rc.json
 .bowerrc
 temp
+dist
