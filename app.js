@@ -4,7 +4,7 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('login', {
         url: '/login',
-        templateUrl: 'partial/login/login.html'
+        templateUrl: 'client/login-partial/login.html'
     });
     
     /* Add New States Above */
