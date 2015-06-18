@@ -56,9 +56,9 @@ echo 'Hello World PHP test';
 
 function getConnection() {
     $dbhost="127.0.0.1";
-    $dbuser="root";
+    $dbuser="4840w";
     $dbpass="";
-    $dbname="crgt";
+    $dbname="4840w";
     $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $dbh;
