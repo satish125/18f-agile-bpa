@@ -3,6 +3,7 @@
 ## Prerequisites
 
 * [Node.js](https://nodejs.org)
+* LAMP Framework (Linux/Apache/MySQL/Php)
 
 ## Install
 
