@@ -32,4 +32,4 @@ To test that everything is working, run
 
 * Turn on rewrite engine for .htaccess to hide index.php in /api
 * Modify /etc/apache2/sites-available/000-default.conf and rewrite directive for SSL redirect
-* 
+  * Redirect permanent / https://ec2-54-152-245-25.compute-1.amazonaws.com/
