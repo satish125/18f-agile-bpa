@@ -27,3 +27,9 @@ To test that everything is working, run
 * *grunt serve* - runs a localhost server and listens to changes in files. This does not build the app into /dist.
 * *grunt test* - runs karma unit tests on angular code
 * *grunt build* - builds the app into /dist
+
+## Apache Changes
+
+* Turn on rewrite engine for .htaccess to hide index.php in /api
+* Modify /etc/apache2/sites-available/000-default.conf and rewrite directive for SSL redirect
+* 
