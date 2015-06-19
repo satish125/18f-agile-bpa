@@ -32,11 +32,11 @@ class restResponse
 	public $msg = "";
 	public $payload = "";
 
-	function set($code_in, $msg_in, $payload_in)
+	function set($code, $msg, $payload)
     {
-        $this->code = $code_in;
-		$this->msg = $msg_in;
-		$this->payload = $payload_in;
+        $this->code = $code;
+		$this->msg = $msg;
+		$this->payload = $payload;
     }
 
 	function toJSON() {
