@@ -6,9 +6,19 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
         url: '/login',
         templateUrl: 'client/login-partial/login.html'
     });
-    
+
+    $stateProvider.state('home-partial', {
+        url: '/',
+        templateUrl: 'client/home-partial/home-partial.html'
+    });
+
+    $stateProvider.state('landing-partial', {
+        url: '/landing',
+        templateUrl: 'client/landing-partial/landing-partial.html'
+    });
+
     /* Add New States Above */
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/');
 
 });
 

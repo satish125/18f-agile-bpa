@@ -1,0 +1,37 @@
+{
+   meta: {
+      disclaimer: "openFDA is a beta research project and not for clinical use. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated.",
+      license: "http://open.fda.gov/license",
+      last_updated: "2015-05-31",
+      results: {
+         skip: 0,
+         limit: 1,
+         total: 2301
+      }
+   },
+   results: [
+      {
+         recall_number: "F-0489-2015",
+         reason_for_recall: "Protein supplement fails to declare allergen: milk",
+         status: "Ongoing",
+         distribution_pattern: "Nationwide",
+         product_quantity: null,
+         recall_initiation_date: "20120921",
+         state: "ME",
+         event_id: "63260",
+         product_type: "Food",
+         product_description: "Hunger and Weight Vanilla  Dietary Supplement Packaged under the labels Stronger Faster Healthier Whey: 2 lb (32 oz),  and 10 oz sizes",
+         country: "US",
+         city: "Warren",
+         recalling_firm: "Maine Natural Health, Inc.",
+         report_date: "20141119",
+         "@epoch": 1424553174.836488,
+         voluntary_mandated: "Voluntary: Firm Initiated",
+         classification: "Class I",
+         code_info: "All lots codes that fail to declare the allergens: milk",
+         "@id": "0015ee8ba126a8441eed062b89a6c1db7dee83a3f0fd5fed41c7d9022355b5ac",
+         "openfda": {},
+         initial_firm_notification: "Press Release"
+      }
+   ]
+}

@@ -1,4 +1,4 @@
-describe('LoginCtrl', function() {
+describe('LandingPartialCtrl', function() {
 
 	beforeEach(module('web'));
 
@@ -6,13 +6,13 @@ describe('LoginCtrl', function() {
 
     beforeEach(inject(function($rootScope, $controller) {
       scope = $rootScope.$new();
-      ctrl = $controller('LoginCtrl', {$scope: scope});
-    }));
+      ctrl = $controller('LandingPartialCtrl', {$scope: scope});
+    }));	
 
 	it('should ...', inject(function() {
 
 		expect(1).toEqual(1);
-
+		
 	}));
 
 });
