@@ -12,7 +12,7 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
         templateUrl: 'client/home-partial/home-partial.html'
     });
     /* Add New States Above */
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/');
 
 });
 
