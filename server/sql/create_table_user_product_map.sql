@@ -1,3 +1,5 @@
+use 4840w;
+
 DROP TABLE IF EXISTS user_product_map;
 
 CREATE TABLE user_product_map (
@@ -12,3 +14,5 @@ CREATE TABLE user_product_map (
     REFERENCES user (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+    
+COMMIT;
