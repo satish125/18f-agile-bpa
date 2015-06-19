@@ -7,6 +7,10 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
         templateUrl: 'client/login-partial/login.html'
     });
     
+    $stateProvider.state('home-partial', {
+        url: '/',
+        templateUrl: 'client/home-partial/home-partial.html'
+    });
     /* Add New States Above */
     $urlRouterProvider.otherwise('/login');
 
