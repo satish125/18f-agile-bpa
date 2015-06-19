@@ -46,6 +46,7 @@ class restResponse
 
 function loginUser() {
 	$response = new restResponse;
+	$session_id = session_id();
     try {
 		$request = Slim::getInstance()->request();
 		$body = json_decode($request->getBody());
@@ -59,16 +60,14 @@ function loginUser() {
 			$response->set("invalid_parameter","password parameter was not found", "");
 			return;
 		}	
-		
+        $db = getConnection();
 		$sql = "SELECT user_id, password, zip, last_login FROM user WHERE email=:email";
 
-        $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("email", $body->email);
         $stmt->execute();
 		
         $user_data = $stmt->fetchObject();
-        $db = null;
 
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");			
@@ -78,11 +77,19 @@ function loginUser() {
 			if ($body->password == $user_data->password) {
 				try {
 					$sql = "update user set last_login= now() WHERE email=:email";
-					$db = getConnection();
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam("email", $body->email);
 					$stmt->execute();
-					$response->set("success","User was authenticated", "");	
+
+					$sql = "insert into user_session (user_id, session_id, create_dttm) values (:user_id, :session_id, now())";
+					$stmt = $db->prepare($sql);
+					$stmt->bindParam("user_id", $user_data->user_id);
+					$stmt->bindParam("session_id", $session_id);					
+					$stmt->execute();
+
+			//		$response->set("success","User was authenticated", array("SESSION_ID"=>$session_id) ;	
+					
+					$response->set("success","User was authenticated", array("SESSION_ID" => $session_id) );
 			
 				} catch(PDOException $e) {
 					$response->set("system_failure","System error occurred, unable to login", "");	
@@ -96,6 +103,7 @@ function loginUser() {
     } catch(PDOException $e) {
 		$response->set("system_failure","System error occurred, unable to login", "");	
     } finally {
+		$db = null;
 		$response->toJSON();
 	}
 }
