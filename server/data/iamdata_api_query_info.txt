@@ -1,0 +1,698 @@
+email: cwoldorf@crgt.com
+userID: 4840w
+pwd: Squirrel18f
+
+client_id: 35874dea
+client_secret: bda9d2d79ed50feaaab2e981771a8c15
+
+NOTES: The information below contains some of the various types data available. The layout for this document contains the following:
+SECTION TITLE - For our purposes, we are interested in Users and Products
+	Request Type - GET or POST
+	Implementation Notes - Description of the data retrieved or posted
+	Response Class (Status)/Model Schema - JSON Model format returned
+	Parameters - list of parameters, their attributes, and whether they are required or not
+	Response Code - status code of response (i.e., 200 is successful)
+	Response Messages - codes and descriptions for response failure message(s) returned
+	Curl - Curl with parameters for post/get requests
+	Request URL - (not sure how this is used since it doesn't have the data-specific params other than the client_id and client key)
+	Response Body - JSON data returned
+***************************************************************************************************************************************
+USER MANAGEMENT
+************************
+GET /v1/users
+
+Implementation Notes:
+Get all users associated with your account.
+
+Response Class (Status 200):
+Model|Model Schema:
+{
+  "result": [
+    {
+      "email": "string",
+      "zip": "string",
+      "user_id": "string",
+      "owner_app_id": "string",
+      "created_at": "string"
+    }
+  ],
+  "meta": {
+    "page": 0,
+    "per_page": 0,
+    "total_count": 0,
+    "next_page": "string",
+    "last_page": "string",
+    "max_number_of_requests_per_minute": 0,
+    "remaining_number_of_request": 0,
+    "time_in_epoch_second_till_reset": 0
+  }
+}
+
+Parameters:
+Parameter	Value	Description			Parameter Type		Data Type
+page									query				integer
+per_page			default:10, max:50	query				integer
+
+Response Messages:
+HTTP Status Code	Reason		Response Model			Headers
+400					Bad request
+401					Unauthorized
+ 
+
+Curl:
+curl -X GET --header "Accept: application/json" "https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15"
+
+Request URL:
+https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+{
+  "result": [],
+  "meta": {
+    "page": 1,
+    "per_page": 10,
+    "total_count": 0,
+    "next_page": "",
+    "last_page": "https://api.iamdata.co/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&page=1&per_page=10",
+    "max_number_of_requests_per_minute": 10000,
+    "remaining_number_of_request": 9999,
+    "time_in_epoch_second_till_reset": 1434758400
+  }
+}
+
+**********************
+POST /v1/users
+
+Implementation Notes:
+Register a new user by specifying "email", "zip" and "user_id". The “user_id” is mandatory and it represents the identifier you will use to identify your user in the IM API infrastructure. Note: The following characters are restricted within "user_id" string ---> { '/', '^', '[', '\', 'w', '.', ']', '+', '$', '/' }
+
+Response Class (Status 201):
+Model|Model Schema
+
+{
+  "result": {
+    "email": "string",
+    "zip": "string",
+    "user_id": "string",
+    "owner_app_id": "string",
+    "created_at": "string"
+  },
+  "meta": {
+    "max_number_of_requests_per_minute": 0,
+    "remaining_number_of_request": 0,
+    "time_in_epoch_second_till_reset": 0
+  }
+}
+ 
+
+Response Content Type: application/json   
+
+Parameters:
+Parameter			Value					Description					Parameter Type		Data Type
+payload				(required)				body 						Model|Model Schema
+					Param content type: 
+					application/json 
+					or text/json
+
+
+
+Response Messages:
+HTTP Status Code	Reason		Response Model			Headers
+400					Bad request
+401					Unauthorized
+422					Unprocessable entity
+500					Internal Server Error
+
+FAILED: (due to 'w' in user_id which is a restricted character!)
+Curl:
+curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{
+  \"email\":\"cwoldorf@crgt.com\",
+  \"zip\":\"20135\",
+  \"user_id\":\"cwoldorf\"
+}" "https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15"  
+
+Request URL:
+https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+{
+  "message": "User ID contains invalid characters",
+  "max_number_of_requests_per_minute": 10000,
+  "remaining_number_of_request": 9993,
+  "time_in_epoch_second_till_reset": 1434758400
+}
+
+Response Code:
+400
+
+Response Headers:
+{
+  "cache-control": "no-cache",
+  "pragma": "no-cache",
+  "content-length": "173",
+  "content-type": "application/json; charset=utf-8",
+  "expires": "-1",
+  "server": "Microsoft-IIS/8.0",
+  "x-aspnet-version": "4.0.30319",
+  "x-powered-by": "ASP.NET",
+  "date": "Fri, 19 Jun 2015 18:20:36 GMT",
+  "": ""
+}
+
+SUCCESSFUL:
+CURL:
+curl -X POST --header "Content-Type: text/json" --header "Accept: application/json" -d "{
+  \"email\":\"ttyson@crgt.com\",
+  \"zip\":\"20151\",
+  \"user_id\":\"ttyson\"
+}" "https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15"
+
+Request URL:
+https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+{
+  "result": {
+    "email": "ttyson@crgt.com",
+    "zip": "20151",
+    "user_id": "ttyson",
+    "owner_app_id": "35874dea",
+    "created_at": "2015-06-19 18:51:53"
+  },
+  "meta": {
+    "max_number_of_requests_per_minute": 10000,
+    "remaining_number_of_request": 9991,
+    "time_in_epoch_second_till_reset": 1434758400
+  }
+}
+
+Response Code:
+201
+
+Response Headers:
+{
+  "cache-control": "no-cache",
+  "pragma": "no-cache",
+  "content-length": "269",
+  "content-type": "application/json; charset=utf-8",
+  "expires": "-1",
+  "server": "Microsoft-IIS/8.0",
+  "x-aspnet-version": "4.0.30319",
+  "x-powered-by": "ASP.NET",
+  "date": "Fri, 19 Jun 2015 18:56:36 GMT",
+  "": ""
+}
+
+SUCCESSFUL (tried using 'W' in user_id successfully):
+CURL:
+curl -X POST --header "Content-Type: text/json" --header "Accept: application/json" -d "{
+  \"email\":\"CWoldorf@crgt.com\",
+  \"zip\":\"20135\",
+  \"user_id\":\"cWoldorf\"
+}" "https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea
+
+Request URL:
+https://api.iamdata.co:443/v1/users?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+{
+  "result": {
+    "email": "CWoldorf@crgt.com",
+    "zip": "20135",
+    "user_id": "cWoldorf",
+    "owner_app_id": "35874dea",
+    "created_at": "2015-06-19 18:56:37"
+  },
+  "meta": {
+    "max_number_of_requests_per_minute": 10000,
+    "remaining_number_of_request": 9990,
+    "time_in_epoch_second_till_reset": 1434758400
+  }
+}
+
+Response Code:
+201
+
+Response Headers:
+{
+"cache-control": "no-cache",
+  "pragma": "no-cache",
+  "content-length": "269",
+  "content-type": "application/json; charset=utf-8",
+  "expires": "-1",
+  "server": "Microsoft-IIS/8.0",
+  "x-aspnet-version": "4.0.30319",
+  "x-powered-by": "ASP.NET",
+  "date": "Fri, 19 Jun 2015 18:56:36 GMT",
+  "": ""
+}
+
+***********************************
+PRODUCTS
+***********************************
+
+GET /v1/products 
+
+Implementation Notes:
+You can query the IM product database by either product name or UPC/EAN/ISBN identifier. Note: If both parameters are specified, UPC/EAN/ISBN has higher priority.
+
+Response Class (Status 200)
+Model|Model Schema:
+{
+  "result": [
+    {
+      "nutrients": [
+        {
+          "dvp": 0,
+          "value": 0,
+          "name": "string",
+          "id": 0
+        }
+      ],
+      "recipes": [
+        "string"
+      ],
+      "visibility_count": 0,
+      "score": 0,
+      "amazon_link": "string",
+      "manufacturer": "string",
+      "ingredients_count": 0,
+      "large_image": "string",
+      "small_image": "string",
+      "serving_size_in_grams": 0,
+      "serving_size_unit": "string",
+      "servings_per_container": "string",
+      "serving_size": "string",
+      "ingredients": "string",
+      "weight": "string",
+      "description": "string",
+      "brand": "string",
+      "upc": "string",
+      "tags": [
+        "string"
+      ],
+      "category": "string",
+      "category_id": 0,
+      "name": "string",
+      "id": 0
+    }
+  ],
+  "meta": {
+    "page": 0,
+    "per_page": 0,
+    "total_count": 0,
+    "next_page": "string",
+    "last_page": "string",
+    "max_number_of_requests_per_minute": 0,
+    "remaining_number_of_request": 0,
+    "time_in_epoch_second_till_reset": 0
+  }
+}
+ 
+Response Content Type: application/json text/json  
+ 
+Parameters:
+Parameter			Value					Description					Parameter Type		Data Type
+
+name   										Product name (or part)		query string  
+product_identifier   						UPC/EAN/ISBN				query string  
+page    																query integer  
+per_page  									default:10, max:50			query integer  
+request_data  								Additional request data 	query string  
+											sent by IM API customer. 
+											Expected format:
+											"Key1:Value1;Key2:Value2"
+
+full_resp  			true/false    			default:false (set true 	query 				boolean 
+											for response with nutrients)
+
+CURL:											
+curl -X GET --header "Accept: application/json" "https://api.iamdata.co:443/v1/products?name=Cucumbers&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15"											
+
+Request URL:
+https://api.iamdata.co:443/v1/products?name=Cucumbers&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+
+{
+  "result": [
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": null,
+      "amazon_link": "",
+      "manufacturer": " ",
+      "ingredients_count": 0,
+      "large_image": "",
+      "small_image": "",
+      "serving_size_in_grams": null,
+      "serving_size_unit": "",
+      "servings_per_container": "",
+      "serving_size": "",
+      "ingredients": "",
+      "weight": "1 cucumber",
+      "description": "",
+      "brand": null,
+      "upc": "4593",
+      "tags": [],
+      "category": "Processed Vegetables",
+      "category_id": 57,
+      "name": "  Cucumber",
+      "id": 114341
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": null,
+      "amazon_link": "http://www.amazon.com/PM0435005-Powermate-Portable-Generator-Manual/dp/tech-data/B0035SZPUE%3FSubscriptionId%3DAKIAJHTLCT4COOLUYZDA%26tag%3Db0937-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D386001%26creativeASIN%3DB0035SZPUE",
+      "manufacturer": " ",
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/YtBQ2w4v0kOnaXJqrMJPAg_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/YtBQ2w4v0kOnaXJqrMJPAg_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": "",
+      "servings_per_container": "",
+      "serving_size": "",
+      "ingredients": "",
+      "weight": "1 cucumber",
+      "description": "",
+      "brand": null,
+      "upc": "4596",
+      "tags": [],
+      "category": "Processed Vegetables",
+      "category_id": 57,
+      "name": "  Cucumber",
+      "id": 117710
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": 825,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 1,
+      "large_image": "http://biqmedia.blob.core.windows.net/200/zJ1MZi2F6kW5FFtqcxUtPA_200.jpg",
+      "small_image": "http://biqmedia.blob.core.windows.net/118/zJ1MZi2F6kW5FFtqcxUtPA_118.jpg",
+      "serving_size_in_grams": 301,
+      "serving_size_unit": "g",
+      "servings_per_container": "1.0",
+      "serving_size": "301",
+      "ingredients": "Cucumber",
+      "weight": null,
+      "description": null,
+      "brand": null,
+      "upc": null,
+      "tags": [
+        "Vegan",
+        "Vegetarian",
+        "Wheat Free",
+        "Gluten Free"
+      ],
+      "category": "Raw Vegetables",
+      "category_id": 56,
+      "name": "Cucumbers",
+      "id": 104438
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": 825,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/3WmoiHA_yUuU9G1DjQu1PA_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/3WmoiHA_yUuU9G1DjQu1PA_118.jpg",
+      "serving_size_in_grams": 100,
+      "serving_size_unit": "g",
+      "servings_per_container": null,
+      "serving_size": "100",
+      "ingredients": null,
+      "weight": null,
+      "description": null,
+      "brand": null,
+      "upc": null,
+      "tags": [],
+      "category": "Raw Vegetables",
+      "category_id": 56,
+      "name": "Cucumber",
+      "id": 315137
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": 825,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/TxtWyuV_8EywI2w6e50EOQ_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/TxtWyuV_8EywI2w6e50EOQ_118.jpg",
+      "serving_size_in_grams": 0,
+      "serving_size_unit": "g",
+      "servings_per_container": null,
+      "serving_size": "100",
+      "ingredients": null,
+      "weight": null,
+      "description": null,
+      "brand": null,
+      "upc": null,
+      "tags": [],
+      "category": "Raw Vegetables",
+      "category_id": 56,
+      "name": "Cucumber",
+      "id": 315491
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": null,
+      "amazon_link": "",
+      "manufacturer": "",
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/hA7ZsFqMf0qE-lLbEnMm5w_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/hA7ZsFqMf0qE-lLbEnMm5w_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": "",
+      "servings_per_container": "",
+      "serving_size": "",
+      "ingredients": "",
+      "weight": "1.00 each",
+      "description": "",
+      "brand": null,
+      "upc": "000000013116",
+      "tags": [],
+      "category": "Uncategorized",
+      "category_id": 1,
+      "name": "Cucumbers",
+      "id": 357538
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": null,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 0,
+      "large_image": "http://biqmedia.blob.core.windows.net/200/EymgPauBa0K1ROL2qg9mIg_200.jpg",
+      "small_image": "http://biqmedia.blob.core.windows.net/118/EymgPauBa0K1ROL2qg9mIg_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": "g",
+      "servings_per_container": null,
+      "serving_size": "276.4g",
+      "ingredients": null,
+      "weight": null,
+      "description": null,
+      "brand": null,
+      "upc": "",
+      "tags": [],
+      "category": "Restaurant",
+      "category_id": 147,
+      "name": "Cucumber Rayta",
+      "id": 112061
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": 463,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/_s-5o1hSy0aiLpJcXcGEAw_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/_s-5o1hSy0aiLpJcXcGEAw_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": "tbsp",
+      "servings_per_container": null,
+      "serving_size": "2",
+      "ingredients": null,
+      "weight": "ea",
+      "description": null,
+      "brand": null,
+      "upc": null,
+      "tags": [],
+      "category": "Salads",
+      "category_id": 316,
+      "name": "Cucumber Yogurt",
+      "id": 314913
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": 4,
+      "score": null,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": null,
+      "large_image": "http://az439100.vo.msecnd.net/200/YaGdqSzkw0OqixTQ2G9XNA_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/YaGdqSzkw0OqixTQ2G9XNA_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": null,
+      "servings_per_container": null,
+      "serving_size": null,
+      "ingredients": null,
+      "weight": "1.00 ct",
+      "description": null,
+      "brand": "Kroger",
+      "upc": "204062000002",
+      "tags": [],
+      "category": "Baby Food",
+      "category_id": 214,
+      "name": "Kroger Cucumbers",
+      "id": 292948
+    },
+    {
+      "nutrients": [],
+      "recipes": [],
+      "visibility_count": null,
+      "score": null,
+      "amazon_link": null,
+      "manufacturer": null,
+      "ingredients_count": 0,
+      "large_image": "http://az439100.vo.msecnd.net/200/zKcq5qR7PUGSm-s6im_3ww_200.jpg",
+      "small_image": "http://az439100.vo.msecnd.net/118/zKcq5qR7PUGSm-s6im_3ww_118.jpg",
+      "serving_size_in_grams": null,
+      "serving_size_unit": null,
+      "servings_per_container": null,
+      "serving_size": null,
+      "ingredients": null,
+      "weight": "ea",
+      "description": null,
+      "brand": null,
+      "upc": null,
+      "tags": [],
+      "category": "Hummus",
+      "category_id": 121,
+      "name": "Hummus Cucumber",
+      "id": 339596
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "per_page": 10,
+    "total_count": 136,
+    "next_page": "https://api.iamdata.co/v1/products?name=Cucumbers&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&page=2&per_page=10",
+    "last_page": "https://api.iamdata.co/v1/products?name=Cucumbers&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&page=14&per_page=10",
+    "max_number_of_requests_per_minute": 10000,
+    "remaining_number_of_request": 9996,
+    "time_in_epoch_second_till_reset": 1434758400
+  }
+}
+
+Response Code:
+200
+
+Response Headers:
+{
+  "cache-control": "no-cache",
+  "pragma": "no-cache",
+  "content-type": "application/json; charset=utf-8",
+  "expires": "-1",
+  "server": "Microsoft-IIS/8.0",
+  "x-aspnet-version": "4.0.30319",
+  "x-powered-by": "ASP.NET",
+  "date": "Fri, 19 Jun 2015 16:10:42 GMT",
+  "": ""
+}
+***************************************
+GET /v1/products/{product_id}/purchases 
+
+Implementation Notes:
+Get all purchases a user has made for a product by specifying the associated product ID.
+
+Response Class (Status 200)
+Model|Model Schema:
+
+{
+  "result": [
+    {
+      "product_id": 0,
+      "date": "string",
+      "store": "string",
+      "price": 0
+    }
+  ],
+  "meta": {
+    "page": 0,
+    "per_page": 0,
+    "total_count": 0,
+    "next_page": "string",
+    "last_page": "string",
+    "max_number_of_requests_per_minute": 0,
+    "remaining_number_of_request": 0,
+    "time_in_epoch_second_till_reset": 0
+  }
+}
+
+Parameters:
+Parameter	Value		Description			Parameter Type		Data Type
+product_id	(required)						path				string
+page										query				integer
+per_page				default:10, max:50	query				integer
+
+Response Messages:
+HTTP Status Code	Reason		Response Model			Headers
+401					Unauthorized
+404					Not Found
+
+Curl:
+curl -X GET --header "Accept: application/json" "https://api.iamdata.co:443/v1/products/292948/purchases?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15"
+
+Request URL:
+https://api.iamdata.co:443/v1/products/292948/purchases?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15
+
+Response Body:
+{
+  "result": [],
+  "meta": {
+    "page": 1,
+    "per_page": 10,
+    "total_count": 0,
+    "next_page": "",
+    "last_page": "https://api.iamdata.co/v1/products/292948/purchases?client_id=35874dea&client_secret=bda9d2d79ed50feaaab2e981771a8c15&page=1&per_page=10",
+    "max_number_of_requests_per_minute": 10000,
+    "remaining_number_of_request": 9995,
+    "time_in_epoch_second_till_reset": 1434758400
+  }
+} 
+
+Response Code:
+200
+
+Response Headers:
+{
+  "cache-control": "no-cache",
+  "pragma": "no-cache",
+  "content-type": "application/json; charset=utf-8",
+  "expires": "-1",
+  "server": "Microsoft-IIS/8.0",
+  "x-aspnet-version": "4.0.30319",
+  "x-powered-by": "ASP.NET",
+  "date": "Fri, 19 Jun 2015 18:02:48 GMT",
+  "": ""
+}
