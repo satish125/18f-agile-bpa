@@ -21,11 +21,8 @@ function getUser($email) {
         $db = null;
         if ($wine ==   null) {
 		    echo "{\"result\":\"failure\"}";
-		}else
-		{
+		} else {
 			echo json_encode($wine);
-
-
         }
         updateLastLogin($email);
 
