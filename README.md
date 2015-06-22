@@ -9,8 +9,7 @@
 
 cd into the /web folder and run the following commands:
 
-	npm install -g bower
-	npm install -g grunt-cli
+	npm install -g grunt-cli yo bower generator-cg-angular
 	npm install
 
 If you get any errors during the npm install, run the command again and it should be fine.
