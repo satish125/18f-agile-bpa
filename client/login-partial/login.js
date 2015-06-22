@@ -17,7 +17,7 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParam
             $scope.errorMsg = null;
 
             userService.loginUser($scope.userEmail, $scope.userPassword).then(function(loginData) {
-                $scope.userLogin_model = loginData;
+                $scope.userLogin_model = loginData.payload;
                 
                 if (loginData.code === "success") {
                     $state.go('landing-partial');
