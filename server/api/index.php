@@ -75,7 +75,7 @@ function loginUser() {
         $user_data = $stmt->fetchObject();
 
         if ($user_data == null) {
-			$response->set("user_not_found","User was not found", "");
+			$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 		}
 		else
 		{
@@ -92,8 +92,6 @@ function loginUser() {
 					$stmt->bindParam("session_id", $session_id);
 					$stmt->execute();
 
-			//		$response->set("success","User was authenticated", array("SESSION_ID"=>$session_id) ;
-
 					$response->set("success","User was authenticated", array("SESSION_ID" => $session_id) );
 
 				} catch(PDOException $e) {
@@ -102,7 +100,7 @@ function loginUser() {
 			}
 			else
 			{
-				$response->set("invalid_password","Invalid password was entered", "");
+				$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 			}
         }
     } catch(PDOException $e) {
