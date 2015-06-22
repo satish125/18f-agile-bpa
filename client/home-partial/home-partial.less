@@ -2,10 +2,14 @@
 	padding-left:0;
 	list-style:none;
 
-	.list-group-item-heading, .list-group-item-text{
+	.list-group-item-heading, .list-group-item-text, .list-group-item-subheading{
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
+	}
+
+	.list-group-item-subheading{
+		font-weight: @headings-font-weight;
 	}
 
 	.list-group-item-subheading{
