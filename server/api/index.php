@@ -23,10 +23,7 @@ $app = new Slim();
 $app->post('/loginUser', 'loginUser');
 $app->get('/getUser/:email', 'getUser');
 $app->post('/addProduct', 'addProduct');
-<<<<<<< .merge_file_a06532
-=======
 $app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
->>>>>>> .merge_file_a02984
 
 $app->run();
 
