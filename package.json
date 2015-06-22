@@ -2,6 +2,7 @@
   "name": "web",
   "version": "0.0.0",
   "devDependencies": {
+    "bower": "^1.4.1",
     "generator-cg-angular": ">=3.2.0",
     "grunt": "~0.4",
     "grunt-angular-templates": "~0.5",
