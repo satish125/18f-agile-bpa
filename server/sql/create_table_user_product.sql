@@ -9,7 +9,7 @@ CREATE TABLE user_product (
   vendor VARCHAR(100) NULL,
   upc_code VARCHAR(100) NULL,
   create_dttm DATETIME NULL,
-  PRIMARY KEY (`user_product_map_id`),
+  PRIMARY KEY (`user_product_id`),
   INDEX `fk_user_product_user_id_idx` (`user_id` ASC),
   CONSTRAINT `fk_user_product_user_id`
     FOREIGN KEY (`user_id`)
