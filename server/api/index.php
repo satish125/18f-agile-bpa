@@ -140,7 +140,7 @@ function getUser($email) {
 function addProduct() {
 	$response = new restResponse;
 
-    $sql = "insert into user_product_map (user_id, product, create_dttm) values (:user_id, :product, now())";
+    $sql = "insert into user_product (user_id, product, vendor, upc_code, create_dttm) values (:user_id, :product, :vendor, :upc_code, now())";
 
     try {
     	$request = Slim::getInstance()->request();
@@ -149,6 +149,8 @@ function addProduct() {
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id",  $body->user_id);
         $stmt->bindParam("product",  $body->product);
+        $stmt->bindParam("vendor",  $body->vendor);
+        $stmt->bindParam("upc_code",  $body->upc_code);
 
 
         $stmt->execute();
