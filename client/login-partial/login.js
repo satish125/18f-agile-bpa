@@ -1,12 +1,12 @@
-angular.module('web').controller('LoginCtrl', [ '$scope', '$stateParams', 'userService',
-    function($scope, $stateParams, userService) {
+angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParams', 'userService',
+    function($scope, $state, $stateParams, userService) {
         
         $scope.loginInProgress = false;
         $scope.userEmail = null;      
         $scope.userPassword = null; 
         $scope.errorMsg = null;
 
-        $scope.user_session_model = null;        
+        $scope.userLogin_model = null;        
        
         angular.element(document).ready(function () {
             $.material.ripples('.btn');
@@ -17,7 +17,13 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$stateParams', 'userS
             $scope.errorMsg = null;
 
             userService.loginUser($scope.userEmail, $scope.userPassword).then(function(loginData) {
-                $scope.user_session_model = loginData;
+                $scope.userLogin_model = loginData;
+                
+                if (loginData.code === "success") {
+                    $state.go('landing-partial');
+                } else {
+                    $scope.errorMsg = loginData.msg;
+                }
             }, function(error) {
                 $scope.errorMsg = error.message;
             })['finally'](function() {
