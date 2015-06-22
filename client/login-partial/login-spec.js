@@ -5,8 +5,8 @@ describe('LoginCtrl', function() {
 	var scope,ctrl;
 
     beforeEach(inject(function($rootScope, $controller) {
-      scope = $rootScope.$new();
-      ctrl = $controller('LoginCtrl', {$scope: scope});
+		scope = $rootScope.$new();
+		ctrl = $controller('LoginCtrl', {$scope: scope});
     }));
 
 	it('should ...', inject(function() {
