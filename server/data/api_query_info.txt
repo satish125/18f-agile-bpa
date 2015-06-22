@@ -5,4 +5,4 @@ pattern:
 https://api.fda.gov/drug/event.json?api_key=dkjmH4qrI5pMYoj8hN0SCR8mhESAPGg8XxBH169b&search=...
 
 actual query used for food_results.json
-https://api.fda.gov/food/enforcement.json?api_key=dkjmH4qrI5pMYoj8hN0SCR8mhESAPGg8XxBH169b&search=report_date:[20140101+TO+20141231]&limit=1
+https://api.fda.gov/food/enforcement.json?api_key=dkjmH4qrI5pMYoj8hN0SCR8mhESAPGg8XxBH169b&search=report_date:[20040101+TO+20141231]&limit=100
