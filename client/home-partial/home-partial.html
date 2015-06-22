@@ -25,25 +25,25 @@
 	<div class="jumbotron">
 		<div class="container">
 			<h1>Know when your purchases are recalled</h1>
-			<a href="/#/signup" class="btn btn-large btn-primary">Sign up</a>
+			<h3>Automatically import online & loyalty card purchases, and get notified of recalls.</h3>
+			<a href="/#/signup" class="btn btn-lg btn-primary">Sign up</a>
 		</div>
 	</div>
 	<div class="container">
-		<h1>Recent recalls</h1>
+		<h1>Recent Recalls</h1>
 		<div class="list-group three-line-list">
-			<div class="list-group-item">
+			<div class="list-group-item" ng-repeat="product in recentRecalls_model">
 				<div class="row-picture">
-					<img class="circle" src="http://lorempixel.com/56/56/food" alt="icon">
+					<img class="circle" src="http://lorempixel.com/56/56/food/{{ $index }}" alt="icon">
 				</div>
 				<div class="row-content">
-					<!-- recall_initiation_date -->
-					<div class="least-content">15m</div>
-					<!-- product-description -->
-					<h4 class="list-group-item-heading">Hunger and Weight Vanilla  Dietary Supplement Packaged under the labels Stronger Faster Healthier Whey: 2 lb (32 oz),  and 10 oz sizes</h4>
-					<h5 class="list-group-item-subheading">Maine Natural Health, Inc.</h5>
-					<!-- recalling-firm -->
-					<!-- reason-for-recall -->
-					<p class="list-group-item-text">Protein supplement fails to declare allergen: milk</p>
+					<div class="least-content">{{ product.recall_initiation_date | date }}</div>
+					<h4 class="list-group-item-heading">{{ product.product_description }}</h4>
+					<p class="list-group-item-text">
+						<span class="list-group-item-subheading">{{ product.recalling_firm }}</span>
+						&ndash;
+						{{ product.reason_for_recall }}
+					</p>
 				</div>
 				<div class="list-group-separator"></div>
 			</div>

@@ -1,3 +1,8 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 //Colors
 @primary: @indigo;
 
@@ -34,5 +39,9 @@ label.floating-label {
 }
 
 .list-group .list-group-item .row-content{
-	width: ~"calc(100% - 100px)";
+	width: ~"calc(100% - 180px)";
+}
+
+.list-group .list-group-separator:before{
+	width: ~"calc(100% - 72px)";
 }
