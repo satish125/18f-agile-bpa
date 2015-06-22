@@ -24,6 +24,7 @@ $app->post('/loginUser', 'loginUser');
 $app->get('/getUser/:email', 'getUser');
 $app->post('/addProduct', 'addProduct');
 $app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
+$app->post('/registerUser', 'registerUser');
 
 $app->run();
 
@@ -164,11 +165,34 @@ function addProduct() {
 	}
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< .merge_file_a06532
-=======
->>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
+function registerUser() {
+	$response = new restResponse;
+
+    $sql = "insert into user (email, zip, password) values (:email, :zip, :password)";
+
+    try {
+    	$request = Slim::getInstance()->request();
+		$body = json_decode($request->getBody());
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("email",  $body->email);
+        $stmt->bindParam("zip",  $body->zipcode);
+        $stmt->bindParam("password",  $body->password);
+
+
+        $stmt->execute();
+
+       $response->set("success","User inserted.", "");
+
+    } catch(PDOException $e) {
+        $response->set("system_failure","System error occurred, unable save user", "");
+    }finally {
+    	$db = null;
+		$response->toJSON();
+	}
+
+}
+	
 function recentRecalls($type, $days, $limit) {
 	$response = new restResponse;
 
