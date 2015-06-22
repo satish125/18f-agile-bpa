@@ -164,8 +164,6 @@ function addProduct() {
 	}
 }
 
-<<<<<<< .merge_file_a06532
-=======
 function recentRecalls($type, $days, $limit) {
 	$response = new restResponse;
 
@@ -204,7 +202,6 @@ function recentRecalls($type, $days, $limit) {
 
 }
 
->>>>>>> .merge_file_a02984
 function getConnection() {
 	$dbhost="127.0.0.1";
 	$dbuser="4840w";
