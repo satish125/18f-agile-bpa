@@ -33,11 +33,11 @@ class restResponse
 	public $msg = "";
 	public $payload = "";
 
-	function set($code_in, $msg_in, $payload_in)
+	function set($code, $msg, $payload)
     {
-        $this->code = $code_in;
-		$this->msg = $msg_in;
-		$this->payload = $payload_in;
+        $this->code = $code;
+		$this->msg = $msg;
+		$this->payload = $payload;
     }
 
 	function toJSON() {
@@ -72,7 +72,7 @@ function loginUser() {
         $user_data = $stmt->fetchObject();
 
         if ($user_data == null) {
-			$response->set("user_not_found","User was not found", "");
+			$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 		}
 		else
 		{
@@ -89,8 +89,6 @@ function loginUser() {
 					$stmt->bindParam("session_id", $session_id);
 					$stmt->execute();
 
-			//		$response->set("success","User was authenticated", array("SESSION_ID"=>$session_id) ;
-
 					$response->set("success","User was authenticated", array("SESSION_ID" => $session_id) );
 
 				} catch(PDOException $e) {
@@ -99,7 +97,7 @@ function loginUser() {
 			}
 			else
 			{
-				$response->set("invalid_password","Invalid password was entered", "");
+				$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 			}
         }
     } catch(PDOException $e) {
@@ -141,7 +139,7 @@ function getUser($email) {
 function addProduct() {
 	$response = new restResponse;
 
-    $sql = "insert into user_product_map (user_id, product, create_dttm) values (:user_id, :product, now())";
+    $sql = "insert into user_product (user_id, product, vendor, upc_code, create_dttm) values (:user_id, :product, :vendor, :upc_code, now())";
 
     try {
     	$request = Slim::getInstance()->request();
@@ -150,6 +148,8 @@ function addProduct() {
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id",  $body->user_id);
         $stmt->bindParam("product",  $body->product);
+        $stmt->bindParam("vendor",  $body->vendor);
+        $stmt->bindParam("upc_code",  $body->upc_code);
 
 
         $stmt->execute();
@@ -164,6 +164,11 @@ function addProduct() {
 	}
 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a06532
+=======
+>>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 function recentRecalls($type, $days, $limit) {
 	$response = new restResponse;
 
@@ -179,10 +184,17 @@ function recentRecalls($type, $days, $limit) {
 	try {
 		$data = array("key1" => "value1", "key2" => "value2");
 		$options = array(
+<<<<<<< HEAD
 			"http" => array(
 			"header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
 			"method"  => "GET",
 			"content" => http_build_query($data),
+=======
+				"http" => array(
+				"header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
+				"method"  => "GET",
+				"content" => http_build_query($data),
+>>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 			),
 		);
 		$context  = stream_context_create($options);
@@ -190,15 +202,29 @@ function recentRecalls($type, $days, $limit) {
 		$bigArr = json_decode($result,true,20);
 		$res = $bigArr["results"];
 		$json = json_encode($res);
+<<<<<<< HEAD
 		$response->set("success","Data successfully fetched from service", $json );
+=======
+		$json1 = json_decode($json);
+
+
+		$response->set("success","Data successfully fetched from service", $json1 );
+>>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 	} catch(PDOException $e) {
 		$response->set("system_failure","System error occurred, unable fetch data", "");
 	} finally {
 		$response->toJSON();
 	}
+<<<<<<< HEAD
 }
 
 	
+=======
+
+}
+
+>>>>>>> .merge_file_a02984
+>>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 function getConnection() {
 	$dbhost="127.0.0.1";
 	$dbuser="4840w";

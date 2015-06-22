@@ -1,3 +1,8 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 //Colors
 @primary: @indigo;
 
@@ -6,15 +11,15 @@
 
 /* Personal preference for BS modal.  The LESS below makes the backdrop white and
    causes the modal to fade in rather than slide in. */
-//@modal-backdrop-bg: white;
-//.modal {
-//	&.fade {
-//		.transition(opacity .3s);
-//	}
-//	&.fade .modal-dialog {
-//		.translate(0,0);
-//	}
-//}
+@modal-backdrop-bg: white;
+.modal {
+	&.fade {
+		.transition(opacity .3s);
+	}
+	&.fade .modal-dialog {
+		.translate(0,0);
+	}
+}
 
 .card{
 	display:block;
@@ -31,4 +36,12 @@ label.floating-label {
 
 .navbar{
 	margin-bottom:0;
+}
+
+.list-group .list-group-item .row-content{
+	width: ~"calc(100% - 180px)";
+}
+
+.list-group .list-group-separator:before{
+	width: ~"calc(100% - 72px)";
 }
