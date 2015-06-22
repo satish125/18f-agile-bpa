@@ -25,7 +25,6 @@ $app->get('/getUser/:email', 'getUser');
 $app->post('/addProduct', 'addProduct');
 $app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
 $app->post('/registerUser', 'registerUser');
-
 $app->run();
 
 class restResponse
@@ -208,17 +207,10 @@ function recentRecalls($type, $days, $limit) {
 	try {
 		$data = array("key1" => "value1", "key2" => "value2");
 		$options = array(
-<<<<<<< HEAD
-			"http" => array(
-			"header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
-			"method"  => "GET",
-			"content" => http_build_query($data),
-=======
 				"http" => array(
 				"header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
 				"method"  => "GET",
 				"content" => http_build_query($data),
->>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 			),
 		);
 		$context  = stream_context_create($options);
@@ -226,29 +218,18 @@ function recentRecalls($type, $days, $limit) {
 		$bigArr = json_decode($result,true,20);
 		$res = $bigArr["results"];
 		$json = json_encode($res);
-<<<<<<< HEAD
-		$response->set("success","Data successfully fetched from service", $json );
-=======
 		$json1 = json_decode($json);
 
 
 		$response->set("success","Data successfully fetched from service", $json1 );
->>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 	} catch(PDOException $e) {
 		$response->set("system_failure","System error occurred, unable fetch data", "");
 	} finally {
 		$response->toJSON();
 	}
-<<<<<<< HEAD
-}
-
-	
-=======
 
 }
 
->>>>>>> .merge_file_a02984
->>>>>>> 6be025bc2f06620f9fd438be5883628f220a895b
 function getConnection() {
 	$dbhost="127.0.0.1";
 	$dbuser="4840w";
