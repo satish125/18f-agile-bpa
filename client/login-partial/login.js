@@ -1,10 +1,9 @@
 angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParams', 'userService',
     function($scope, $state, $stateParams, userService) {
-        
         $scope.loginInProgress = false;
-        $scope.userEmail = null;      
-        $scope.userPassword = null; 
-        $scope.errorMsg = null;
+        $scope.hasloginError = false;
+        
+        $scope.login = {};        
 
         $scope.userLogin_model = null;        
        
@@ -12,20 +11,23 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParam
             $.material.ripples('.btn');
         });
         
-        var loginUser = function() {
+        $scope.doLogin = function() {
             $scope.loginInProgress = true;
-            $scope.errorMsg = null;
+            $scope.hasloginError = false;
+            $scope.login.errorMsg = null;
 
-            userService.loginUser($scope.userEmail, $scope.userPassword).then(function(loginData) {
+            userService.loginUser($scope.login.email, $scope.login.password).then(function(loginData) {
                 $scope.userLogin_model = loginData.payload;
                 
                 if (loginData.code === "success") {
                     $state.go('landing-partial');
                 } else {
-                    $scope.errorMsg = loginData.msg;
+                    $scope.login.errorMsg = loginData.msg;
+                    $scope.hasloginError = true;
                 }
             }, function(error) {
-                $scope.errorMsg = error.message;
+                $scope.login.errorMsg = error.message;
+                $scope.hasloginError = true;
             })['finally'](function() {
                 $scope.loginInProgress = false;
             });

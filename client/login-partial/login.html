@@ -3,27 +3,31 @@
 	<div class="break-edge">
 		<div class="card small-card floating-title">
 			<h1>RecallRodent</h1>
-			<div class="card-body">
-				<div class="form-group">
-					<div class="form-control-wrapper">
-						<input id="email" name="email" type="text" class="form-control empty">
-						<label for="email" class="floating-label">email</label>
-						<span class="material-input"></span>
-					</div>
-					<br>
-					<div class="form-control-wrapper">
-						<input id="password" name="password" type="password" class="form-control empty">
-						<label for="password" class="floating-label">password</label>
-						<span class="material-input"></span>
-					</div>
-				</div>
-			</div>
-			<div class="card-footer buttons">
-				<a class="pull-right" href="/signup">Don't have an account yet?</a>
-				<button type="submit" class="btn btn-default btn-flat btn-tight">
-					Login
-				</button>
-			</div>
+            <form name="loginForm" ng-submit="doLogin()">
+                <div class="card-body">
+                    <div ng-class="hasloginError?'form-group has-error':'form-group'">                                          
+                        <div class="form-control-wrapper">                    
+                            <input id="email" name="email" type="text" class="form-control empty" ng-model="login.email">
+                            <label for="email" class="floating-label">email</label>
+                            <span class="material-input"></span>
+                        </div>
+                        <br>
+                        <div class="form-control-wrapper">
+                            <input id="password" name="password" type="password" class="form-control empty" ng-model="login.password">
+                            <label for="password" class="floating-label">password</label>
+                            <span class="material-input"></span>
+                        </div>
+                        <br>
+                        <label class="control-label">{{login.errorMsg}}</label>                             
+                    </div>                 
+                </div>
+                <div class="card-footer buttons">
+                    <a class="pull-right" href="/signup">Don't have an account yet?</a>
+                    <button type="submit" class="btn btn-default btn-flat btn-tight">
+                        Login
+                    </button>
+                </div>
+            </form>
 		</div>
 	</div>
 </div>
