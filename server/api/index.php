@@ -23,7 +23,10 @@ $app = new Slim();
 $app->post('/loginUser', 'loginUser');
 $app->get('/getUser/:email', 'getUser');
 $app->post('/addProduct', 'addProduct');
+<<<<<<< .merge_file_a06532
+=======
 $app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
+>>>>>>> .merge_file_a02984
 
 $app->run();
 
@@ -164,6 +167,8 @@ function addProduct() {
 	}
 }
 
+<<<<<<< .merge_file_a06532
+=======
 function recentRecalls($type, $days, $limit) {
 	$response = new restResponse;
 
@@ -202,6 +207,7 @@ function recentRecalls($type, $days, $limit) {
 
 }
 
+>>>>>>> .merge_file_a02984
 function getConnection() {
 	$dbhost="127.0.0.1";
 	$dbuser="4840w";
