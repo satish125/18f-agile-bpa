@@ -25,13 +25,14 @@
 	<div class="jumbotron">
 		<div class="container">
 			<h1>Know when your purchases are recalled</h1>
-			<a href="/#/signup" class="btn btn-large btn-primary">Sign up</a>
+			<h3>Automatically import online & loyalty card purchases, and get notified of recalls.</h3>
+			<a href="/#/signup" class="btn btn-lg btn-primary">Sign up</a>
 		</div>
 	</div>
 	<div class="container">
-		<h1>Recent recalls</h1>
+		<h1>Recent Recalls</h1>
 		<div class="list-group three-line-list">
-			<div class="list-group-item" ng-repeat="product in demoData">
+			<div class="list-group-item" ng-repeat="product in recentRecalls_model">
 				<div class="row-picture">
 					<img class="circle" src="http://lorempixel.com/56/56/food/{{ $index }}" alt="icon">
 				</div>

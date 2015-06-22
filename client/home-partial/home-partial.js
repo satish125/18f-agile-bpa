@@ -13,7 +13,13 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
         });
         
         recallService.recentRecalls($scope.dayLimit, $scope.recordLimit).then(function(recallData) {
-            $scope.recentRecalls_model = recallData.payload;
+            $scope.recentRecalls_model = recallData.payload.map(function(obj){
+            	obj.recall_initiation_date = new Date(
+            		obj.recall_initiation_date.substring(0,4),
+            		obj.recall_initiation_date.substring(4,6),
+            		obj.recall_initiation_date.substring(6,8));
+            	return obj;
+            });
             
             if (recallData.code !== "success") {
                 $scope.errorMsg = recallData.msg;
@@ -31,7 +37,7 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
 	        status: "Ongoing",
 	        distribution_pattern: "Nationwide",
 	        product_quantity: null,
-	        recall_initiation_date: "1288323623006",
+	        recall_initiation_date: "yyyymmdd",
 	        state: "ME",
 	        event_id: "63260",
 	        product_type: "Food",
