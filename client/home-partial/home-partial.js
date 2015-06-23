@@ -1,4 +1,4 @@
-angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$stateParams', 'recallService',
+angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$stateParams', 'openfdaService',
     function($scope, $state, $stateParams, recallService) {
         
         $scope.RecentRecallsInProgress = true;
