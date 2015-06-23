@@ -5,11 +5,13 @@
 			<form name="signupForm" ng-submit="doSignup()" class="form-expanded">
 				<div class="card-body">
 					<h3>Create a new account</h3>
-					<div class="form-group" ng-class="{has-error: signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
+					<div class="form-group" ng-class="{'has-error': signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
 						<div class="form-control-wrapper floating-label-wrapper">
-							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/" class="form-control empty" ng-focus required>
-							<div class="hint" ng-show="signupForm.email.$dirty && signupForm.email.$invalid">
-								<div class="error" ng-show="signupForm.email.$error.required">Please input an email</div>
+							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/" class="form-control empty" ng-focus required>
+							<div class="hint error" ng-show="signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused">
+								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+								<span ng-show="signupForm.email.$error.required">An email is required</span>
+								<span ng-show="signupForm.email.$error.pattern">Please input a valid email</span>
 							</div>
 							<label for="email" class="floating-label">email</label>
 							<span class="material-input"></span>
@@ -21,23 +23,38 @@
 							</div-->
 						</div>
 					</div>
-					<div class="form-group" ng-class="{has-error: signupForm.zip.$dirty && signupForm.zip.$invalid && !signupForm.zip.$focused}">
+					<div class="form-group" ng-class="{'has-error': signupForm.zip.$dirty && signupForm.zip.$invalid && !signupForm.zip.$focused}">
 						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="zip" name="zip" ng-model="signup.zip" type="text" ng-pattern="/^[0-9]{5}$/" class="form-control empty" ng-focus required>
+							<div class="hint error" ng-show="signupForm.zip.$dirty && signupForm.zip.$invalid && !signupForm.zip.$focused">
+								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+								<span ng-show="signupForm.zip.$error.required">A zip code is required</span>
+								<span ng-show="signupForm.zip.$error.pattern">Please input a 5-digit zip code</span>
+							</div>
 							<label for="zip" class="floating-label">zip</label>
 							<span class="material-input"></span>
 						</div>
 					</div>
-					<div class="form-group" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused}">
+					<div class="form-group" ng-class="{'has-error': signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused}">
 						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="password" name="password" ng-model="signup.password" type="password" class="form-control empty" ng-minlength="8" ng-focus required>
+							<div class="hint error" ng-show="signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused">
+								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+								<span ng-show="signupForm.password.$error.required">A password is required</span>
+								<span ng-show="signupForm.password.$error.minlength">Please input a password of at least 8 characters</span>
+							</div>
 							<label for="password" class="floating-label">password</label>
 							<span class="material-input"></span>
 						</div>
 					</div>
-					<div class="form-group" ng-class="{invalid: signupForm.confirm.$dirty && signupForm.confirm.$invalid}">
+					<div class="form-group" ng-class="{'has-error': signupForm.confirm.$dirty && signupForm.confirm.$invalid}">
 						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="confirm" name="confirm" ng-model="signup.confirm" type="password" ng-pattern="passwordConfirmPattern" class="form-control empty" ng-minlength="8" ng-focus required>
+							<div class="hint error" ng-show="signupForm.confirm.$dirty && signupForm.confirm.$invalid && !signupForm.confirm.$focused">
+								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+								<span ng-show="signupForm.confirm.$error.required">A password confirmation is required</span>
+								<span ng-show="signupForm.confirm.$error.minlength">The password confirmation must match</span>
+							</div>
 							<label for="confirm" class="floating-label">confirm password</label>
 							<span class="material-input"></span>
 						</div>
