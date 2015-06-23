@@ -1,6 +1,10 @@
 angular.module('web').controller('SignupPartialCtrl',['$scope','$state','userService',function($scope,$state,userService){
 	$scope.signup = {errors: []};
 
+	angular.element(document).ready(function () {
+		$.material.ripples('.btn');
+	});
+
 	$scope.passwordConfirmPattern = {
 		test: function(value) {
 			return $('#password')[0].value === $('#confirm')[0].value;
@@ -11,7 +15,7 @@ angular.module('web').controller('SignupPartialCtrl',['$scope','$state','userSer
 		$scope.signup.isInProgress = true;
 		$scope.signup.errors = [];
 
-		userService.registerUser($scope.signup.email, $scope.signup.password)
+		userService.registerUser($scope.signup.email, $scope.signup.zip, $scope.signup.password)
 		.then(
 			function(data) {
 				$scope.userLogin_model = data.payload;
