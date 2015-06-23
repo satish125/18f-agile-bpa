@@ -65,7 +65,7 @@ module.exports = function (grunt) {
     },
     clean: {
       before:{
-        src:['dist','temp']
+        src:['dist', 'temp']
       },
       after: {
         src:['temp', 'app.css']
@@ -135,6 +135,10 @@ module.exports = function (grunt) {
       }
     },
     concat: {
+      options: {
+        sourceMap: true,
+        sourceMapName: 'dist/app.full.js.map'
+      },
       main: {
         src: ['<%= dom_munger.data.appjs %>','<%= ngtemplates.main.dest %>'],
         dest: 'temp/app.full.js'
@@ -149,7 +153,8 @@ module.exports = function (grunt) {
     uglify: {
       options: {
         sourceMap: true,
-        sourceMapIncludeSources: true
+        sourceMapIncludeSources: true,
+        sourceMapIn: 'dist/app.full.js.map'
       },
       main: {
         src: 'temp/app.full.js',
@@ -207,8 +212,8 @@ module.exports = function (grunt) {
       },
     }
   });
-
-  grunt.registerTask('build',['jshint','clean:before','less','dom_munger','ngtemplates','cssmin','concat','ngAnnotate','uglify','copy','htmlmin','clean:after']);
+//'jshint','clean:before','less','dom_munger','ngtemplates','cssmin','concat','ngAnnotate','uglify','copy','htmlmin','clean:after'
+  grunt.registerTask('build',['jshint','less','dom_munger','ngtemplates','cssmin','concat','ngAnnotate','uglify','copy','htmlmin']);
   grunt.registerTask('serve', ['dom_munger:read','jshint','connect', 'watch']);
   grunt.registerTask('test',['dom_munger:read','karma:all_tests']);
 
