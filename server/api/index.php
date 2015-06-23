@@ -34,8 +34,8 @@ $app->post('/addProduct', 'addProduct');
 $app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
 
 // Product Services
-$app->get('/getProductUser/:userId', 'getProductUser');
-$app->delete('/deleteProductUser/:userId', 'deleteProductUser');
+$app->get('/getProductUser', 'getProductUser');
+$app->delete('/deleteProductUser', 'deleteProductUser');
 
 $app->run();
 

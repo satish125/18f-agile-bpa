@@ -1,23 +1,38 @@
 <?php
 
-
-function getProductUser($userId) {
+function getProductUser() {
 	$response = new restResponse;
+    $session_id = session_id();    
 
     try {
-		$sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
+
+		$sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $session_id);
+        $stmt->execute();
+        $session_data = $stmt->fetchObject();
+        
+        if ($session_data == null) {
+			$response->set("not_logged_on","You are not currently logged into the system", "");
+            return;
+		}    
+        
+		$sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
         
+        if ($iamdata == null) {
+			$response->set("service_failure","product api keys are not configured", "");
+            return;
+		}          
+        
 		$sql = "SELECT user_id FROM user WHERE user_id=:user_id";
-        $db = getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $userId);
+        $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        $db = null;
         
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
@@ -47,27 +62,44 @@ function getProductUser($userId) {
     } catch(Exception $e) {
 		$response->set("system_failure","System error occurred, unable to return data", "");
     } finally {
+        $db = null;        
 		$response->toJSON();
 	}
 }
 
-function deleteProductUser($userId) {
+function deleteProductUser() {
 	$response = new restResponse;
+    $session_id = session_id();
 
     try {
+        $db = getConnection();        
+        
+		$sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $session_id);
+        $stmt->execute();
+        $session_data = $stmt->fetchObject();
+        
+        if ($session_data == null) {
+			$response->set("not_logged_on","You are not currently logged into the system", "");
+            return;
+		}        
+        
 		$sql = "SELECT client_id, client_secret FROM iamdata_properties";
-        $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
         
+        if ($iamdata == null) {
+			$response->set("service_failure","product api keys are not configured", "");
+            return;
+		}            
+        
 		$sql = "SELECT user_id FROM user WHERE user_id=:user_id";
-        $db = getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $userId);
+        $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        $db = null;
         
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
@@ -107,49 +139,76 @@ function deleteProductUser($userId) {
     } catch(Exception $e) {
 		$response->set("system_failure","System error occurred, unable to return data", "");
     } finally {
+        $db = null;
 		$response->toJSON();
 	}
 }
 
-function setProductUser($userId, $email, $zipcode) {
+function setProductUser() {
 	$response = new restResponse;
+    $session_id = session_id();    
 
     try {    
 		$request = Slim::getInstance()->request();
 		$body = json_decode($request->getBody());
+        $db = getConnection();        
 
-		if (!property_exists($body, 'userId')) {
-			$response->set("invalid_parameter","User Id parameter was not found", "");
-			return;
-		}
+		$sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $session_id);
+        $stmt->execute();
+        $session_data = $stmt->fetchObject();
         
-		if (!property_exists($body, 'email')) {
-			$response->set("invalid_parameter","Email parameter was not found", "");
-			return;
-		}
-
-		if (!property_exists($body, 'zipcode')) {
-			$response->set("invalid_parameter","password parameter was not found", "");
-			return;
-		}
-
+        if ($session_data == null) {
+			$response->set("not_logged_on","You are not currently logged into the system", "");
+            return;
+		}            
+        
 		$sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
         
-		$sql = "SELECT user_id FROM user WHERE email=:user_id";
+        if ($iamdata == null) {
+			$response->set("service_failure","product api keys are not configured", "");
+            return;
+		}            
+        
+		$sql = "SELECT user_id, email, zip FROM user WHERE email=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $body->email);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        $db = null;
         
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
             return;
 		}
+        
+        $user_id = $iamdata->client_id ."_". $userId;
+        $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        
+        $data = array("key1" => "value1", "key2" => "value2");
+        $options = array(
+            "http" => array(
+                "header"  => "Accept: application/json; \r\nContent-type: application/x-www-form-urlencoded\r\n",
+                "method"  => "POST",
+                "content" => http_build_query($data),
+            ),
+        );
+        $context = stream_context_create($options);
+
+        $result = file_get_contents($url, false, $context);
+        
+        
+    } catch(Exception $e) {
+		$response->set("system_failure","System error occurred, unable to return data", "");
+    } finally {
+        $db = null;
+		$response->toJSON();
+	}
+}        
 
 ?>
