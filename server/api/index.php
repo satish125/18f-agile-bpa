@@ -41,6 +41,9 @@ $app->get('/products/getUserStores', 'productsGetUserStores');
 $app->get('/products/getUserStores/:page', 'productsGetUserStores');
 $app->get('/products/getUserStore/:userStoreId', 'productsGetUserStore');
 $app->get('/products/getUserPurchases/:dayLimit/:page', 'productsGetUserPurchases');
+$app->post('/products/addUserStore', 'productsAddUserStore');
+$app->delete('/products/deleteUserStore/:userStoreId','productsDeleteUserStore');
+$app->post('/products/updateUserStore', 'productsUpdateUserStore');
 
 $app->run();
 

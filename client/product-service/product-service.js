@@ -108,7 +108,7 @@ angular.module('web').factory('productService',['$q', '$http',
                 "password": password
             });
             
-            $http.post("/api/products/setUserStore", postData).then(function(response) {
+            $http.post("/api/products/addUserStore", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -136,7 +136,28 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+        service.updateUserStore = function(userStoreId, userName, password) {
+            var deferred = $q.defer();
+            
+            var postData = JSON.stringify({
+                "user_store_id": userStoreId,
+                "username": userName,
+                "password": password
+            });            
+            
+            $http.put("/api/products/updateUserStore", postData).then(function(response) {
+                    deferred.resolve(response.data);
+                },
+                function(error) {
+                    deferred.reject(error);
+                },
+                function(value) {
+                    deferred.notify(value);
+                });
+
+            return deferred.promise;
+        };
+		
         service.getUserPurchases = function(dayLimit, page) {
             var deferred = $q.defer();
             
