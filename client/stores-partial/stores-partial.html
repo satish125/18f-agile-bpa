@@ -1,4 +1,37 @@
 <div class="col-md-12" ng-controller="StoresPartialCtrl">
-
-
+	<h1>Connect Stores</h1>
+	<div ng-repeat="error in errors track by $index" class="clearfix">
+	   <div class="alert alert-danger alert-dismissible" role="alert">
+		 <button type="button" ng-click="errors.splice($index,1)" class="close" data-dismiss="alert" aria-label="Close"><span class="fa fa-close" aria-hidden="true"></span></button>
+		 <ul class="fa-ul pre"><li><i class="fa-li fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">Error: </span>{{error}}</li></ul>
+	   </div>
+	</div>
+	<div class="col-md-12">
+		<ul class="media-list">
+			<li class="media" ng-repeat="store in stores">
+				<div class="media-left">
+					<div class="store-logo-container">
+						<img class="media-object" ng-src="{{store.imageSrc}}" alt="{{store.name}}">
+					</div>
+				</div>
+				<div class="media-body">
+					<form name="connectForm" class="form-inline" ng-submit="doStoreConnect(store)">
+						<div class="form-group form-control-wrapper floating-label-wrapper">
+							<input id="username{{$index}}" name="username" ng-model="store.username" type="text" class="form-control empty" required>
+							<label for="username{{$index}}" class="floating-label">user</label>
+							<span class="material-input"></span>
+						</div>
+						<div class="form-group form-control-wrapper floating-label-wrapper">
+							<input id="password{{$index}}" name="password" ng-model="store.password" type="password" class="form-control empty" required>
+							<label for="password{{$index}}" class="floating-label">password</label>
+							<span class="material-input"></span>
+						</div>
+						<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="connectForm[$index].$invalid">
+							<i class="fa fa-link" aria-hidden="true"></i> Connect
+						</button>
+					</form>
+				</div>
+			</li>
+		</ul>
+	</div>
 </div>
