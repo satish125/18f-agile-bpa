@@ -55,6 +55,15 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getStores").then(function(response) {
+                    var stores = JSON.parse(response.data.payload);
+                    var stores_new = [];
+
+                    for(var resultIndex in stores){
+                        stores_new.push(stores[resultIndex]);
+                    }
+
+                    response.data.payload = stores_new;
+
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -71,7 +80,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getUserStores/"+page).then(function(response) {
-                    deferred.resolve(response.data);
+                    deferred.resolve(response.data.payload);
                 },
                 function(error) {
                     deferred.reject(error);
@@ -156,7 +165,7 @@ angular.module('web').factory('productService',['$q', '$http',
                 });
 
             return deferred.promise;
-        }
+        };
 		
         service.getUserPurchases = function(dayLimit, page) {
             var deferred = $q.defer();
