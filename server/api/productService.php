@@ -269,6 +269,13 @@ function productsGetStores() {
         if (!$result === false) {
             $bigArr = json_decode($result, true, 20);
             $res = $bigArr["result"];
+
+            //filter for objects with canScrape true
+            $res = array_filter($res, function($obj){
+                if ($obj["can_scrape"] == 0) return false;
+                return true;
+            });
+            
             $json = json_encode($res);
             $response->set("success", "Data successfully fetched from service", $json );
         } else {
