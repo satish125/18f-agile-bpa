@@ -1,5 +1,7 @@
 # 18f-agile-bpa
 
+[![Dependencies from david-dm.org](https://david-dm.org/CRGTMobile/18f-agile-bpa.svg)](http://david-dm.org/CRGTMobile/18f-agile-bpa)
+
 ## Prerequisites
 
 * [Node.js](https://nodejs.org)
