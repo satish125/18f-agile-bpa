@@ -9,6 +9,7 @@ angular.module('web').controller('SignupPartialCtrl',['$scope','$state','userSer
 
 	$scope.doSignup = function() {
 		$scope.signup.isInProgress = true;
+		$scope.signup.errors = [];
 
 		userService.registerUser($scope.signup.email, $scope.signup.password)
 		.then(
