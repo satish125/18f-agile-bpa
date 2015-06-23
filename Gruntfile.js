@@ -95,11 +95,15 @@ module.exports = function (grunt) {
         files: [
           {src: ['app.css'], dest: 'dist/'},
           {src: ['img/**'], dest: 'dist/'},
-          {cwd: 'server/', src: ['api/**'], dest: 'dist/',expand:true, dot:true},
           {src: ['bower_components/font-awesome/fonts/**'], dest: 'dist/',filter:'isFile',expand:true}
           //{src: ['bower_components/angular-ui-utils/ui-utils-ieshiv.min.js'], dest: 'dist/'},
           //{src: ['bower_components/select2/*.png','bower_components/select2/*.gif'], dest:'dist/css/',flatten:true,expand:true},
           //{src: ['bower_components/angular-mocks/angular-mocks.js'], dest: 'dist/'}
+        ]
+      },
+      server: {
+        files: [
+          {cwd: 'server/', src: ['api/**'], dest: 'dist/',expand:true, dot:true},
         ]
       }
     },
@@ -213,7 +217,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('build',['jshint','clean:before','less','dom_munger','ngtemplates','cssmin','concat','ngAnnotate','uglify','copy','htmlmin','clean:after']);
+  grunt.registerTask('build',['jshint','clean:before','copy:server','less','dom_munger','ngtemplates','cssmin','concat','ngAnnotate','uglify','copy','htmlmin','clean:after']);
   grunt.registerTask('serve', ['dom_munger:read','jshint','connect', 'watch']);
   grunt.registerTask('test',['dom_munger:read','karma:all_tests']);
 
