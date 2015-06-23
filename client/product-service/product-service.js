@@ -19,7 +19,7 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };
         
-        service.deleteUser = function(userId) {
+        service.deleteUser = function() {
             var deferred = $q.defer();
             
             $http.delete("/api/products/deleteUser").then(function(response) {
@@ -67,10 +67,10 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };
         
-        service.getUserStores = function() {
+        service.getUserStores = function(page) {
             var deferred = $q.defer();
             
-            $http.get("/api/products/getUserStores").then(function(response) {
+            $http.get("/api/products/getUserStores/"+page).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -83,10 +83,10 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };
         
-        service.getUserStore = function(storeId) {
+        service.getUserStore = function(userStoreId) {
             var deferred = $q.defer();
             
-            $http.get("/api/products/getUserStore/" + storeId).then(function(response) {
+            $http.get("/api/products/getUserStore/" + userStoreId).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {

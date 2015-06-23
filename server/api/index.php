@@ -37,6 +37,8 @@ $app->delete('/products/deleteUser', 'productsDeleteUser');
 $app->post('/products/setUser', 'productsSetUser');
 $app->get('/products/getStores', 'productsGetStores');
 $app->get('/products/getUserStores', 'productsGetUserStores');
+$app->get('/products/getUserStores/:page', 'productsGetUserStores');
+$app->get('/products/getUserStore/:userStoreId', 'productsGetUserStore');
 
 $app->run();
 
@@ -58,36 +60,6 @@ class restResponse
 	}
 
 }
-
-function addProduct() {
-	$response = new restResponse;
-
-    $sql = "insert into user_product (user_id, product, vendor, upc_code, create_dttm) values (:user_id, :product, :vendor, :upc_code, now())";
-
-    try {
-    	$request = Slim::getInstance()->request();
-		$body = json_decode($request->getBody());
-        $db = getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id",  $body->user_id);
-        $stmt->bindParam("product",  $body->product);
-        $stmt->bindParam("vendor",  $body->vendor);
-        $stmt->bindParam("upc_code",  $body->upc_code);
-
-
-        $stmt->execute();
-
-       $response->set("success","product inserted", "");
-
-    } catch(PDOException $e) {
-        $response->set("system_failure","System error occurred, unable save product", "");
-    }finally {
-    	$db = null;
-		$response->toJSON();
-	}
-}
-
-
 
 function getConnection() {
 	$dbhost="127.0.0.1";
