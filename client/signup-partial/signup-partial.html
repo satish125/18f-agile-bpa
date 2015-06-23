@@ -7,7 +7,7 @@
 					<div class="form-group">
 						<h3>Create a new account</h3>
 						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
-							<input id="email" name="email" ng-model="signup.email" type="email" ng-patter="/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/" class="form-control empty" ng-focus required>
+							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/" class="form-control empty" ng-focus required>
 							<label for="email" class="floating-label">email</label>
 							<span class="material-input"></span>
 						</div>
@@ -17,13 +17,13 @@
 							<span class="material-input"></span>
 						</div>
 						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused}">
-							<input id="password" name="password" type="password" class="form-control empty" ng-minlength="8" ng-focus required>
+							<input id="password" name="password" ng-model="signup.password" type="password" class="form-control empty" ng-minlength="8" ng-focus required>
 							<label for="password" class="floating-label">password</label>
 							<span class="material-input"></span>
 						</div>
-						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid}">
-							<input id="password-confirm" name="password" type="password" class="form-control empty" ng-minlength="8" ng-focus required>
-							<label for="password-confirm" class="floating-label">confirm password</label>
+						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.confirm.$dirty && signupForm.confirm.$invalid}">
+							<input id="confirm" name="confirm" ng-model="signup.confirm" type="password" ng-pattern="passwordConfirmPattern" class="form-control empty" ng-minlength="8" ng-focus required>
+							<label for="confirm" class="floating-label">confirm password</label>
 							<span class="material-input"></span>
 						</div>
 					</div>
