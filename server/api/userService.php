@@ -36,6 +36,7 @@ function userLogin() {
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam("email", $body->email);
 					$stmt->execute();
+					$user_data = $stmt->fetchObject();
 
 					$sql = "insert into user_session (user_id, session_id, create_dttm) values (:user_id, :session_id, now())";
 					$stmt = $db->prepare($sql);
@@ -64,22 +65,33 @@ function userLogin() {
 
 function userRegister() {
     $response = new restResponse;
-
+	$check_user_exists_sql = "SELECT email, zip, password  FROM user WHERE email=:email";
     $sql = "insert into user (email, zip, password) values (:email, :zip, :password)";
 
     try {
 		$request = Slim::getInstance()->request();
 		$body = json_decode($request->getBody());
         $db = getConnection();
-        $stmt = $db->prepare($sql);
+
+        $stmt = $db->prepare($check_user_exists_sql);
         $stmt->bindParam("email",  $body->email);
-        $stmt->bindParam("zip",  $body->zipcode);
-        $stmt->bindParam("password",  $body->password);
-
-
         $stmt->execute();
+        $user_data = $stmt->fetchObject();
+		if ($user_data != null) {
+			$response->set("user_already_exists","User with Email address already exists", "");
+		}
+		else
+		{
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam("email",  $body->email);
+			$stmt->bindParam("zip",  $body->zipcode);
+			$stmt->bindParam("password",  $body->password);
 
-       $response->set("success","User inserted.", "");
+
+			$stmt->execute();
+
+		   $response->set("success","User inserted.", "");
+       }
 
     } catch(PDOException $e) {
         $response->set("system_failure","System error occurred, unable save user", "");
