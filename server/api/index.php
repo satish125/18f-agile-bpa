@@ -34,7 +34,7 @@ $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
 // Product Services
 $app->get('/products/getUser', 'productsGetUser');
 $app->delete('/products/deleteUser', 'productsDeleteUser');
-$app->post('/products/setUser', 'productsSetUser');
+$app->post('/products/addUser', 'productsAddUser');
 $app->get('/products/getStores', 'productsGetStores');
 $app->get('/products/getUserStores', 'productsGetUserStores');
 $app->get('/products/getUserStores/:page', 'productsGetUserStores');
