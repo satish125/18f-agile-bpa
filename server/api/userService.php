@@ -62,6 +62,34 @@ function userLogin() {
 	}
 }
 
+function userRegister() {
+    $response = new restResponse;
+
+    $sql = "insert into user (email, zip, password) values (:email, :zip, :password)";
+
+    try {
+		$request = Slim::getInstance()->request();
+		$body = json_decode($request->getBody());
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("email",  $body->email);
+        $stmt->bindParam("zip",  $body->zipcode);
+        $stmt->bindParam("password",  $body->password);
+
+
+        $stmt->execute();
+
+       $response->set("success","User inserted.", "");
+
+    } catch(PDOException $e) {
+        $response->set("system_failure","System error occurred, unable save user", "");
+    }finally {
+		$db = null;
+		$response->toJSON();
+	}
+
+}
+
 function userGet($email) {
 	$response = new restResponse;
 
@@ -73,7 +101,7 @@ function userGet($email) {
         $stmt->execute();
         $user_data = $stmt->fetchObject();
         $db = null;
-        
+
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
 		}

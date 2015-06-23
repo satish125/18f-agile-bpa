@@ -26,6 +26,7 @@ $app = new Slim();
 // User Services
 $app->post('/user/login', 'userLogin');
 $app->get('/user/get/:email', 'userGet');
+$app->post('/user/register', 'userRegister');
 
 // openFDA Services
 $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
