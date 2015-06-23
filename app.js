@@ -21,6 +21,10 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
         url: '/signup',
         templateUrl: 'client/signup-partial/signup-partial.html'
     });
+    $stateProvider.state('stores-partial', {
+        url: '/connect',
+        templateUrl: 'client/stores-partial/stores-partial.html'
+    });
     /* Add New States Above */
     $urlRouterProvider.otherwise('/');
 
