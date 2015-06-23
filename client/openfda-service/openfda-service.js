@@ -2,6 +2,10 @@ angular.module('web').factory('openfdaService',['$q', '$http',
 
     function($q, $http) {
         var service = {};
+
+        service.productMatch = function(product){
+            
+        };
         
         service.recentRecalls = function(dayLimit, recordLimit) {
             var deferred = $q.defer();

@@ -12,11 +12,6 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
         templateUrl: 'client/home-partial/home-partial.html'
     });
 
-    $stateProvider.state('landing-partial', {
-        url: '/landing',
-        templateUrl: 'client/landing-partial/landing-partial.html'
-    });
-
     $stateProvider.state('signup-partial', {
         url: '/signup',
         templateUrl: 'client/signup-partial/signup-partial.html'
@@ -24,6 +19,10 @@ angular.module('web').config(function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('stores-partial', {
         url: '/connect',
         templateUrl: 'client/stores-partial/stores-partial.html'
+    });
+    $stateProvider.state('recalls-partial', {
+        url: '/recalls',
+        templateUrl: 'client/recalls-partial/recalls-partial.html'
     });
     /* Add New States Above */
     $urlRouterProvider.otherwise('/');

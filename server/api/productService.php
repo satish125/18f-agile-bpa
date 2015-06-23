@@ -412,4 +412,18 @@ function productsGetUserStore($userStoreId) {
 	}
 }
 
+function productsGetUserPurchases($daylimit, $page){
+    $response = new restResponse;
+    $session_id = session_id();
+    try{
+        $db = getConnection();
+    } catch(Exception $e) {
+
+        $response->set("system_failure","System error occurred, unable to return data", "");
+    } finally {
+        $db = null;        
+        $response->toJSON();
+    }
+}
+
 ?>

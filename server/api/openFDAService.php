@@ -7,6 +7,7 @@ function openFDARecentRecalls($type, $days, $limit) {
     $end = date("Ymd");
     
     $key = "dkjmH4qrI5pMYoj8hN0SCR8mhESAPGg8XxBH169b";
+
     $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
     
     try {
@@ -32,6 +33,28 @@ function openFDARecentRecalls($type, $days, $limit) {
         $response->toJSON();
     }
     
+}
+
+/**
+ * match a purchase pulled in from Information Machine to FDA recall data
+ * POST body - the purchase
+ */
+function openFDAProductMatch(){
+    $response = new restResponse;
+    $session_id = session_id();
+    try{
+        //get the request body
+        $request = Slim::getInstance()->request();
+        $body = json_decode($request->getBody());
+
+        $url = "https://api.fda.gov/";
+
+    } catch(PDOException $e) {
+        $response->set("system_failure","System error occurred, unable to login", "");
+    } finally {
+        $db = null;
+        $response->toJSON();
+    }
 }
 
 ?>

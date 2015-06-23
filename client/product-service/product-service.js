@@ -137,10 +137,10 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };
         
-        service.getUserPurchases = function(fromDate, page) {
+        service.getUserPurchases = function(dayLimit, page) {
             var deferred = $q.defer();
             
-            $http.get("/api/products/getPurchases/" + fromDate + "/" + page).then(function(response) {
+            $http.get("/api/products/getUserPurchases/" + dayLimit + "/" + page).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -151,7 +151,7 @@ angular.module('web').factory('productService',['$q', '$http',
                 });
 
             return deferred.promise;
-        };        
+        };
 
         return service;
     }        

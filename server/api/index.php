@@ -30,6 +30,7 @@ $app->post('/user/register', 'userRegister');
 
 // openFDA Services
 $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
+$app->post('/openFDA/productMatch', 'openFDAProductMatch');
 
 // Product Services
 $app->get('/products/getUser', 'productsGetUser');
@@ -39,6 +40,7 @@ $app->get('/products/getStores', 'productsGetStores');
 $app->get('/products/getUserStores', 'productsGetUserStores');
 $app->get('/products/getUserStores/:page', 'productsGetUserStores');
 $app->get('/products/getUserStore/:userStoreId', 'productsGetUserStore');
+$app->get('/products/getUserPurchases/:dayLimit/:page', 'productsGetUserPurchases');
 
 $app->run();
 
