@@ -80,7 +80,17 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getUserStores/"+page).then(function(response) {
-                    deferred.resolve(response.data.payload);
+                    var userStores = JSON.parse(response.data.payload);
+                    var userStores_new = {};
+
+                    //convert array of stores to a map for lookup
+                    for(var i = 0, s; s = userStores[i]; i++){
+                        userStores_new[s.supermarket_id] = s;
+                    }
+
+                    response.data.payload = userStores_new;
+
+                    deferred.resolve(response.data);
                 },
                 function(error) {
                     deferred.reject(error);

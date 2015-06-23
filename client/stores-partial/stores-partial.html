@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				<div class="media-body">
-					<form name="connectForm" class="form-inline" ng-submit="doStoreConnect(store)">
+					<form name="connectForm" ng-class="userStores[store.id]?'hide':''" class="form-inline" ng-submit="doStoreConnect(store)">
 						<div class="form-group form-control-wrapper floating-label-wrapper">
 							<input id="username{{store.id}}" name="username"  type="text" class="form-control empty" required><!-- ng-model="store.username" -->
 							<label for="username{{store.id}}" class="floating-label">user</label>
@@ -30,6 +30,9 @@
 							<i class="fa fa-link" aria-hidden="true"></i> Connect
 						</button>
 					</form>
+					<div ng-class="userStores[store.id]?'':'hide'">
+						CONNECTED
+					</div>
 				</div>
 			</li>
 		</ul>

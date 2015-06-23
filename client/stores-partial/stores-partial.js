@@ -1,21 +1,7 @@
 angular.module('web').controller('StoresPartialCtrl',['$scope','productService',function($scope,productService){
 
 	$scope.stores = [];
-
-	$scope.demoData = [
-		{
-			name: 'Amazon',
-			imageSrc: 'https://bagiq.com/images/store-logos/store-amazon.svg'
-		},
-		{
-			name: 'PeaPod',
-			imageSrc: 'https://bagiq.com/images/store-logos/store-peapod.png'
-		},
-		{
-			name: 'Walmart',
-			imageSrc: 'https://bagiq.com/images/store-logos/store-walmart.svg'
-		}
-	];
+	$scope.userStores = [];
 	
 	productService.getStores().then(
 		function(data) {
