@@ -128,4 +128,27 @@ function userGet($email) {
 	}
 }
 
+
+function userLogout($email) {
+	$response = new restResponse;
+	$session_id = session_id();
+    try {
+		$sql = "DELETE FROM user_session WHERE session_id=:session_id";
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $session_id);
+        $stmt->execute();
+
+        $db = null;
+
+		$response->set("success","User logged out successfully", "");
+
+    } catch(PDOException $e) {
+		$response->set("success","User logged out successfully", "");
+    } finally {
+    	$db = null;
+		$response->toJSON();
+	}
+}
+
 ?>
