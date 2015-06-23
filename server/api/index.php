@@ -27,6 +27,7 @@ $app = new Slim();
 $app->post('/user/login', 'userLogin');
 $app->get('/user/get/:email', 'userGet');
 $app->post('/user/register', 'userRegister');
+$app->get('/user/logout', 'userLogout');
 
 // openFDA Services
 $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
