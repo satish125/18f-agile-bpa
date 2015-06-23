@@ -11,7 +11,7 @@
 		<div class="list-group three-line-list">
 			<div class="list-group-item" ng-repeat="product in recentRecalls_model">
 				<div class="row-picture">
-					<img class="circle" src="http://lorempixel.com/56/56/food/{{ $index }}" alt="icon">
+					<img class="circle" src="http://lorempixel.com/56/56/food/{{ $index % 11 }}" alt="Rnadom image of food #{{ $index % 11 }}">
 				</div>
 				<div class="row-content">
 					<div class="least-content">{{ product.recall_initiation_date | date }}</div>
