@@ -1,27 +1,42 @@
-<div class="col-md-12" ng-controller="SignupPartialCtrl">
+<div ng-controller="SignupPartialCtrl">
 	<div class="break-edge">
 		<div class="card small-card floating-title">
 			<h1>RecallRodent</h1>
-			<form name="signupForm" ng-submit="doSignup()">
+			<form name="signupForm" ng-submit="doSignup()" class="form-expanded">
 				<div class="card-body">
-					<div class="form-group">
-						<h3>Create a new account</h3>
-						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
+					<h3>Create a new account</h3>
+					<div class="form-group" ng-class="{has-error: signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
+						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/" class="form-control empty" ng-focus required>
+							<div class="hint" ng-show="signupForm.email.$dirty && signupForm.email.$invalid">
+								<div class="error" ng-show="signupForm.email.$error.required">Please input an email</div>
+							</div>
 							<label for="email" class="floating-label">email</label>
 							<span class="material-input"></span>
+							<!--div class="error-container" ng-show="signup_form.username.$dirty && signup_form.username.$invalid">
+								<div class="error" ng-show="signup_form.username.$error.required">Please input a username</small>
+							    <small class="error" ng-show="signup_form.username.$error.minlength">Your username is required to be at least 3 characters</small>
+							    <small class="error" ng-show="signup_form.username.$error.maxlength">Your username cannot be longer than 20 characters</small>
+							    <small class="error" ng-show="signup_form.username.$error.unique">That username is taken, please try another</small>
+							</div-->
 						</div>
-						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.zip.$dirty && signupForm.zip.$invalid && !signupForm.zip.$focused}">
+					</div>
+					<div class="form-group" ng-class="{has-error: signupForm.zip.$dirty && signupForm.zip.$invalid && !signupForm.zip.$focused}">
+						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="zip" name="zip" ng-model="signup.zip" type="text" ng-pattern="/^[0-9]{5}$/" class="form-control empty" ng-focus required>
 							<label for="zip" class="floating-label">zip</label>
 							<span class="material-input"></span>
 						</div>
-						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused}">
+					</div>
+					<div class="form-group" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid && !signupForm.password.$focused}">
+						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="password" name="password" ng-model="signup.password" type="password" class="form-control empty" ng-minlength="8" ng-focus required>
 							<label for="password" class="floating-label">password</label>
 							<span class="material-input"></span>
 						</div>
-						<div class="form-control-wrapper floating-label-wrapper" ng-class="{invalid: signupForm.confirm.$dirty && signupForm.confirm.$invalid}">
+					</div>
+					<div class="form-group" ng-class="{invalid: signupForm.confirm.$dirty && signupForm.confirm.$invalid}">
+						<div class="form-control-wrapper floating-label-wrapper">
 							<input id="confirm" name="confirm" ng-model="signup.confirm" type="password" ng-pattern="passwordConfirmPattern" class="form-control empty" ng-minlength="8" ng-focus required>
 							<label for="confirm" class="floating-label">confirm password</label>
 							<span class="material-input"></span>
