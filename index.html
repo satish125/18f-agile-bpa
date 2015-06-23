@@ -38,14 +38,12 @@
   <script src="client/user-service/user-service.js"></script>
   <script src="client/recall-service/recall-service.js"></script>
   <script src="client/signup-partial/signup-partial.js"></script>
+  <script src="client/header-partial/header-partial.js"></script>
   <!-- Add New Component JS Above -->
 
-  <div>
-    <div id="content">
-        <div ui-view></div>
-      </div>
-    </div>
-  </div>
+  <header ng-include="'client/header-partial/header-partial.html'"></header>
+
+  <main ui-view></main>
 
   <footer class="credits">
     <div class="container">
