@@ -11,7 +11,7 @@ angular.module('web').factory('userService',['$q', '$http',
                 "password": password
             });
             
-            $http.post("/api/loginUser", postData).then(function(response) {
+            $http.post("/api/user/login", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -33,7 +33,7 @@ angular.module('web').factory('userService',['$q', '$http',
                 "zipcode": zipcode                
             });
             
-            $http.post("/api/registerUser", postData).then(function(response) {
+            $http.post("/api/user/register", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -50,7 +50,7 @@ angular.module('web').factory('userService',['$q', '$http',
             var deferred = $q.defer();
             
             
-            $http.get("/api/getUser/"+email).then(function(response) {
+            $http.get("/api/user/get/"+email).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
