@@ -15,7 +15,7 @@ session_start(); // Start the php session
 
 require 'Slim/Slim.php';
 require 'userService.php';
-require 'recallService.php';
+require 'openFDAService.php';
 require 'productService.php';
 
 ini_set('display_errors', '1');
@@ -24,18 +24,18 @@ error_reporting(-1);
 $app = new Slim();
 
 // User Services
-$app->post('/loginUser', 'loginUser');
-$app->get('/getUser/:email', 'getUser');
+$app->post('/user/login', 'userLogin');
+$app->get('/user/get/:email', 'userGet');
 
-// This needs to be removed
-$app->post('/addProduct', 'addProduct');
-
-// Recall Services
-$app->get('/recentRecalls/:type/:days/:limit', 'recentRecalls');
+// openFDA Services
+$app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
 
 // Product Services
-$app->get('/getProductUser', 'getProductUser');
-$app->delete('/deleteProductUser', 'deleteProductUser');
+$app->get('/products/getUser', 'productsGetUser');
+$app->delete('/products/deleteUser', 'productsDeleteUser');
+$app->post('/products/setUser', 'productsSetUser');
+$app->get('/products/getStores', 'productsGetStores');
+$app->get('/products/getUserStores', 'productsGetUserStores');
 
 $app->run();
 

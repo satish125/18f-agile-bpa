@@ -1,6 +1,6 @@
 <?php
 
-function loginUser() {
+function userLogin() {
 	$response = new restResponse;
 	$session_id = session_id();
     try {
@@ -62,7 +62,7 @@ function loginUser() {
 	}
 }
 
-function getUser($email) {
+function userGet($email) {
 	$response = new restResponse;
 
     try {

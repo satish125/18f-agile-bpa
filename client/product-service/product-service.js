@@ -6,7 +6,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.getUser = function() {
             var deferred = $q.defer();
             
-            $http.get("/api/getProductUser").then(function(response) {
+            $http.get("/api/products/getUser").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -22,7 +22,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.deleteUser = function(userId) {
             var deferred = $q.defer();
             
-            $http.delete("/api/deleteProductUser").then(function(response) {
+            $http.delete("/api/products/deleteUser").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -38,7 +38,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.setUser = function() {
             var deferred = $q.defer();
             
-            $http.post("/api/setProductUser", "{}").then(function(response) {
+            $http.post("/api/products/getUser", "{}").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -54,7 +54,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.getStores = function() {
             var deferred = $q.defer();
             
-            $http.get("/api/getProductStores").then(function(response) {
+            $http.get("/api/products/getStores").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -70,7 +70,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.getUserStores = function() {
             var deferred = $q.defer();
             
-            $http.get("/api/getProductUserStores").then(function(response) {
+            $http.get("/api/products/getUserStores").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -86,7 +86,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.getUserStore = function(storeId) {
             var deferred = $q.defer();
             
-            $http.get("/api/getProductUserStore/" + storeId).then(function(response) {
+            $http.get("/api/products/getUserStore/" + storeId).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -108,7 +108,7 @@ angular.module('web').factory('productService',['$q', '$http',
                 "password": password
             });
             
-            $http.post("/api/setProductUserStore", postData).then(function(response) {
+            $http.post("/api/products/setUserStore", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -124,7 +124,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.deleteUserStore = function(storeId) {
             var deferred = $q.defer();
             
-            $http.delete("/api/deleteProductUserStore/" + storeId).then(function(response) {
+            $http.delete("/api/products/deleteUserStore/" + storeId).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -140,7 +140,7 @@ angular.module('web').factory('productService',['$q', '$http',
         service.getUserPurchases = function(fromDate, page) {
             var deferred = $q.defer();
             
-            $http.get("/api/getProductUserPurchases/" + fromDate + "/" + page).then(function(response) {
+            $http.get("/api/products/getPurchases/" + fromDate + "/" + page).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {

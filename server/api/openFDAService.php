@@ -1,6 +1,6 @@
 <?php
 
-function recentRecalls($type, $days, $limit) {
+function openFDARecentRecalls($type, $days, $limit) {
     $response = new restResponse;
     
     $start = date("Ymd", strtotime("-".$days." days"));
