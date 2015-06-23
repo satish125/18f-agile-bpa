@@ -35,10 +35,10 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };
         
-        service.setUser = function() {
+        service.addUser = function() {
             var deferred = $q.defer();
             
-            $http.post("/api/products/getUser", "{}").then(function(response) {
+            $http.post("/api/products/addUser", "{}").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -99,7 +99,7 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };        
 
-        service.setUserStore = function(storeid, userName, password) {
+        service.addUserStore = function(storeid, userName, password) {
             var deferred = $q.defer();
             
             var postData = JSON.stringify({
@@ -121,10 +121,10 @@ angular.module('web').factory('productService',['$q', '$http',
             return deferred.promise;
         };  
         
-        service.deleteUserStore = function(storeId) {
+        service.deleteUserStore = function(userStoreId) {
             var deferred = $q.defer();
             
-            $http.delete("/api/products/deleteUserStore/" + storeId).then(function(response) {
+            $http.delete("/api/products/deleteUserStore/" + userStoreId).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {

@@ -36,7 +36,6 @@ function userLogin() {
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam("email", $body->email);
 					$stmt->execute();
-					$user_data = $stmt->fetchObject();
 
 					$sql = "insert into user_session (user_id, session_id, create_dttm) values (:user_id, :session_id, now())";
 					$stmt = $db->prepare($sql);

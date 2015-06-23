@@ -21,7 +21,7 @@ angular.module('web').controller('SignupPartialCtrl',['$scope','$state','userSer
 				$scope.userLogin_model = data.payload;
 
 				if (data.code === "success") {
-					$state.go('landing-partial');
+					$state.go('stores-partial');
 				} else {
 					$scope.signup.errors.push(data.msg);
 				}
