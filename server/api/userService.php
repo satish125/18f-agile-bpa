@@ -40,10 +40,10 @@ function userLogin() {
 					$sql = "insert into user_session (user_id, session_id, create_dttm) values (:user_id, :session_id, now())";
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam("user_id", $userData->user_id);
-					$stmt->bindParam("session_id", $session_id);
+					$stmt->bindParam("session_id", $sessionId);
 					$stmt->execute();
 
-					$response->set("success","User was authenticated", array("SESSION_ID" => $session_id) );
+					$response->set("success","User was authenticated", array("SESSION_ID" => $sessionId) );
 
 				} catch(PDOException $e) {
 					$response->set("system_failure","System error occurred, unable to login", "");
@@ -149,7 +149,7 @@ function userGet() {
 			$response->set("success","User is logged into the system", $userData);
         }
     } catch(Exception $e) {
-		$response->set("system_failure", $e->getMessage(), "");
+		$response->set("system_failure", "System error occurred, unable get user", "");
     } finally {
     	$db = null;
 		$response->toJSON();
