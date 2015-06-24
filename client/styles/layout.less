@@ -97,9 +97,24 @@ button.close {
 }
 
 /* FOOTER */
-body {
-  margin-bottom: @footer-height;
+html, body {
+	height: 100%;
 }
+ 
+body {
+	display: table;
+	width: 100%;
+}
+ 
+header, main, footer {
+	display: table-row;
+	height: 1px;
+}
+ 
+main {
+	height: 100%;
+}
+
 .credits{
 	padding: @grid-gutter-width;
 	bottom: 0;
