@@ -54,7 +54,7 @@ function userLogin() {
 				$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 			}
         }
-    } catch(PDOException $e) {
+    } catch(Exception $e) {
 		$response->set("system_failure","System error occurred, unable to login", "");
     } finally {
 		$db = null;
@@ -92,7 +92,7 @@ function userRegister() {
 		   $response->set("success","User inserted.", "");
        }
 
-    } catch(PDOException $e) {
+    } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable save user", "");
     }finally {
 		$db = null;
@@ -120,7 +120,7 @@ function userGet($email) {
 		{
 			$response->set("success","User was found", $user_data);
         }
-    } catch(PDOException $e) {
+    } catch(Exception $e) {
 		$response->set("system_failure","System error occurred, unable to login", "");
     } finally {
     	$db = null;
@@ -128,8 +128,7 @@ function userGet($email) {
 	}
 }
 
-
-function userLogout($email) {
+function userLogout() {
 	$response = new restResponse;
 	$session_id = session_id();
     try {
@@ -138,14 +137,11 @@ function userLogout($email) {
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
-
-        $db = null;
-
-		$response->set("success","User logged out successfully", "");
-
-    } catch(PDOException $e) {
-		$response->set("success","User logged out successfully", "");
+    } catch(Exception $e) {
+		// Do nothing
     } finally {
+        // Always respond with success
+        $response->set("success","User logged out successfully", "");
     	$db = null;
 		$response->toJSON();
 	}
