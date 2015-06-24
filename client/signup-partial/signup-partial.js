@@ -6,7 +6,7 @@ angular.module('web').controller('SignupPartialCtrl',['$scope','$state','userSer
 	});
 
 	$scope.passwordConfirmPattern = {
-		test: function(value) {
+		test: function() {
 			return $('#password')[0].value === $('#confirm')[0].value;
 		}
 	};
