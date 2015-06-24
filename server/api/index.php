@@ -25,7 +25,7 @@ $app = new Slim();
 
 // User Services
 $app->post('/user/login', 'userLogin');
-$app->get('/user/get/:email', 'userGet');
+$app->get('/user/get', 'userGet');
 $app->post('/user/register', 'userRegister');
 $app->get('/user/logout', 'userLogout');
 
