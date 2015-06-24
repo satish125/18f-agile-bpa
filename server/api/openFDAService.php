@@ -34,7 +34,7 @@ function openFDARecentRecalls($type, $days, $limit) {
         
         $response->set("success","Data successfully fetched from service", $bigArr["results"] );
     } catch(Exception $e) {
-        $response->set("system_failure",$e->getMessage(), "");
+        $response->set("system_failure", "System error occurred, unable to return data", "");
     } finally {
         $response->toJSON();
     }
@@ -98,7 +98,7 @@ function openFDAProductMatch(){
         $response->set("success","Data successfully fetched from service", $bigArr );
 
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to login", "");
+        $response->set("system_failure", "System error occurred, unable to return data", "");
     } finally {
         $db = null;
         $response->toJSON();
