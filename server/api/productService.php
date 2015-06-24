@@ -2,7 +2,7 @@
 
 function productsGetUser() {
     $response = new restResponse;
-    $session_id = session_id();    
+    $session_id = session_id();
 
     try {
         $db = getConnection();
@@ -12,28 +12,28 @@ function productsGetUser() {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -46,8 +46,8 @@ function productsGetUser() {
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET"
             ),
-        );    
-        
+        );
+
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -55,12 +55,12 @@ function productsGetUser() {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to return data", "" );            
+            $response->set("service_failure", "Service failed to return data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to return data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -70,53 +70,53 @@ function productsDeleteUser() {
     $session_id = session_id();
 
     try {
-        $db = getConnection();        
-        
+        $db = getConnection();
+
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }        
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }            
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
         $url = "https://api.iamdata.co:443/v1/users?id=" .$user_id. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
-        
+
         $options = array(
             "http" => array(
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "DELETE"
             ),
-        ); 
-        
+        );
+
         $context = stream_context_create($options);
 
         $result = file_get_contents($url, false, $context);
-        
+
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
             if (!property_exists($bigArr, 'result')) {
@@ -125,14 +125,14 @@ function productsDeleteUser() {
                     return;
                 } else {
                     $response->set("service_failure", $bigArr->message, "");
-                    return; 
+                    return;
                 }
             } else {
-                $response->set("success", "User ID has been deleted", "" );   
+                $response->set("success", "User ID has been deleted", "" );
             }
         } else {
-            $response->set("service_failure", "Service failed to delete data", "" );            
-        } 
+            $response->set("service_failure", "Service failed to delete data", "" );
+        }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to delete data", "");
     } finally {
@@ -143,54 +143,54 @@ function productsDeleteUser() {
 
 function productsAddUser() {
     $response = new restResponse;
-    $session_id = session_id();    
+    $session_id = session_id();
 
-    try {    
+    try {
         $request = Slim::getInstance()->request();
         $body = json_decode($request->getBody());
-        $db = getConnection();        
+        $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }            
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }            
-        
+        }
+
         $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
-        
+
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
         $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
-        
+
         $data = array("email" => $user_data->email, "zip" => $user_data->zip, "user_id" => $user_id);
-        
+
         $json_data = json_encode($data);
-        
+
         $options = array(
             'http' => array(
                 'protocol_version' => 1.1,
@@ -202,29 +202,29 @@ function productsAddUser() {
                 'content'          => $json_data,
             ),
         );
-        
+
         $context = stream_context_create($options);
-        
+
         $result = file_get_contents($url, false, $context);
-        
+
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully added in service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to add data", "" );            
+            $response->set("service_failure", "Service failed to add data", "" );
         }
-        
+
     } catch(Exception $e) {
         $response->set("system_failure", "System error occurred, unable to add data", "");
     } finally {
         $db = null;
         $response->toJSON();
     }
-}    
+}
 
 function productsGetStores() {
     $response = new restResponse;
-    $session_id = session_id();    
+    $session_id = session_id();
 
     try {
         $db = getConnection();
@@ -234,22 +234,22 @@ function productsGetStores() {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $url = "https://api.iamdata.co:443/v1/stores/?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -257,7 +257,7 @@ function productsGetStores() {
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET"
             ),
-        );         
+        );
 
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
@@ -271,29 +271,29 @@ function productsGetStores() {
                 if ($obj["can_scrape"] == 0) return false;
                 return true;
             });
-            
+
             $response->set("success", "Data successfully fetched from service", $results );
         } else {
-            $response->set("service_failure", "Service failed to return data", "" );            
+            $response->set("service_failure", "Service failed to return data", "" );
         }
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to return data", "");
+        $response->set("system_failure",$e->getMessage(), "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
-}    
+}
 
 function productsGetUserStores($page) {
     $response = new restResponse;
     $session_id = session_id();
     $pageSize = 50;
-    
+
     if ($page === NULL) {
         $pageNumber = "1";
     } else {
         $pageNumber = trim($page);
-    }    
+    }
 
     try {
         $db = getConnection();
@@ -303,28 +303,28 @@ function productsGetUserStores($page) {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -338,8 +338,8 @@ function productsGetUserStores($page) {
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET"
             ),
-        );   
-        
+        );
+
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -347,12 +347,12 @@ function productsGetUserStores($page) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to return data", "" );            
+            $response->set("service_failure", "Service failed to return data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to return data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -369,28 +369,28 @@ function productsGetUserStore($userStoreId) {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -398,14 +398,14 @@ function productsGetUserStore($userStoreId) {
 
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
-        
+
         $options = array(
             "http" => array(
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET"
             ),
-        );  
-        
+        );
+
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -413,12 +413,12 @@ function productsGetUserStore($userStoreId) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to return data", "" );            
+            $response->set("service_failure", "Service failed to return data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to return data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -426,22 +426,22 @@ function productsGetUserStore($userStoreId) {
 function productsGetUserPurchases($daylimit, $page){
     $response = new restResponse;
     $session_id = session_id();
-    $pageSize = 50;    
+    $pageSize = 50;
 
     if ($page === NULL) {
         $pageNumber = "1";
     } else {
         $pageNumber = trim($page);
     }
-    
+
     if ($daylimit === NULL) {
         $days = "30";
     } else {
         $days = trim($daylimit);
     }
-    
+
     $purchase_date_from = date("Ymd", strtotime("-".$days." days"));
-    
+
     try{
         $db = getConnection();
 
@@ -451,7 +451,7 @@ function productsGetUserPurchases($daylimit, $page){
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
@@ -462,7 +462,7 @@ function productsGetUserPurchases($daylimit, $page){
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
@@ -474,7 +474,7 @@ function productsGetUserPurchases($daylimit, $page){
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -490,7 +490,7 @@ function productsGetUserPurchases($daylimit, $page){
                 "method"  => "GET"
             )
         );
-        
+
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -498,13 +498,13 @@ function productsGetUserPurchases($daylimit, $page){
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to return data", "" );            
+            $response->set("service_failure", "Service failed to return data", "" );
         }
     } catch(Exception $e) {
 
         $response->set("system_failure", "System error occurred, unable to return data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -531,7 +531,7 @@ function productsAddUserStore() {
             $response->set("invalid_parameter","password parameter was not found", "");
             return;
         }
-        
+
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
@@ -539,28 +539,28 @@ function productsAddUserStore() {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -570,9 +570,9 @@ function productsAddUserStore() {
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
-        
+
         $json_data = json_encode($data);
-        
+
         $options = array(
             'http' => array(
                 'protocol_version' => 1.1,
@@ -584,21 +584,21 @@ function productsAddUserStore() {
                 'content'          => $json_data,
             ),
         );
-        
+
         $context = stream_context_create($options);
-        
+
         $result = file_get_contents($url, false, $context);
-        
+
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully added to service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to add data", "" );            
+            $response->set("service_failure", "Service failed to add data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to add data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -615,44 +615,44 @@ function productsDeleteUserStore($userStoreId) {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
-        
+
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
-        
+
         $options = array(
             "http" => array(
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "DELETE"
             ),
-        );  
-        
+        );
+
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -660,12 +660,12 @@ function productsDeleteUserStore($userStoreId) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully deleted from service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to delete data", "" );            
+            $response->set("service_failure", "Service failed to delete data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to delete data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }
@@ -692,7 +692,7 @@ function productsUpdateUserStore() {
             $response->set("invalid_parameter","password parameter was not found", "");
             return;
         }
-        
+
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
@@ -700,28 +700,28 @@ function productsUpdateUserStore() {
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
         $session_data = $stmt->fetchObject();
-        
+
         if ($session_data == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-        }    
-        
+        }
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", "");
             return;
-        }          
-        
+        }
+
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
         $stmt->execute();
         $user_data = $stmt->fetchObject();
-        
+
         if ($user_data == null) {
             $response->set("user_not_found","User was not found", "");
             return;
@@ -731,9 +731,9 @@ function productsUpdateUserStore() {
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("user_store_id" => $body->user_store_id, "username" => $body->username, "password" => $body->password);
-        
+
         $json_data = json_encode($data);
-        
+
         $options = array(
             'http' => array(
                 'protocol_version' => 1.1,
@@ -745,21 +745,21 @@ function productsUpdateUserStore() {
                 'content'          => $json_data,
             ),
         );
-        
+
         $context = stream_context_create($options);
-        
+
         $result = file_get_contents($url, false, $context);
-        
+
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
             $response->set("success", "Data successfully updated in service", $bigArr );
         } else {
-            $response->set("service_failure", "Service failed to update data", "" );            
+            $response->set("service_failure", "Service failed to update data", "" );
         }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to update data", "");
     } finally {
-        $db = null;        
+        $db = null;
         $response->toJSON();
     }
 }

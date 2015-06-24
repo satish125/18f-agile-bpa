@@ -25,7 +25,7 @@
 	<div ng-if="currentUrl() == '/login' || currentUrl() == '/signup'" class="header-panel"></div>
 
 	<!-- header for pages with session -->
-	<nav ng-if="currentUrl() == '/connect'" class="navbar navbar-default">
+	<nav ng-if="currentUrl() == '/connect' || currentUrl() == 'recalls'" class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<!-- Menu Button -->
@@ -43,8 +43,8 @@
 			<!-- Nav links -->
 			<div class="collapse navbar-collapse" id="collapsing-navbar-elements">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/#/login">Recalls</a></li>
-					<li><a href="/#/login">Connect Stores</a></li>
+					<li><a href="/#/recalls">Recalls</a></li>
+					<li><a href="/#/connect">Connect Stores</a></li>
 					<li><a href="#/">Logout</a></li>
 				</ul>
 			</div><!-- / Nav links -->
