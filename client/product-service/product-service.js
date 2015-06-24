@@ -55,11 +55,11 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getStores").then(function(response) {
-                    var stores = JSON.parse(response.data.payload);
+
                     var stores_new = [];
 
-                    for(var resultIndex in stores){
-                        stores_new.push(stores[resultIndex]);
+                    for(var resultIndex in response.data.payload){
+                        stores_new.push(response.data.payload[resultIndex]);
                     }
 
                     response.data.payload = stores_new;
@@ -80,7 +80,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getUserStores/"+page).then(function(response) {
-                    var userStores = JSON.parse(response.data.payload);
+                    var userStores = response.data.payload;
                     var userStores_new = {};
 
                     //convert array of stores to a map for lookup

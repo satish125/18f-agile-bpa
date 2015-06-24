@@ -6,29 +6,35 @@ function openFDARecentRecalls($type, $days, $limit) {
     $start = date("Ymd", strtotime("-".$days." days"));
     $end = date("Ymd");
     
-    $key = "dkjmH4qrI5pMYoj8hN0SCR8mhESAPGg8XxBH169b";
-
-    $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
-    
     try {
-        $data = array("key1" => "value1", "key2" => "value2");
+        $db = getConnection();
+        
+        //get openFDA api key
+        $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $api_data = $stmt->fetchObject();
+        
+        if ($api_data == null) {
+            $response->set("service_failure","openFDA api keys are not configured", "");
+            return;
+        }  
+        
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        
         $options = array(
                 "http" => array(
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET",
-                "content" => http_build_query($data),
             ),
         );
         $context  = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-        $bigArr = json_decode($result,true,20);
-        $res = $bigArr["results"];
-        $json = json_encode($res);
-        $json1 = json_decode($json);
+        $bigArr = json_decode($result, true, 20);
         
-        $response->set("success","Data successfully fetched from service", $json1 );
-    } catch(PDOException $e) {
-        $response->set("system_failure","System error occurred, unable fetch data", "");
+        $response->set("success","Data successfully fetched from service", $bigArr["results"] );
+    } catch(Exception $e) {
+        $response->set("system_failure",$e->getMessage(), "");
     } finally {
         $response->toJSON();
     }
@@ -43,13 +49,55 @@ function openFDAProductMatch(){
     $response = new restResponse;
     $session_id = session_id();
     try{
+        $db = getConnection();        
+        
         //get the request body
         $request = Slim::getInstance()->request();
         $body = json_decode($request->getBody());
+        
+        //retrieve request body attributes
+        //
+        //
+        
+        
+        //get logged in user
+        $sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $session_id);
+        $stmt->execute();
+        $session_data = $stmt->fetchObject();
+        
+        if ($session_data == null) {
+            $response->set("not_logged_on","You are not currently logged into the system", "");
+            return;
+        }
+        
+        //get openFDA api key
+        $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $api_data = $stmt->fetchObject();
+        
+        if ($api_data == null) {
+            $response->set("service_failure","openFDA api keys are not configured", "");
+            return;
+        }  
+        
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        
+        $options = array(
+                "http" => array(
+                "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
+                "method"  => "GET",
+            ),
+        );
+        $context  = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        $bigArr = json_decode($result, true, 20);
+        
+        $response->set("success","Data successfully fetched from service", $bigArr );
 
-        $url = "https://api.fda.gov/";
-
-    } catch(PDOException $e) {
+    } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable to login", "");
     } finally {
         $db = null;

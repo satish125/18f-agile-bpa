@@ -4,7 +4,19 @@ angular.module('web').factory('openfdaService',['$q', '$http',
         var service = {};
 
         service.productMatch = function(product){
+            var deferred = $q.defer();
             
+            $http.post("/api/openFDA/match/food", product).then(function(response) {
+                    deferred.resolve(response.data);
+                },
+                function(error) {
+                    deferred.reject(error);
+                },
+                function(value) {
+                    deferred.notify(value);
+                });
+
+            return deferred.promise; 
         };
         
         service.recentRecalls = function(dayLimit, recordLimit) {

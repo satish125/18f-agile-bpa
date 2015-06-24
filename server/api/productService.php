@@ -53,9 +53,7 @@ function productsGetUser() {
 
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully fetched from service", $json );
+            $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to return data", "" );            
         }
@@ -104,7 +102,7 @@ function productsDeleteUser() {
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
             return;
-		}
+        }
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
         $url = "https://api.iamdata.co:443/v1/users?id=" .$user_id. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
         
@@ -119,7 +117,7 @@ function productsDeleteUser() {
 
         $result = file_get_contents($url, false, $context);
         
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
             if (!property_exists($bigArr, 'result')) {
                 if (!property_exists($bigArr, 'message')) {
@@ -136,23 +134,23 @@ function productsDeleteUser() {
             $response->set("service_failure", "Service failed to delete data", "" );            
         } 
     } catch(Exception $e) {
-		$response->set("system_failure","System error occurred, unable to delete data", "");
+        $response->set("system_failure","System error occurred, unable to delete data", "");
     } finally {
         $db = null;
-		$response->toJSON();
-	}
+        $response->toJSON();
+    }
 }
 
 function productsAddUser() {
-	$response = new restResponse;
+    $response = new restResponse;
     $session_id = session_id();    
 
     try {    
-		$request = Slim::getInstance()->request();
-		$body = json_decode($request->getBody());
+        $request = Slim::getInstance()->request();
+        $body = json_decode($request->getBody());
         $db = getConnection();        
 
-		$sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $session_id);
         $stmt->execute();
@@ -161,9 +159,9 @@ function productsAddUser() {
         if ($session_data == null) {
 			$response->set("not_logged_on","You are not currently logged into the system", "");
             return;
-		}            
+        }            
         
-		$sql = "SELECT client_id, client_secret FROM iamdata_properties";
+        $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -172,9 +170,9 @@ function productsAddUser() {
         if ($iamdata == null) {
 			$response->set("service_failure","product api keys are not configured", "");
             return;
-		}            
+        }            
         
-		$sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
+        $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("user_id", $session_data->user_id);
@@ -184,7 +182,7 @@ function productsAddUser() {
         if ($user_data == null) {
 			$response->set("user_not_found","User was not found", "");
             return;
-		}
+        }
         
         $user_id = $iamdata->client_id ."_". $user_data->user_id;
         $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
@@ -211,9 +209,7 @@ function productsAddUser() {
         
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully added in service", $json );
+            $response->set("success", "Data successfully added in service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to add data", "" );            
         }
@@ -266,18 +262,17 @@ function productsGetStores() {
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
+            $results = $bigArr["result"];
 
             //filter for objects with canScrape true
-            $res = array_filter($res, function($obj){
+            $results = array_filter($results, function($obj){
                 if ($obj["can_scrape"] == 0) return false;
                 return true;
             });
             
-            $json = json_encode($res);
-            $response->set("success", "Data successfully fetched from service", $json );
+            $response->set("success", "Data successfully fetched from service", $results );
         } else {
             $response->set("service_failure", "Service failed to return data", "" );            
         }
@@ -348,11 +343,9 @@ function productsGetUserStores($page) {
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully fetched from service", $json );
+            $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to return data", "" );            
         }
@@ -416,11 +409,9 @@ function productsGetUserStore($userStoreId) {
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully fetched from service", $json );
+            $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to return data", "" );            
         }
@@ -435,24 +426,21 @@ function productsGetUserStore($userStoreId) {
 function productsGetUserPurchases($daylimit, $page){
     $response = new restResponse;
     $session_id = session_id();
-    $purchase_date_from = 2014-06-23; //TODO:
 
     if ($page === NULL) {
         $pageNumber = "1";
     } else {
         $pageNumber = trim($page);
     }
-
-
-    //////////////
-
-
-    /*try {
-
-        
-
-    //////*/
-
+    
+    if ($daylimit === NULL) {
+        $days = "30";
+    } else {
+        $days = trim($daylimit);
+    }
+    
+    $purchase_date_from = date("Ymd", strtotime("-".$days." days"));
+    
     try{
         $db = getConnection();
 
@@ -505,11 +493,9 @@ function productsGetUserPurchases($daylimit, $page){
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully fetched from service", $json );
+            $response->set("success", "Data successfully fetched from service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to return data", "" );            
         }
@@ -604,9 +590,7 @@ function productsAddUserStore() {
         
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully added to service", $json );
+            $response->set("success", "Data successfully added to service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to add data", "" );            
         }
@@ -671,11 +655,9 @@ function productsDeleteUserStore($userStoreId) {
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        if (!$result === false) {
+        if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully deleted from service", $json );
+            $response->set("success", "Data successfully deleted from service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to delete data", "" );            
         }
@@ -769,9 +751,7 @@ function productsUpdateUserStore() {
         
         if ($result !== false) {
             $bigArr = json_decode($result, true, 20);
-            $res = $bigArr["result"];
-            $json = json_encode($res);
-            $response->set("success", "Data successfully updated in service", $json );
+            $response->set("success", "Data successfully updated in service", $bigArr );
         } else {
             $response->set("service_failure", "Service failed to update data", "" );            
         }
