@@ -65,7 +65,6 @@ angular.module('web').factory('userService',['$q', '$http',
         service.getUser = function() {
             var deferred = $q.defer();
             
-            
             $http.get("/api/user/get").then(function(response) {
                     deferred.resolve(response.data);
                 },
