@@ -62,11 +62,11 @@ angular.module('web').factory('userService',['$q', '$http',
             return deferred.promise;
         };        
 
-        service.getUser = function(email) {
+        service.getUser = function() {
             var deferred = $q.defer();
             
             
-            $http.get("/api/user/get/"+email).then(function(response) {
+            $http.get("/api/user/get").then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
