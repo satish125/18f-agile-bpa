@@ -13,14 +13,14 @@ function openFDARecentRecalls($type, $days, $limit) {
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $api_data = $stmt->fetchObject();
+        $apiData = $stmt->fetchObject();
         
-        if ($api_data == null) {
+        if ($apiData == null) {
             $response->set("service_failure","openFDA api keys are not configured", "");
             return;
         }  
         
-        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
         
         $options = array(
                 "http" => array(
@@ -47,13 +47,12 @@ function openFDARecentRecalls($type, $days, $limit) {
  */
 function openFDAProductMatch(){
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
     try{
         $db = getConnection();        
         
         //get the request body
         $request = Slim::getInstance()->request();
-        $body = json_decode($request->getBody());
         
         //retrieve request body attributes
         //
@@ -63,11 +62,11 @@ function openFDAProductMatch(){
         //get logged in user
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
         
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -76,14 +75,14 @@ function openFDAProductMatch(){
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $api_data = $stmt->fetchObject();
+        $apiData = $stmt->fetchObject();
         
-        if ($api_data == null) {
+        if ($apiData == null) {
             $response->set("service_failure","openFDA api keys are not configured", "");
             return;
         }  
         
-        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
         
         $options = array(
                 "http" => array(
