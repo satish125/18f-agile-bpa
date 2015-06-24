@@ -13,14 +13,14 @@ function openFDARecentRecalls($type, $days, $limit) {
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $api_data = $stmt->fetchObject();
+        $apiData = $stmt->fetchObject();
         
-        if ($api_data == null) {
+        if ($apiData == null) {
             $response->set("service_failure","openFDA api keys are not configured", "");
             return;
         }  
         
-        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
         
         $options = array(
                 "http" => array(
@@ -51,8 +51,7 @@ function openFDAProductMatch($type, $days) {
     
     $start = date("Ymd", strtotime("-".$days." days"));
     $end = date("Ymd");
-    
-    $session_id = session_id();
+
     $limit = 100;
     
     try{
@@ -60,8 +59,7 @@ function openFDAProductMatch($type, $days) {
         
         //get the request body
         $request = Slim::getInstance()->request();
-        $body = json_decode($request->getBody());
-        
+        $body = json_decode($request->getBody());        
         //retrieve request body attributes
         if ($body->source === "iamdata") {
             $productId = $body->id;
@@ -80,63 +78,50 @@ function openFDAProductMatch($type, $days) {
         $productNamePieces = array_filter($productNamePieces, function($obj){
             if(preg_match('/the|of|all/i', $obj) === true) return false;
             return true;
-        });        
-        
-        //get logged in user
-        $sql = "SELECT user_id FROM user_session where session_id=:session_id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
-        $stmt->execute();
-        $session_data = $stmt->fetchObject();
-        
-        if ($session_data == null) {
-            $response->set("not_logged_on","You are not currently logged into the system", "");
-            return;
-        }
+        });
         
         //get openFDA api key
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $api_data = $stmt->fetchObject();
+        $apiData = $stmt->fetchObject();
         
-        if ($api_data == null) {
+        if ($apiData == null) {
             $response->set("service_failure","openFDA api keys are not configured", "");
             return;
         }
         
-        $search_params="search=(";
+        $searchParams="search=(";
         
         $first=true;
         
         // Build Searches for product name
         foreach ($productNamePieces as &$value) {
             if (!$first) {
-                $search_params .= "+"; 
+                $searchParams .= "+"; 
             } else {
                 $first=false;
             }
-            $search_params .= "product_description:" .$value. "+code_info:" .$value;
+            $searchParams .= "product_description:" .$value. "+code_info:" .$value;
         }
         
         // Build Searches for product upc
         foreach ($productUpcPieces as &$value) {
             if (!$first) {
-                $search_params .= "+"; 
+                $searchParams .= "+"; 
             } else {
                 $first=false;
             }            
-            $search_params .= "product_description:" .$value. "+code_info:" .$value;
+            $searchParams .= "product_description:" .$value. "+code_info:" .$value;
         }       
         
         // Add search dates
-        $search_params .= ")+AND+report_date:[" .$start. "+TO+" .$end. "]";
+        $searchParams .= ")+AND+report_date:[" .$start. "+TO+" .$end. "]";
         
         // Add limit
-        $search_params .= "&limit=".$limit;
+        $searchParams .= "&limit=".$limit;
         
-
-        $url = "https://api.fda.gov/".$type."/enforcement.json?" .$search_params. "&api_key=" .$api_data->api_key;
+        $url = "https://api.fda.gov/".$type."/enforcement.json?" .$searchParams. "&api_key=" .$apiData->api_key;
              
         $options = array(
                 "http" => array(
