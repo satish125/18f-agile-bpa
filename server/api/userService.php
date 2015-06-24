@@ -94,16 +94,6 @@ function userRegister() {
 			$stmt->bindParam("user_id", $user_data->user_id);
 			$stmt->bindParam("session_id", $session_id);
 			$stmt->execute();
-
-
-
-
-
-
-
-
-
-
        }
     } catch(Exception $e) {
         $response->set("system_failure","System error occurred, unable save user", "");
