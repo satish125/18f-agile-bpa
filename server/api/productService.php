@@ -2,18 +2,18 @@
 
 function productsGetUser() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -30,15 +30,15 @@ function productsGetUser() {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -67,18 +67,18 @@ function productsGetUser() {
 
 function productsDeleteUser() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -95,15 +95,15 @@ function productsDeleteUser() {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users?id=" .$user_id. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -143,7 +143,7 @@ function productsDeleteUser() {
 
 function productsAddUser() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $request = Slim::getInstance()->request();
@@ -152,11 +152,11 @@ function productsAddUser() {
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -175,19 +175,19 @@ function productsAddUser() {
         $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
-        $data = array("email" => $user_data->email, "zip" => $user_data->zip, "user_id" => $user_id);
+        $data = array("email" => $userData->email, "zip" => $userData->zip, "user_id" => $user_id);
 
         $json_data = json_encode($data);
 
@@ -224,18 +224,18 @@ function productsAddUser() {
 
 function productsGetStores() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -286,7 +286,7 @@ function productsGetStores() {
 
 function productsGetUserStores($page) {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
     $pageSize = 50;
 
     if ($page === NULL) {
@@ -300,11 +300,11 @@ function productsGetUserStores($page) {
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -321,16 +321,16 @@ function productsGetUserStores($page) {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -359,18 +359,18 @@ function productsGetUserStores($page) {
 
 function productsGetUserStore($userStoreId) {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -387,16 +387,16 @@ function productsGetUserStore($userStoreId) {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -425,7 +425,7 @@ function productsGetUserStore($userStoreId) {
 
 function productsGetUserPurchases($daylimit, $page){
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
     $pageSize = 50;
 
     if ($page === NULL) {
@@ -448,11 +448,11 @@ function productsGetUserPurchases($daylimit, $page){
         //get logged in user
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -471,17 +471,17 @@ function productsGetUserPurchases($daylimit, $page){
         // Get user id
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
         //build the URL
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/purchases?full_resp=true&purchase_date_from=".$purchase_date_from."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
@@ -511,7 +511,7 @@ function productsGetUserPurchases($daylimit, $page){
 
 function productsAddUserStore() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $request = Slim::getInstance()->request();
@@ -536,11 +536,11 @@ function productsAddUserStore() {
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -557,16 +557,16 @@ function productsAddUserStore() {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
@@ -605,18 +605,18 @@ function productsAddUserStore() {
 
 function productsDeleteUserStore($userStoreId) {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -633,16 +633,16 @@ function productsDeleteUserStore($userStoreId) {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
 
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
@@ -672,7 +672,7 @@ function productsDeleteUserStore($userStoreId) {
 
 function productsUpdateUserStore() {
     $response = new restResponse;
-    $session_id = session_id();
+    $sessionId = session_id();
 
     try {
         $request = Slim::getInstance()->request();
@@ -697,11 +697,11 @@ function productsUpdateUserStore() {
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("session_id", $session_id);
+        $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
-        $session_data = $stmt->fetchObject();
+        $sessionData = $stmt->fetchObject();
 
-        if ($session_data == null) {
+        if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", "");
             return;
         }
@@ -718,16 +718,16 @@ function productsUpdateUserStore() {
 
         $sql = "SELECT user_id FROM user WHERE user_id=:user_id";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("user_id", $session_data->user_id);
+        $stmt->bindParam("user_id", $sessionData->user_id);
         $stmt->execute();
-        $user_data = $stmt->fetchObject();
+        $userData = $stmt->fetchObject();
 
-        if ($user_data == null) {
+        if ($userData == null) {
             $response->set("user_not_found","User was not found", "");
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $user_data->user_id;
+        $user_id = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("user_store_id" => $body->user_store_id, "username" => $body->username, "password" => $body->password);
