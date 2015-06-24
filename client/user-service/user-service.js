@@ -24,6 +24,22 @@ angular.module('web').factory('userService',['$q', '$http',
             return deferred.promise;
         };
         
+        service.logoutUser = function() {
+            var deferred = $q.defer();
+            
+            $http.get("/api/user/logout").then(function(response) {
+                    deferred.resolve(response.data);
+                },
+                function(error) {
+                    deferred.reject(error);
+                },
+                function(value) {
+                    deferred.notify(value);
+                });
+
+            return deferred.promise;
+        };
+        
         service.registerUser = function(email, zipcode, password) {
             var deferred = $q.defer();
             
