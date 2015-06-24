@@ -38,8 +38,8 @@ function productsGetUser() {
             $response->set("user_not_found","User was not found", "");
             return;
         }
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -103,8 +103,8 @@ function productsDeleteUser() {
             $response->set("user_not_found","User was not found", "");
             return;
         }
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users?id=" .$user_id. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users?id=" .$userId. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -184,12 +184,12 @@ function productsAddUser() {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
         $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
-        $data = array("email" => $userData->email, "zip" => $userData->zip, "user_id" => $user_id);
+        $data = array("email" => $userData->email, "zip" => $userData->zip, "user_id" => $userId);
 
-        $json_data = json_encode($data);
+        $jsonData = json_encode($data);
 
         $options = array(
             'http' => array(
@@ -199,7 +199,7 @@ function productsAddUser() {
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
                                       "Content-length: " . strlen($json_data) . "\r\n",
-                'content'          => $json_data,
+                'content'          => $jsonData,
             ),
         );
 
@@ -330,8 +330,8 @@ function productsGetUserStores($page) {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -396,8 +396,8 @@ function productsGetUserStore($userStoreId) {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -481,8 +481,8 @@ function productsGetUserPurchases($daylimit, $page){
         }
 
         //build the URL
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/purchases?full_resp=true&purchase_date_from=".$purchase_date_from."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/purchases?full_resp=true&purchase_date_from=".$purchase_date_from."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -566,12 +566,12 @@ function productsAddUserStore() {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
 
-        $json_data = json_encode($data);
+        $jsonData = json_encode($data);
 
         $options = array(
             'http' => array(
@@ -581,7 +581,7 @@ function productsAddUserStore() {
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
                                       "Content-length: " . strlen($json_data) . "\r\n",
-                'content'          => $json_data,
+                'content'          => $jsonData,
             ),
         );
 
@@ -642,9 +642,9 @@ function productsDeleteUserStore($userStoreId) {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
 
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores/" .$userStoreId. "?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -727,12 +727,12 @@ function productsUpdateUserStore() {
             return;
         }
 
-        $user_id = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$user_id. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $data = array("user_store_id" => $body->user_store_id, "username" => $body->username, "password" => $body->password);
 
-        $json_data = json_encode($data);
+        $jsonData = json_encode($data);
 
         $options = array(
             'http' => array(
@@ -742,7 +742,7 @@ function productsUpdateUserStore() {
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
                                       "Content-length: " . strlen($json_data) . "\r\n",
-                'content'          => $json_data,
+                'content'          => $jsonData,
             ),
         );
 
