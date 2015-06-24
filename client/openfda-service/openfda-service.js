@@ -6,7 +6,7 @@ angular.module('web').factory('openfdaService',['$q', '$http',
         service.productMatch = function(product){
             var deferred = $q.defer();
             
-            $http.post("/api/openFDA/match/food", product).then(function(response) {
+            $http.post("/api/openFDA/productMatch/food", product).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
