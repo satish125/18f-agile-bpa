@@ -1,0 +1,42 @@
+.recall{
+	.make-lg-column(2);
+	.make-md-column(3);
+	.make-sm-column(6);
+
+	.transition(width 1s ease);
+}
+
+.recall .card{
+	padding: 15px;
+	height: 250px;
+	margin-bottom: 30px;
+	overflow:auto;
+	cursor:pointer;
+
+	&:hover{
+		background-color:@light-green-A100;
+	}
+
+	.imageBG{
+		background:white;
+		padding:5px 0;
+	}
+
+	img{
+		max-width: 100%;
+		max-height: 100px;
+		margin:0 auto;
+		display:block;
+	}
+
+	h1{
+		font-size: 18px;
+	}
+}
+
+/* EXPANDED */
+.recall.expanded{
+	.make-lg-column(12);
+	.make-md-column(12);
+	.make-sm-column(6);
+}
