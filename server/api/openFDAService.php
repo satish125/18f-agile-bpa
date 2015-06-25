@@ -59,8 +59,8 @@ function openFDAProductMatch($type, $days) {
              "by,down,during,except,for,from,in,inside,into,like,near,,off,out,outside,over,since,through,throughout,".
              "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
              "spite,instead,on,account,the";
-
-    $wordList = explode(",", $words);           
+        
+    $wordListMap = array_map('strtolower', explode(",", $words));
              
     try{
         $db = getConnection();        
@@ -77,24 +77,34 @@ function openFDAProductMatch($type, $days) {
             $response->set("source_not_supported","Currently support is only for iamdata product information", "");
             return;
         }
-       
+        
+        // Replace all hyphens with a space in the product name and convert to lower case
+        $productName = str_replace('-', ' ', strtolower($productName));
+        
         // Build array of search terms for product name, filter out common words and special characters
         $productNamePieces = array();        
-        
+
         foreach (explode(" ", $productName) as &$value) {
-            if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
-                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value); 
-                array_push($productNamePieces, $safeString);
+            if ( ! in_array($value, $wordListMap) ) {
+                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value);
+                if (! in_array($safeString, $productNamePieces)) {                
+                    array_push($productNamePieces, $safeString);
+                }
             }
         }
+        
+        // Remove all hyphens in the product upc and convert to lower case
+        $productUpc = str_replace('-', '', strtolower($productUpc));
         
         // Build array of search terms for upc code, filter out common words and special characters
         $productUpcPieces = array();        
         
-        foreach (explode(" ", $productName) as &$value) {
-            if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
-                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value); 
-                array_push($productNamePieces, $safeString);
+        foreach (explode(" ", $productUpc) as &$value) {
+            if ( ! in_array($value, $wordListMap) ) {
+                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value);
+                if (! in_array($safeString, $productUpcPieces)) {
+                    array_push($productUpcPieces, $safeString);
+                }
             }
         }
         
