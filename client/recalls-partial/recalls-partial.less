@@ -1,9 +1,16 @@
 .recall{
-	.make-lg-column(2);
-	.make-md-column(3);
 	.make-sm-column(6);
+	.make-md-column(3);
+	.make-lg-column(2);
 
 	.transition(width 1s ease);
+}
+
+.recall .matchesList{
+	display:none;
+	.make-sm-column(6);
+	.make-md-column(3);
+	.make-lg-column(2);
 }
 
 .recall .card{
@@ -36,7 +43,17 @@
 
 /* EXPANDED */
 .recall.expanded{
-	.make-lg-column(12);
+	.make-sm-column(12);
 	.make-md-column(12);
-	.make-sm-column(6);
+	.make-lg-column(12);
+
+	.matchesList{
+		display:block;
+	}
+
+	.productInfo{
+		.make-sm-column(4);
+		.make-md-column(3);
+		.make-lg-column(3);
+	}
 }
