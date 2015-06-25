@@ -11,4 +11,5 @@ PRIMARY KEY (`user_id`),
 UNIQUE KEY email_UNIQUE (`email`)
 );
 
+insert into user (email, password, zip) values('demo@crgt.com', 'demodemo', '20151');
 COMMIT;
