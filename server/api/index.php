@@ -31,7 +31,7 @@ $app->get('/user/logout', 'userLogout');
 
 // openFDA Services
 $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
-$app->post('/openFDA/match/:type', 'openFDAProductMatch');
+$app->post('/openFDA/productMatch/:type/:days', 'openFDAProductMatch');
 
 // Product Services
 $app->get('/products/getUser', 'productsGetUser');

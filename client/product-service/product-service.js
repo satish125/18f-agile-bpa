@@ -181,7 +181,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
             
             $http.get("/api/products/getUserPurchases/" + dayLimit + "/" + page).then(function(response) {
-                    deferred.resolve(response.payload);
+                    deferred.resolve(response.data.payload);
                 },
                 function(error) {
                     deferred.reject(error);

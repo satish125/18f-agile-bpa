@@ -1,7 +1,7 @@
-angular.module('web').controller('HeaderPartialCtrl',['$scope','$state',
-	function($scope,$state) {
-		$scope.currentUrl = function(){
-			return $state.current.url;
+angular.module('web').controller('HeaderPartialCtrl',['$scope','$location',
+	function($scope,$location) {
+		$scope.currentPath = function(){
+			return $location.path();
 		};
 	}
 ]);

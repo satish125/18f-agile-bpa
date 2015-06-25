@@ -28,7 +28,8 @@ function userLogin() {
         if ($userData == null) {
 			$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 		}
-		else{
+		else
+		{
 			if ($body->password == $userData->password) {
 				try {
 					$sql = "update user set last_login= now() WHERE email=:email";
@@ -48,7 +49,8 @@ function userLogin() {
 					$response->set("system_failure","System error occurred, unable to login", "");
 				}
 			}
-			else{
+			else
+			{
 				$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 			}
         }
@@ -78,7 +80,8 @@ function userRegister() {
 		if ($userData != null) {
 			$response->set("user_already_exists","User with Email address already exists", "");
 		}
-		else{
+		else
+		{
             // Create user record 
             $sql = "insert into user (email, zip, password, last_login) values (:email, :zip, :password, now())";
 			$stmt = $db->prepare($sql);
@@ -141,7 +144,8 @@ function userGet() {
         if ($userData == null) {
 			$response->set("user_not_found","User was not found", "");
 		}
-		else{
+		else
+		{
 			$response->set("success","User is logged into the system", $userData);
         }
     } catch(Exception $e) {

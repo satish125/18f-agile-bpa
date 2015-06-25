@@ -147,6 +147,7 @@ function productsAddUser() {
 
     try {
         $request = Slim::getInstance()->request();
+        $body = json_decode($request->getBody());
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
@@ -439,7 +440,7 @@ function productsGetUserPurchases($daylimit, $page){
         $days = trim($daylimit);
     }
 
-    $purchaseDateFrom = date("Ymd", strtotime("-".$days." days"));
+    $purchase_date_from = date("Ymd", strtotime("-".$days." days"));
 
     try{
         $db = getConnection();
@@ -481,7 +482,7 @@ function productsGetUserPurchases($daylimit, $page){
 
         //build the URL
         $userId = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/purchases?full_resp=true&purchase_date_from=".$purchase_date_from."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -595,7 +596,7 @@ function productsAddUserStore() {
             $response->set("service_failure", "Service failed to add data", "" );
         }
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to add data", "");
+        $response->set("system_failure","System error occurred, unable to add data ERROR:".$e->getMessage(), "");
     } finally {
         $db = null;
         $response->toJSON();

@@ -15,7 +15,7 @@ angular.module('web').factory('userService',['$q', '$http',
 				function(response) {
                     deferred.resolve(response.data);
                     if (response.data.code === "success") {
-					    service.user = response.data.payload;
+					    service.getUser();
 					    service.isLoggedIn = true;
 					} else {
 					    service.user = {};
@@ -66,7 +66,7 @@ angular.module('web').factory('userService',['$q', '$http',
 				function(response) {
                     deferred.resolve(response.data);
                     if (response.data.code === "success") {
-					    service.user = response.data.payload;
+					    service.getUser();
 					    service.isLoggedIn = true;
 					} else {
 					    service.user = {};
