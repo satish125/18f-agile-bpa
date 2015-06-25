@@ -8,12 +8,12 @@ function userLogin() {
 		$body = json_decode($request->getBody());
 
 		if (!property_exists($body, 'email')) {
-			$response->set("invalid_parameter","email parameter was not found", array());
+			$response->set("invalid_parameter","email parameter was not found", "");
 			return;
 		}
 
 		if (!property_exists($body, 'password')) {
-			$response->set("invalid_parameter","password parameter was not found", array());
+			$response->set("invalid_parameter","password parameter was not found", "");
 			return;
 		}
         $db = getConnection();
@@ -26,10 +26,9 @@ function userLogin() {
         $userData = $stmt->fetchObject();
 
         if ($userData == null) {
-			$response->set("invalid_user_id_password","Email address and/or password was invalid", array());
+			$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 		}
-		else
-		{
+		else{
 			if ($body->password == $userData->password) {
 				try {
 					$sql = "update user set last_login= now() WHERE email=:email";
@@ -37,11 +36,6 @@ function userLogin() {
 					$stmt->bindParam("email", $body->email);
 					$stmt->execute();
 
-					$sql = "delete from user_session where session_id=:session_id";
-					$stmt = $db->prepare($sql);
-					$stmt->bindParam("session_id", $sessionId);
-					$stmt->execute();
-                    
 					$sql = "insert into user_session (user_id, session_id, create_dttm) values (:user_id, :session_id, now())";
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam("user_id", $userData->user_id);
@@ -51,16 +45,15 @@ function userLogin() {
 					$response->set("success","User was authenticated", array("SESSION_ID" => $sessionId) );
 
 				} catch(PDOException $e) {
-					$response->set("system_failure","System error occurred, unable to login", array());
+					$response->set("system_failure","System error occurred, unable to login", "");
 				}
 			}
-			else
-			{
-				$response->set("invalid_user_id_password","Email address and/or password was invalid", array());
+			else{
+				$response->set("invalid_user_id_password","Email address and/or password was invalid", "");
 			}
         }
     } catch(Exception $e) {
-		$response->set("system_failure","System error occurred, unable to login", array());
+		$response->set("system_failure","System error occurred, unable to login", "");
     } finally {
 		$db = null;
 		$response->toJSON();
@@ -83,10 +76,9 @@ function userRegister() {
         $userData = $stmt->fetchObject();
         
 		if ($userData != null) {
-			$response->set("user_already_exists","User with Email address already exists", array());
+			$response->set("user_already_exists","User with Email address already exists", "");
 		}
-		else
-		{
+		else{
             // Create user record 
             $sql = "insert into user (email, zip, password, last_login) values (:email, :zip, :password, now())";
 			$stmt = $db->prepare($sql);
@@ -109,22 +101,11 @@ function userRegister() {
 			$stmt->bindParam("session_id", $sessionId);
 			$stmt->execute();
             
-            // Auto register user in products service (iamdata)
-            try {
-                $productAddUser = productsAddUserLocalAPI($productId);
-             
-                if ($productAddUser->code !== "success") {
-                    // Need to handle errors if they occur in a future sprint
-                }
-            } catch(Exception $e) {
-                // Nothing
-            }            
-            
 		    $response->set("success","User was registered", $userData);            
        }
 
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable save user", array());
+        $response->set("system_failure","System error occurred, unable save user", "");
     }finally {
 		$db = null;
 		$response->toJSON();
@@ -146,7 +127,7 @@ function userGet() {
         $sessionData = $stmt->fetchObject();
         
         if ($sessionData == null) {
-            $response->set("not_logged_on","User is not logged into the system", array());
+            $response->set("not_logged_on","User is not logged into the system", "");
             return;
         }  
         
@@ -158,14 +139,13 @@ function userGet() {
         $userData = $stmt->fetchObject();
 
         if ($userData == null) {
-			$response->set("user_not_found","User was not found", array());
+			$response->set("user_not_found","User was not found", "");
 		}
-		else
-		{
+		else{
 			$response->set("success","User is logged into the system", $userData);
         }
     } catch(Exception $e) {
-		$response->set("system_failure", "System error occurred, unable get user", array());
+		$response->set("system_failure", "System error occurred, unable get user", "");
     } finally {
     	$db = null;
 		$response->toJSON();
@@ -185,7 +165,7 @@ function userLogout() {
 		// Do nothing
     } finally {
         // Always respond with success
-        $response->set("success","User logged out successfully", array());
+        $response->set("success","User logged out successfully", "");
     	$db = null;
 		$response->toJSON();
 	}

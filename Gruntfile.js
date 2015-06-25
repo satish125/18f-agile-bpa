@@ -158,8 +158,7 @@ module.exports = function (grunt) {
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
-        sourceMapIn: 'dist/app.full.js.map',
-        mingle: false
+        sourceMapIn: 'dist/app.full.js.map'
       },
       main: {
         src: 'temp/app.full.js',
@@ -182,7 +181,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    //Imagemin has issues on Windows.
+    //Imagemin has issues on Windows.  
     //To enable imagemin:
     // - "npm install grunt-contrib-imagemin"
     // - Comment in this section
