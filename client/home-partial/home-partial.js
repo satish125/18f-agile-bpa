@@ -2,7 +2,7 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
     function($scope, $state, $stateParams, openfdaService, userService) {
 
         $scope.RecentRecallsInProgress = true;
-        $scope.dayLimit = 30;
+        $scope.dayLimit = 90;
         $scope.recordLimit = 100;
         $scope.errorMsg = null;
 
@@ -14,7 +14,7 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
 
         openfdaService.recentRecalls($scope.dayLimit, $scope.recordLimit).then(function(recallData) {
             $scope.recentRecalls_model = recallData.payload.map(function(obj){
-            	obj.recall_initiation_date = new Date(
+            	obj.recall_initiation_date= new Date(
             		obj.recall_initiation_date.substring(0,4),
             		obj.recall_initiation_date.substring(4,6),
             		obj.recall_initiation_date.substring(6,8));

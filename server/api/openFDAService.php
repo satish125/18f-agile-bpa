@@ -20,7 +20,7 @@ function openFDARecentRecalls($type, $days, $limit) {
             return;
         }  
         
-        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=recall_initiation_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
         
         $options = array(
                 "http" => array(
@@ -34,7 +34,7 @@ function openFDARecentRecalls($type, $days, $limit) {
         
         $response->set("success","Data successfully fetched from service", $bigArr["results"] );
     } catch(Exception $e) {
-        $response->set("system_failure", "System error occurred, unable to return data", "");
+        $response->set("system_failure", "System error occurred, unable to return data.", "");
     } finally {
         $response->toJSON();
     }
