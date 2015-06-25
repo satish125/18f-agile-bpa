@@ -11,7 +11,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
         $scope.progress = 0;
 
         var dayLimit = 365;
-        var minScore = 0.5;
+        var minScore = 0.7;
 
         /**
          * @param page 
@@ -51,6 +51,23 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                     return;
                 }
 
+                //didn't find any matches
+                if(response.payload.length === 0){
+                    return;
+                }
+
+                if(!(response.payload instanceof Array)){
+                    console.log('convert payload object to array');
+
+                    //convert payload object to array
+                    var arr = [];
+                    for(var el in response.payload){
+                        arr.push(response.payload[el]);
+                    }
+                    response.payload = arr;
+                }
+
+                //add recalls
                 $scope.recalls.push({
                     purchase: product,
                     matches: response.payload
