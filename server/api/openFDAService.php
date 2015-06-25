@@ -237,7 +237,7 @@ function openFDAProductMatch($type, $days, $minScore) {
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
                 
                 // Initialize default empty value
-                $productAmazonLink = "x";
+                $productAmazonLink = "DEFAULT";
                 $productManufacturer = "";
                 $productLargeImage = "";
                 $productSmallImage = "";
@@ -259,7 +259,10 @@ function openFDAProductMatch($type, $days, $minScore) {
                         }
                     } catch(Exception $e) {
                         // Nothing
+                        $productAmazonLink = "EXCEPTION";
                     }
+                } else {
+                    $productAmazonLink = "NO PRODUCT ID";
                 }
                 
                 // Inject product attributes into search result
