@@ -1,11 +1,14 @@
 angular.module('web').factory('productService',['$q', '$http',
 
     function($q, $http) {
-        var service = {};
+        var service = {
+			stores: [],
+			userStores: []
+		};
 
         service.getUser = function() {
             var deferred = $q.defer();
-            
+
             $http.get("/api/products/getUser").then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -18,10 +21,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.deleteUser = function() {
             var deferred = $q.defer();
-            
+
             $http.delete("/api/products/deleteUser").then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -34,10 +37,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.addUser = function() {
             var deferred = $q.defer();
-            
+
             $http.post("/api/products/addUser", "{}").then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -49,21 +52,17 @@ angular.module('web').factory('productService',['$q', '$http',
                 });
 
             return deferred.promise;
-        };        
-        
+        };
+
         service.getStores = function() {
             var deferred = $q.defer();
-            
-            $http.get("/api/products/getStores").then(function(response) {
 
-                    var stores_new = [];
-
+            $http.get("/api/products/getStores").then(
+				function(response) {
                     for(var resultIndex in response.data.payload){
-                        stores_new.push(response.data.payload[resultIndex]);
+                        service.stores.push(response.data.payload[resultIndex]); // it's stored as {"0":x,"1":y}
                     }
-
-                    response.data.payload = stores_new;
-
+                    response.data.payload = service.stores;
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -75,21 +74,19 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.getUserStores = function(page) {
+            page = page || 1;
             var deferred = $q.defer();
-            
-            $http.get("/api/products/getUserStores/"+page).then(function(response) {
-                    var userStores = response.data.payload;
-                    var userStores_new = {};
 
-                    //convert array of stores to a map for lookup
-                    for(var i = 0, s; s = userStores[i]; i++){
-                        userStores_new[s.supermarket_id] = s;
-                    }
+            $http.get("/api/products/getUserStores/"+page).then(
+				function(response) {
+					Array.prototype.push.apply(service.userStores,response.data.payload.result);
 
-                    response.data.payload = userStores_new;
-
+					if (response.data.payload.meta.next_page) {
+						service.getUserStores(response.data.payload.meta.next_page);
+					}
+                    response.data.payload = response.data.payload.result; // trimming meta
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -101,10 +98,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.getUserStore = function(userStoreId) {
             var deferred = $q.defer();
-            
+
             $http.get("/api/products/getUserStore/" + userStoreId).then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -116,17 +113,17 @@ angular.module('web').factory('productService',['$q', '$http',
                 });
 
             return deferred.promise;
-        };        
+        };
 
         service.addUserStore = function(storeid, userName, password) {
             var deferred = $q.defer();
-            
+
             var postData = JSON.stringify({
                 "store_id": storeid,
                 "username": userName,
                 "password": password
             });
-            
+
             $http.post("/api/products/addUserStore", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -138,11 +135,11 @@ angular.module('web').factory('productService',['$q', '$http',
                 });
 
             return deferred.promise;
-        };  
-        
+        };
+
         service.deleteUserStore = function(userStoreId) {
             var deferred = $q.defer();
-            
+
             $http.delete("/api/products/deleteUserStore/" + userStoreId).then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -157,13 +154,13 @@ angular.module('web').factory('productService',['$q', '$http',
         };
         service.updateUserStore = function(userStoreId, userName, password) {
             var deferred = $q.defer();
-            
+
             var postData = JSON.stringify({
                 "user_store_id": userStoreId,
                 "username": userName,
                 "password": password
-            });            
-            
+            });
+
             $http.put("/api/products/updateUserStore", postData).then(function(response) {
                     deferred.resolve(response.data);
                 },
@@ -176,10 +173,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             return deferred.promise;
         };
-		
+
         service.getUserPurchases = function(dayLimit, page) {
             var deferred = $q.defer();
-            
+
             $http.get("/api/products/getUserPurchases/" + dayLimit + "/" + page).then(function(response) {
                     deferred.resolve(response.data.payload);
                 },
@@ -194,5 +191,5 @@ angular.module('web').factory('productService',['$q', '$http',
         };
 
         return service;
-    }        
+    }
 ]);
