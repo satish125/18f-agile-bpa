@@ -78,21 +78,23 @@ function openFDAProductMatch($type, $days) {
             return;
         }
        
-        // Build array of search terms for product name, filter out common words
+        // Build array of search terms for product name, filter out common words and special characters
         $productNamePieces = array();        
         
         foreach (explode(" ", $productName) as &$value) {
             if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
-                array_push($productNamePieces, $value);
+                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value); 
+                array_push($productNamePieces, $safeString);
             }
         }
         
-        // Build array of search terms for upc code, filter out common words
+        // Build array of search terms for upc code, filter out common words and special characters
         $productUpcPieces = array();        
         
         foreach (explode(" ", $productName) as &$value) {
             if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
-                array_push($productUpcPieces, $value);
+                $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value); 
+                array_push($productNamePieces, $safeString);
             }
         }
         
