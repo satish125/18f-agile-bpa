@@ -47,14 +47,12 @@ $app->post('/products/updateUserStore', 'productsUpdateUserStore');
 
 $app->run();
 
-class restResponse
-{
+class restResponse{
 	public $code = "";
 	public $msg = "";
 	public $payload = "";
 
-	function set($code, $msg, $payload)
-    {
+	function set($code, $msg, $payload){
         $this->code = $code;
 		$this->msg = $msg;
 		$this->payload = $payload;
