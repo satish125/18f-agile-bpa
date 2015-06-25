@@ -1,3 +1,12 @@
-<div ng-controller="RecallsPartialCtrl">
-	
+<div class="container-fluid" ng-controller="RecallsPartialCtrl">
+	<div class="row" ng-repeat="recall in recalls">
+		<div class="col-lg-6 col-md-3">
+			<div class="card shadow-z-1">
+				<img src="" />
+				test
+				{{recall.purchase.name}}
+				{{recall.matches.length}} possible recalls
+			</div>
+		</div>
+	</div>
 </div>

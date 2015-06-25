@@ -31,13 +31,14 @@ $app->get('/user/logout', 'userLogout');
 
 // openFDA Services
 $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
-$app->post('/openFDA/productMatch/:type/:days', 'openFDAProductMatch');
+$app->post('/openFDA/productMatch/:type/:days/:minScore', 'openFDAProductMatch');
 
 // Product Services
 $app->get('/products/getUser', 'productsGetUser');
 $app->delete('/products/deleteUser', 'productsDeleteUser');
 $app->post('/products/addUser', 'productsAddUser');
 $app->get('/products/getStores', 'productsGetStores');
+$app->get('/products/getProduct/:productId', 'productsGetProduct');
 $app->get('/products/getUserStores/:page', 'productsGetUserStores');
 $app->get('/products/getUserStore/:userStoreId', 'productsGetUserStore');
 $app->get('/products/getUserPurchases/:dayLimit/:page', 'productsGetUserPurchases');
@@ -47,14 +48,12 @@ $app->post('/products/updateUserStore', 'productsUpdateUserStore');
 
 $app->run();
 
-class restResponse
-{
+class restResponse{
 	public $code = "";
 	public $msg = "";
 	public $payload = "";
 
-	function set($code, $msg, $payload)
-    {
+	function set($code, $msg, $payload){
         $this->code = $code;
 		$this->msg = $msg;
 		$this->payload = $payload;
