@@ -16,7 +16,7 @@ function openFDARecentRecalls($type, $days, $limit) {
         $apiData = $stmt->fetchObject();
         
         if ($apiData == null) {
-            $response->set("service_failure","openFDA api keys are not configured", "");
+            $response->set("service_failure","openFDA api keys are not configured", array());
             return;
         }  
         
@@ -34,7 +34,7 @@ function openFDARecentRecalls($type, $days, $limit) {
         
         $response->set("success","Data successfully fetched from service", $bigArr["results"] );
     } catch(Exception $e) {
-        $response->set("system_failure", "System error occurred, unable to return data", "");
+        $response->set("system_failure", "System error occurred, unable to return data", array());
     } finally {
         $response->toJSON();
     }
@@ -62,19 +62,21 @@ function wordListParser($text, $wordListMap) {
     return $wordList;
 } 
  
-function openFDAProductMatch($type, $days) {
+function openFDAProductMatch($type, $days, $minScore) {
     $response = new restResponse;
     
     $start = date("Ymd", strtotime("-".$days." days"));
     $end = date("Ymd");
 
     $limit = 100;
-    
+     
     // Word exclusion list that will not be searched upon or scored upon
     $words = "about,above,across,after,against,around,at,before,behind,below,beneath,beside,besides,between,beyond,".
              "by,down,during,except,for,from,in,inside,into,like,near,,off,out,outside,over,since,through,throughout,".
              "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
-             "spite,instead,on,account,the,and";
+             "spite,instead,on,account,the,and,aboard,along,amid,among,as,behind,but,concerning,considering,despite,".
+             "excepting,excluding,following,minus,of,on,onto,opposite,past,per,plus,regarding,round,save,than,then,".
+             "towards,underneath,unlike,versus,via,within";
         
     $wordListMap = array_map('strtolower', explode(",", $words));
              
@@ -93,7 +95,7 @@ function openFDAProductMatch($type, $days) {
 
         // Fail if product source is not found
         if (!property_exists($body, 'source')) {
-			$response->set("missing_product_source","Product source is a required parameter", "");
+			$response->set("missing_product_source","Product source is a required parameter", array());
 			return;
         } else {
             $productSource = $body->source;
@@ -101,17 +103,19 @@ function openFDAProductMatch($type, $days) {
         
         //retrieve request body attributes
         if ($productSource === "iamdata") {
-            if (property_exists($body, 'id')) {
-                $productId = $body->id;
-            }
             if (property_exists($body, 'name')) {
                 $productName = $body->name;
             }
             if (property_exists($body, 'upc')) {
                 $productUpc = $body->upc;
             }
+            if (property_exists($body, 'product')) {
+                if (property_exists($body->product, 'id')) {
+                    $productId = $body->product->id;
+                }          
+            }
         } else {
-            $response->set("source_not_supported","No support exists for the product source provided", "");
+            $response->set("source_not_supported","No support exists for the product source provided", array());
             return;
         }
         
@@ -134,7 +138,7 @@ function openFDAProductMatch($type, $days) {
         $apiData = $stmt->fetchObject();
         
         if ($apiData == null) {
-            $response->set("service_failure","openFDA api keys are not configured", "");
+            $response->set("service_failure","openFDA api keys are not configured", array());
             return;
         }
         
@@ -188,13 +192,13 @@ function openFDAProductMatch($type, $days) {
         
         // If the API call has returned an error then capture it and return the code/message to the caller
         if (array_key_exists('error',$bigArr)) {
-            $response->set($bigArr['error']['code'], $bigArr['error']['message'], "" );
+            $response->set($bigArr['error']['code'], $bigArr['error']['message'], array() );
             return;
         }
         
         // Exit with an error if the service did not contain a results array
         if (!array_key_exists('results',$bigArr)) {
-            $response->set("results_failure","The api did not contain any results", "");
+            $response->set("results_failure","The api did not contain any results", array());
             return;
         }
         
@@ -207,12 +211,11 @@ function openFDAProductMatch($type, $days) {
             } else {
                 $resultProductName =  str_replace('-', ' ', strtolower($idxVal['product_description']));
                 $resultProductNamePieces = wordListParser($resultProductName, $wordListMap);
-            }
+            }      
             
             // Find matching terms for product upc
-            $matchingProductNamePieces = array_intersect ($productNamePieces, $resultProductNamePieces);
+            $matchingProductNamePieces = array_intersect ($resultProductNamePieces, $productNamePieces);
             
-
             // Build array of terms for product ups, filter out common words and special characters
             if (!array_key_exists('code_info', $idxVal)) {
                 $resultProductUpcPieces = array();   
@@ -222,21 +225,62 @@ function openFDAProductMatch($type, $days) {
             }
             
             // Find matching terms
-            $matchingProductUpcPieces = array_intersect ($productUpcPieces, $resultProductUpcPieces);
+            $matchingProductUpcPieces = array_intersect ($resultProductUpcPieces, $productUpcPieces);
             
             // Calculating matching score
-            $matchingScore = ( count($matchingProductNamePieces) / count($resultProductNamePieces) ) + 
-                             ( count($matchingProductUpcPieces) / count($resultProductUpcPieces) );
-                          
-            $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
+            $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) ) + 
+                             ( count($matchingProductUpcPieces) / count($productUpcPieces) );
+                         
+            // Remove array entry if minimum score has not been met
+            if ($matchingScore >= $minScore) {
+                // Store 
+                $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
+                
+                // Initialize default empty value
+                $productAmazonLink = "x";
+                $productManufacturer = "";
+                $productLargeImage = "";
+                $productSmallImage = "";
+                $productDescription = "";
+                $productBrand = "";
+                $productCategory = "";
+                
+                if ($productId !== "") {
+                    try {
+                        $productQuery = productsGetProductLocalAPI($productId);
+                        if ($productQuery->code === "success") {
+                            $productAmazonLink = $productQuery->payload->result->amazon_link;
+                            $productManufacturer = $productQuery->payload->result->manufacturer;
+                            $productLargeImage = $productQuery->payload->result->large_image;
+                            $productSmallImage = $productQuery->payload->result->small_image;
+                            $productDescription = $productQuery->payload->result->description;
+                            $productBrand = $productQuery->payload->result->brand;
+                            $productCategory = $productQuery->payload->result->category;
+                        }
+                    } catch(Exception $e) {
+                        // Nothing
+                    }
+                }
+                
+                // Inject product attributes into search result
+                $bigArr['results'][$idx]['amazon_link']=$productAmazonLink;
+                $bigArr['results'][$idx]['manufacturer']=$productManufacturer;
+                $bigArr['results'][$idx]['large_image']=$productLargeImage;
+                $bigArr['results'][$idx]['small_image']=$productSmallImage;
+                $bigArr['results'][$idx]['description']=$productDescription;
+                $bigArr['results'][$idx]['brand']=$productBrand;
+                $bigArr['results'][$idx]['category']=$productCategory;
+                
+            } else {
+                unset($bigArr['results'][$idx]);
+            }
             
         }
-     
-        //var_dump ($bigArr);
+        
         $response->set("success","Data successfully fetched from service", $bigArr['results'] );
 
     } catch(Exception $e) {
-        $response->set("system_failure", $e->getMessage(), "");
+        $response->set("system_failure", $e->getMessage(), array());
     } finally {
         $db = null;
         $response->toJSON();
