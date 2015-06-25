@@ -228,8 +228,10 @@ function openFDAProductMatch($type, $days, $minScore) {
             $matchingProductUpcPieces = array_intersect ($resultProductUpcPieces, $productUpcPieces);
             
             // Calculating matching score
-            $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) ) + 
-                             ( count($matchingProductUpcPieces) / count($productUpcPieces) );
+            $nameWeight = count($matchingProductNamePieces)*.5;
+            $upcWeight = 1000;
+            $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) *  $nameWeight) + 
+                             ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );
                          
             // Remove array entry if minimum score has not been met
             if ($matchingScore >= $minScore) {
