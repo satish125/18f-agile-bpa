@@ -91,8 +91,12 @@ function openFDAProductMatch($type, $days, $minScore) {
         
         //get the request body
         $request = Slim::getInstance()->request();
-        $body = json_decode($request->getBody());    
+        $body = json_decode($request->getBody());   
 
+        // Initialize payload
+        $payload = array();
+        $payload["purchase"] = $body;
+        
         // Fail if product source is not found
         if (!property_exists($body, 'source')) {
 			$response->set("missing_product_source","Product source is a required parameter", array());
@@ -228,48 +232,15 @@ function openFDAProductMatch($type, $days, $minScore) {
             $matchingProductUpcPieces = array_intersect ($resultProductUpcPieces, $productUpcPieces);
             
             // Calculating matching score
-            $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) ) + 
-                             ( count($matchingProductUpcPieces) / count($productUpcPieces) );
+            $nameWeight = count($matchingProductNamePieces)*.5;
+            $upcWeight = 1000;
+            $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) *  $nameWeight) + 
+                             ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );
                          
             // Remove array entry if minimum score has not been met
             if ($matchingScore >= $minScore) {
                 // Store 
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
-                
-                // Initialize default empty value
-                $productAmazonLink = "x";
-                $productManufacturer = "";
-                $productLargeImage = "";
-                $productSmallImage = "";
-                $productDescription = "";
-                $productBrand = "";
-                $productCategory = "";
-                
-                if ($productId !== "") {
-                    try {
-                        $productQuery = productsGetProductLocalAPI($productId);
-                        if ($productQuery->code === "success") {
-                            $productAmazonLink = $productQuery->payload->result->amazon_link;
-                            $productManufacturer = $productQuery->payload->result->manufacturer;
-                            $productLargeImage = $productQuery->payload->result->large_image;
-                            $productSmallImage = $productQuery->payload->result->small_image;
-                            $productDescription = $productQuery->payload->result->description;
-                            $productBrand = $productQuery->payload->result->brand;
-                            $productCategory = $productQuery->payload->result->category;
-                        }
-                    } catch(Exception $e) {
-                        // Nothing
-                    }
-                }
-                
-                // Inject product attributes into search result
-                $bigArr['results'][$idx]['amazon_link']=$productAmazonLink;
-                $bigArr['results'][$idx]['manufacturer']=$productManufacturer;
-                $bigArr['results'][$idx]['large_image']=$productLargeImage;
-                $bigArr['results'][$idx]['small_image']=$productSmallImage;
-                $bigArr['results'][$idx]['description']=$productDescription;
-                $bigArr['results'][$idx]['brand']=$productBrand;
-                $bigArr['results'][$idx]['category']=$productCategory;
                 
             } else {
                 unset($bigArr['results'][$idx]);
@@ -277,7 +248,46 @@ function openFDAProductMatch($type, $days, $minScore) {
             
         }
         
-        $response->set("success","Data successfully fetched from service", $bigArr['results'] );
+        // Retrieve product information
+        $productAmazonLink = null;
+        $productManufacturer = null;
+        $productLargeImage = null;
+        $productSmallImage = null;
+        $productDescription = null;
+        $productBrand = null;
+        $productCategory = null;
+        
+        if ($productId !== "") {
+            try {
+                $productQuery = productsGetProductLocalAPI($productId);
+             
+                if ($productQuery->code === "success") {
+                    $productAmazonLink = $productQuery->payload['result']['amazon_link'];
+                    $productManufacturer = $productQuery->payload['result']['manufacturer'];
+                    $productLargeImage = $productQuery->payload['result']['large_image'];
+                    $productSmallImage = $productQuery->payload['result']['small_image'];
+                    $productDescription = $productQuery->payload['result']['description'];
+                    $productBrand = $productQuery->payload['result']['brand'];
+                    $productCategory = $productQuery->payload['result']['category'];
+                }
+            } catch(Exception $e) {
+                // Nothing
+            }
+        }
+
+        // Add results to the payload
+        $payload["results"] = $bigArr['results'];        
+        
+        // Inject product attributes into purchase element
+        $payload["purchase"]->amazon_link=$productAmazonLink;
+        $payload["purchase"]->manufacturer=$productManufacturer;
+        $payload["purchase"]->large_image=$productLargeImage;
+        $payload["purchase"]->small_image=$productSmallImage;
+        $payload["purchase"]->description=$productDescription;
+        $payload["purchase"]->brand=$productBrand;
+        $payload["purchase"]->category=$productCategory;
+        
+        $response->set("success","Data successfully fetched from service", $payload );
 
     } catch(Exception $e) {
         $response->set("system_failure", $e->getMessage(), array());

@@ -222,6 +222,87 @@ function productsAddUser() {
     }
 }
 
+function productsAddUserLocalAPI() {
+    $response = new restResponse;
+    $sessionId = session_id();
+
+    try {
+        $request = Slim::getInstance()->request();
+        $body = json_decode($request->getBody());
+        $db = getConnection();
+
+        $sql = "SELECT user_id FROM user_session where session_id=:session_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("session_id", $sessionId);
+        $stmt->execute();
+        $sessionData = $stmt->fetchObject();
+
+        if ($sessionData == null) {
+            $response->set("not_logged_on","You are not currently logged into the system", array());
+            return;
+        }
+
+        $sql = "SELECT client_id, client_secret FROM iamdata_properties";
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $iamdata = $stmt->fetchObject();
+
+        if ($iamdata == null) {
+            $response->set("service_failure","product api keys are not configured", array());
+            return;
+        }
+
+        $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("user_id", $sessionData->user_id);
+        $stmt->execute();
+        $userData = $stmt->fetchObject();
+
+        if ($userData == null) {
+            $response->set("user_not_found","User was not found", array());
+            return;
+        }
+
+        $userId = $iamdata->client_id ."_". $userData->user_id;
+        $url = "https://api.iamdata.co:443/v1/users?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+
+        $data = array("email" => $userData->email, "zip" => $userData->zip, "user_id" => $userId);
+
+        $jsonData = json_encode($data);
+
+        $options = array(
+            'http' => array(
+                'protocol_version' => 1.1,
+                'user_agent'       => 'phpRestAPIservice',
+                'method'           => 'POST',
+                'header'           => "Content-type: application/json\r\n".
+                                      "Connection: close\r\n" .
+                                      "Content-length: " . strlen($jsonData) . "\r\n",
+                'content'          => $jsonData,
+            ),
+        );
+
+        $context = stream_context_create($options);
+
+        $result = file_get_contents($url, false, $context);
+
+        if ($result !== false) {
+            $bigArr = json_decode($result, true, 20);
+            $response->set("success", "Data successfully added in service", $bigArr );
+        } else {
+            $response->set("service_failure", "Service failed to add data", array() );
+        }
+
+    } catch(Exception $e) {
+        $response->set("system_failure", "System error occurred, unable to add data", array());
+    } finally {
+        $db = null;
+        return $response;
+    }
+}
+
 function productsGetStores() {
     $response = new restResponse;
     $sessionId = session_id();
