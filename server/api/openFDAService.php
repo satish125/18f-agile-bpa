@@ -54,6 +54,14 @@ function openFDAProductMatch($type, $days) {
 
     $limit = 100;
     
+    // Word exclusion list that will not be searched upon or scored upon
+    $words = "about,above,across,after,against,around,at,before,behind,below,beneath,beside,besides,between,beyond,".
+             "by,down,during,except,for,from,in,inside,into,like,near,,off,out,outside,over,since,through,throughout,".
+             "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
+             "spite,instead,on,account,the";
+
+    $wordList = explode(",", $words);           
+             
     try{
         $db = getConnection();        
         
@@ -69,16 +77,24 @@ function openFDAProductMatch($type, $days) {
             $response->set("source_not_supported","Currently support is only for iamdata product information", "");
             return;
         }
+       
+        // Build array of search terms for product name, filter out common words
+        $productNamePieces = array();        
         
-        // Build array of search terms
-        $productNamePieces = explode(" ", $productName);
-        $productUpcPieces = explode(" ", $productUpc);
+        foreach (explode(" ", $productName) as &$value) {
+            if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
+                array_push($productNamePieces, $value);
+            }
+        }
         
-        // Filter out keywords that we don't want to search upon
-        $productNamePieces = array_filter($productNamePieces, function($obj){
-            if(preg_match('/the|of|all/i', $obj) === true) return false;
-            return true;
-        });
+        // Build array of search terms for upc code, filter out common words
+        $productUpcPieces = array();        
+        
+        foreach (explode(" ", $productName) as &$value) {
+            if ( ! in_array(strtolower($value), array_map('strtolower', $wordList)) ) {
+                array_push($productUpcPieces, $value);
+            }
+        }
         
         //get openFDA api key
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
@@ -121,15 +137,20 @@ function openFDAProductMatch($type, $days) {
         // Add limit
         $searchParams .= "&limit=".$limit;
         
+        // Build the URL
         $url = "https://api.fda.gov/".$type."/enforcement.json?" .$searchParams. "&api_key=" .$apiData->api_key;
-             
+        
+        // HTTP options
         $options = array(
                 "http" => array(
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET",
             ),
         );
+        
+        // Retrieve the content
         $context  = stream_context_create($options);
+        
         $result = file_get_contents($url, false, $context);
         $bigArr = json_decode($result, true, 20);
         
