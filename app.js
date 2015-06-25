@@ -62,3 +62,31 @@ angular.module('web').directive('ngFocus', [function() {
 		}
 	};
 }]);
+
+
+angular.module('web').run(['$rootScope','$state','$location','userService',function($rootScope,$state,$location,userService) {
+	$rootScope.$on('$locationChangeStart',
+		function(event) {
+			var currentUrl = $location.url();
+			console.log('userService.isLoggedIn',userService.isLoggedIn);
+			console.log('currentUrl',currentUrl);
+			if(userService.isLoggedIn){
+				if (currentUrl === '/login' || currentUrl === '/signup'){
+					event.preventDefault();
+					$state.go('recalls-partial'); // may need to determine if user has stores already
+				}
+			}else{
+				if (currentUrl !== '/' && currentUrl !== '/login' && currentUrl !== '/signup'){
+					console.log('doing $state.go(login)');
+					event.preventDefault();
+					userService.getUser().then(function(){
+						if (!userService.isLoggedIn){
+							$state.go('login');
+						}
+					});
+				}
+			}
+		}
+	);
+
+}]);

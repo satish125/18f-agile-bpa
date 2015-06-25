@@ -10,7 +10,7 @@ angular.module('web').factory('openfdaService',['$q', '$http',
             var type = "food";
             product.source = "iamdata";
             
-            $http.post("/api/openFDA/match/"+type, product).then(function(response) {
+            $http.post("/api/openFDA/productMatch/food", product).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {

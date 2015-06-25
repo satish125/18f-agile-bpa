@@ -198,7 +198,7 @@ function productsAddUser() {
                 'method'           => 'POST',
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
-                                      "Content-length: " . strlen($json_data) . "\r\n",
+                                      "Content-length: " . strlen($jsonData) . "\r\n",
                 'content'          => $jsonData,
             ),
         );

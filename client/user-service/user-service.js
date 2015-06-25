@@ -1,18 +1,26 @@
 angular.module('web').factory('userService',['$q', '$http',
 
     function($q, $http) {
-        var service = {};
-        
+        var service = {user:{},isLoggedIn:false};
+
         service.loginUser = function(email, password) {
             var deferred = $q.defer();
-            
+
             var postData = JSON.stringify({
                 "email": email,
                 "password": password
             });
-            
-            $http.post("/api/user/login", postData).then(function(response) {
+
+            $http.post("/api/user/login", postData).then(
+				function(response) {
                     deferred.resolve(response.data);
+                    if (response.data.code === "success") {
+					    service.user = response.data.payload;
+					    service.isLoggedIn = true;
+					} else {
+					    service.user = {};
+					    service.isLoggedIn = false;
+                    }
                 },
                 function(error) {
                     deferred.reject(error);
@@ -23,12 +31,17 @@ angular.module('web').factory('userService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.logoutUser = function() {
             var deferred = $q.defer();
-            
-            $http.get("/api/user/logout").then(function(response) {
+
+            $http.get("/api/user/logout").then(
+				function(response) {
                     deferred.resolve(response.data);
+                    if (response.data.code === "success") {
+					    service.user = {};
+					    service.isLoggedIn = false;
+                    }
                 },
                 function(error) {
                     deferred.reject(error);
@@ -39,18 +52,26 @@ angular.module('web').factory('userService',['$q', '$http',
 
             return deferred.promise;
         };
-        
+
         service.registerUser = function(email, zipcode, password) {
             var deferred = $q.defer();
-            
+
             var postData = JSON.stringify({
                 "email": email,
                 "password": password,
-                "zipcode": zipcode                
+                "zipcode": zipcode
             });
-            
-            $http.post("/api/user/register", postData).then(function(response) {
+
+            $http.post("/api/user/register", postData).then(
+				function(response) {
                     deferred.resolve(response.data);
+                    if (response.data.code === "success") {
+					    service.user = response.data.payload;
+					    service.isLoggedIn = true;
+					} else {
+					    service.user = {};
+					    service.isLoggedIn = false;
+                    }
                 },
                 function(error) {
                     deferred.reject(error);
@@ -60,13 +81,21 @@ angular.module('web').factory('userService',['$q', '$http',
                 });
 
             return deferred.promise;
-        };        
+        };
 
         service.getUser = function() {
             var deferred = $q.defer();
-            
-            $http.get("/api/user/get").then(function(response) {
+
+            $http.get("/api/user/get").then(
+				function(response) {
                     deferred.resolve(response.data);
+                    if (response.data.code === "success") {
+					    service.user = response.data.payload;
+					    service.isLoggedIn = true;
+					} else {
+					    service.user = {};
+					    service.isLoggedIn = false;
+                    }
                 },
                 function(error) {
                     deferred.reject(error);
@@ -79,5 +108,5 @@ angular.module('web').factory('userService',['$q', '$http',
         };
 
         return service;
-    }        
+    }
 ]);
