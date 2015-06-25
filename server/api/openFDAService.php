@@ -63,18 +63,39 @@ function openFDAProductMatch($type, $days) {
     $wordListMap = array_map('strtolower', explode(",", $words));
              
     try{
-        $db = getConnection();        
+        $db = getConnection();
+        
+        // Initialize post request capture fields
+        $productSource = "";
+        $productId = "";
+        $productName = "";
+        $productUpc = "";
         
         //get the request body
         $request = Slim::getInstance()->request();
-        $body = json_decode($request->getBody());        
-        //retrieve request body attributes
-        if ($body->source === "iamdata") {
-            $productId = $body->id;
-            $productName = $body->name;
-            $productUpc = $body->upc;
+        $body = json_decode($request->getBody());    
+
+        // Fail if product source is not found
+        if (!property_exists($body, 'source')) {
+			$response->set("missing_product_source","Product source is a required parameter", "");
+			return;
         } else {
-            $response->set("source_not_supported","Currently support is only for iamdata product information", "");
+            $productSource = $body->source;
+        }
+        
+        //retrieve request body attributes
+        if ($productSource === "iamdata") {
+            if (property_exists($body, 'id')) {
+                $productId = $body->id;
+            }
+            if (property_exists($body, 'name')) {
+                $productName = $body->name;
+            }
+            if (property_exists($body, 'upc')) {
+                $productUpc = $body->upc;
+            }
+        } else {
+            $response->set("source_not_supported","No support exists for the product source provided", "");
             return;
         }
         
