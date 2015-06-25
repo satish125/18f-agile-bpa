@@ -1,12 +1,21 @@
 <div class="container-fluid" ng-controller="RecallsPartialCtrl">
+	<h1>Recalls</h1>
+	<div ng-show="progress<100" class="progress progress-striped active">
+        <div class="progress-bar" style="width: {{progress}}%"></div>
+    </div>
 	<div class="row" ng-repeat="recall in recalls">
 		<div class="col-lg-6 col-md-3">
 			<div class="card shadow-z-1">
 				<img src="" />
-				test
 				{{recall.purchase.name}}
 				{{recall.matches.length}} possible recalls
 			</div>
 		</div>
+	</div>
+	<div ng-show="progress==100 && num_purchases==0">
+		<p>We didn't get any purchases from your connected stores. Try <a href="/#/connect">connecting more stores</a>.</p>
+	</div>
+	<div ng-show="progress==100 && !recalls.length && num_purchases>0">
+		<p>We checked {{num_checked}} of your {{num_purchases}} purchases, and nothing has been recalled.</p>
 	</div>
 </div>

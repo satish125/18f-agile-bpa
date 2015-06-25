@@ -1,16 +1,29 @@
 angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService',  'productService', 
     function($scope, openfdaService, productService){
 
-        $scope.num_purchases = 0;
-        $scope.num_orders = 0;
-        $scope.store_purchases = [];
-        $scope.recalls = [];
+        $scope.store_purchases = null; //array of stores and purchases
+        $scope.recalls = []; //array of purchase items with possible recalls 
+
+        $scope.num_purchases = 0; //number of items purchased
+        $scope.num_orders = 0; //number of purchase events
+        $scope.num_checked = 0; //number of purchase items that were successfully checked
+        $scope.num_attempted = 0; //number of purchase items that we've attempted to check
+        $scope.progress = 0;
+
         var dayLimit = 365;
         var minScore = 0.5;
 
+        /**
+         * @param page 
+         */
         function getPageOfPurchases(page){
             productService.getUserPurchases(dayLimit, page).then(function(response){
-                $scope.store_purchases = response.result;
+
+                //add this page of store purchases to our saved array
+                if($scope.store_purchases == null){
+                    $scope.store_purchases = [];
+                }
+                $scope.store_purchases = $scope.store_purchases.concat(response.result);
 
                 //loop through purchases and match
                 for(var i = 0, orders; orders = $scope.store_purchases[i]; i++){
@@ -32,8 +45,9 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 
         function productMatch(product){
             openfdaService.productMatch(product, minScore).then(function(response){
-                if(response.code !== 'success'){
+                if(response.code !== 'success' && response.code !== 'NO_MATCH'){
                     //TODO Handle error
+                    $scope.num_checked++;
                     return;
                 }
 
@@ -41,6 +55,10 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                     purchase: product,
                     matches: response.payload
                 });
+            }).finally(function(){
+                //set progress
+                $scope.num_attempted++;
+                $scope.progress = ($scope.num_attempted/$scope.num_purchases)*100;
             });
         }
 
