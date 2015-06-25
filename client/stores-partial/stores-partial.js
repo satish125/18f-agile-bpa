@@ -14,8 +14,7 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 
 	function getUserStores(page){
 
-		productService.getUserStores(page)
-		.then(
+		productService.getUserStores(page).then(
 			function(data) {
 				$scope.userStores = data.payload;
 				// if more pages available, go get them?
@@ -27,5 +26,13 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		);
 	}
 	getUserStores(1);
+
+	$scope.doStoreConnect = function(store){
+		console.log(store);
+
+		productService.addUserStore(store.id, store.username, store.password).then(function(response){
+			console.log(response);
+		});
+	};
 
 }]);

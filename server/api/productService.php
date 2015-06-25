@@ -580,7 +580,7 @@ function productsAddUserStore() {
                 'method'           => 'POST',
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
-                                      "Content-length: " . strlen($json_data) . "\r\n",
+                                      "Content-length: " . strlen($jsonData) . "\r\n",
                 'content'          => $jsonData,
             ),
         );
@@ -596,7 +596,7 @@ function productsAddUserStore() {
             $response->set("service_failure", "Service failed to add data", "" );
         }
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to add data", "");
+        $response->set("system_failure","System error occurred, unable to add data ERROR:".$e->getMessage(), "");
     } finally {
         $db = null;
         $response->toJSON();
@@ -741,7 +741,7 @@ function productsUpdateUserStore() {
                 'method'           => 'PUT',
                 'header'           => "Content-type: application/json\r\n".
                                       "Connection: close\r\n" .
-                                      "Content-length: " . strlen($json_data) . "\r\n",
+                                      "Content-length: " . strlen($jsonData) . "\r\n",
                 'content'          => $jsonData,
             ),
         );

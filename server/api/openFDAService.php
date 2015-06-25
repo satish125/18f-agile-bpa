@@ -83,7 +83,7 @@ function openFDAProductMatch(){
             return;
         }  
         
-        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&search=report_date:[" .$start. "+TO+" .$end. "]&limit=".$limit; //
+        $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$api_data->api_key. "&limit=".$limit; //
         
         $options = array(
                 "http" => array(

@@ -15,14 +15,16 @@
 					</div>
 				</div>
 				<div class="media-body">
-					<form name="connectForm" ng-class="userStores[store.id]?'hide':''" class="form-inline" ng-submit="doStoreConnect(store)">
+					<form name="connectForm" ng-class="userStores[store.id]?'hide':''" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
 						<div class="form-group form-control-wrapper floating-label-wrapper">
-							<input id="username{{store.id}}" name="username"  type="text" class="form-control empty" required><!-- ng-model="store.username" -->
+							<input style="display:none" type="text">
+							<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
 							<label for="username{{store.id}}" class="floating-label">user</label>
 							<span class="material-input"></span>
 						</div>
 						<div class="form-group form-control-wrapper floating-label-wrapper">
-							<input id="password{{store.id}}" name="password" type="password" class="form-control empty" required><!-- ng-model="store.password" -->
+							<input style="display:none" type="password">
+							<input id="password{{store.id}}" name="password{{store.id}}" type="password" ng-model="store.password" class="form-control empty" required autocomplete="off">
 							<label for="password{{store.id}}" class="floating-label">password</label>
 							<span class="material-input"></span>
 						</div>
