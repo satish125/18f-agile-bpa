@@ -20,8 +20,12 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		return productService.userStores;
 	};
 
-	productService.getStores();
+	if (!productService.stores.length){
+		productService.getStores();
+	}
 	productService.getUserStores();
+	// rebuilding on every scope change
+	// we should probably tie user-dependent data into the logout function
 
 	$scope.doStoreConnect = function(store){
 		productService.addUserStore(store.id, store.username, store.password).then(function(response){

@@ -1,9 +1,10 @@
-# 18f-agile-bpa
+# RecallRodent
 [![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c)
 [![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242)
 
-## Description
+![Squirrel alt text](/docs/images/Squirrel.jpg)
 
+## Description
 
 ## US Digital Services Playbook
 #### Understand What people need
@@ -32,19 +33,7 @@
 
 ## Install
 
-cd into the /web folder and run the following commands:
-
-	npm install -g grunt-cli yo bower generator-cg-angular
-	npm install
-
-If you get any errors during the npm install, run the command again and it should be fine.
-
-	bower install
-
-To test that everything is working, run
-
-	grunt build
-	grunt test
+[View Installation Instructions](installation.md)
 
 ## Commands
 
