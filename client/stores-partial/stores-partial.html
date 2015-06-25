@@ -1,4 +1,10 @@
 <div class="container" ng-controller="StoresPartialCtrl">
+	<div ng-show="getUserStores.length > 0">
+		<h1>Connect Stores</h1>
+		<div class="col-md-12">
+		</div>
+	</div>
+
 	<h1>Connect Stores</h1>
 	<div ng-repeat="error in errors track by $index" class="clearfix">
 	   <div class="alert alert-danger alert-dismissible" role="alert">
@@ -6,16 +12,21 @@
 		 <ul class="fa-ul pre"><li><span class="fa-li fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Error: </span>{{error}}</li></ul>
 	   </div>
 	</div>
+
+	<form class="col-md-3">
+		<input type="search" class="form-control empty" id="storeSearch" ng-model="storeSearch.name" placeholder="search for store">
+	</form>
+
 	<div class="col-md-12">
 		<ul class="media-list">
-			<li class="media card" ng-repeat="store in stores">
+			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch | orderBy:['-isConnected','name']">
 				<div class="media-left">
 					<div class="store-logo-container">
 						<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}">
 					</div>
 				</div>
 				<div class="media-body">
-					<form name="connectForm" ng-class="userStores[store.id]?'hide':''" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
+					<form name="connectForm" ng-show="!store.isConnected" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
 						<div class="form-group form-control-wrapper floating-label-wrapper">
 							<input style="display:none" type="text">
 							<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
@@ -32,9 +43,10 @@
 							<span class="fa fa-link" aria-hidden="true"></span> Connect
 						</button>
 					</form>
-					<div ng-class="userStores[store.id]?'':'hide'">
+					<h4 ng-show="store.isConnected">
 						CONNECTED
-					</div>
+						<span class="fa fa-check text-success" aria-hidden="true"></span>
+					</h4>
 				</div>
 			</li>
 		</ul>
