@@ -19,14 +19,21 @@
 
 	<div class="col-md-12">
 		<ul class="media-list">
-			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch | orderBy:['-isConnected','name']">
+			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch | orderBy:['-hasConnectionAttempt()','name']">
 				<div class="media-left">
 					<div class="store-logo-container">
 						<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}">
 					</div>
 				</div>
 				<div class="media-body">
-					<form name="connectForm" ng-show="!store.isConnected" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
+					<h4 ng-show="store.isConnected()">
+						CONNECTED
+						<span class="fa fa-check text-success" aria-hidden="true"></span>
+					</h4>
+					<div class="label" ng-show="store.hasConnectionAttempt()" ng-class="{'label-danger':store.userStore().credentials_status==='invalid'}">
+						{{store.userStore().credentials_status}} Credentials
+					</div>
+					<form name="connectForm" ng-show="!store.isConnected()" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
 						<div class="form-group form-control-wrapper floating-label-wrapper">
 							<input style="display:none" type="text">
 							<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
@@ -40,13 +47,14 @@
 							<span class="material-input"></span>
 						</div>
 						<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="connectForm[$index].$invalid">
-							<span class="fa fa-link" aria-hidden="true"></span> Connect
+							<span class="fa fa-link fa-rotate-90" aria-hidden="true"></span> Connect
 						</button>
 					</form>
-					<h4 ng-show="store.isConnected">
-						CONNECTED
-						<span class="fa fa-check text-success" aria-hidden="true"></span>
-					</h4>
+					<form name="connectForm" ng-show="store.hasConnectionAttempt()" class="form-inline" ng-submit="doStoreDisconnect(store)" autocomplete="off">
+						<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="connectForm[$index].$invalid">
+							<span class="fa fa-unlink" aria-hidden="true"></span> Disconnect
+						</button>
+					</form>
 				</div>
 			</li>
 		</ul>

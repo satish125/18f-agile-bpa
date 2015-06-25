@@ -663,7 +663,7 @@ function productsDeleteUserStore($userStoreId) {
             $response->set("service_failure", "Service failed to delete data", array() );
         }
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to delete data", array());
+        $response->set("system_failure","System error occurred, unable to delete data :: " . $e->getMessage(), array());
     } finally {
         $db = null;
         $response->toJSON();
