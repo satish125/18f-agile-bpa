@@ -237,32 +237,30 @@ function openFDAProductMatch($type, $days, $minScore) {
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
                 
                 // Initialize default empty value
-                $productAmazonLink = "DEFAULT";
-                $productManufacturer = "";
-                $productLargeImage = "";
-                $productSmallImage = "";
-                $productDescription = "";
-                $productBrand = "";
-                $productCategory = "";
+                $productAmazonLink = null;
+                $productManufacturer = null;
+                $productLargeImage = null;
+                $productSmallImage = null;
+                $productDescription = null;
+                $productBrand = null;
+                $productCategory = null;
                 
                 if ($productId !== "") {
                     try {
                         $productQuery = productsGetProductLocalAPI($productId);
+                     
                         if ($productQuery->code === "success") {
-                            $productAmazonLink = $productQuery->payload->result->amazon_link;
-                            $productManufacturer = $productQuery->payload->result->manufacturer;
-                            $productLargeImage = $productQuery->payload->result->large_image;
-                            $productSmallImage = $productQuery->payload->result->small_image;
-                            $productDescription = $productQuery->payload->result->description;
-                            $productBrand = $productQuery->payload->result->brand;
-                            $productCategory = $productQuery->payload->result->category;
+                            $productAmazonLink = $productQuery->payload['result']['amazon_link'];
+                            $productManufacturer = $productQuery->payload['result']['manufacturer'];
+                            $productLargeImage = $productQuery->payload['result']['large_image'];
+                            $productSmallImage = $productQuery->payload['result']['small_image'];
+                            $productDescription = $productQuery->payload['result']['description'];
+                            $productBrand = $productQuery->payload['result']['brand'];
+                            $productCategory = $productQuery->payload['result']['category'];
                         }
                     } catch(Exception $e) {
                         // Nothing
-                        $productAmazonLink = "EXCEPTION";
                     }
-                } else {
-                    $productAmazonLink = "NO PRODUCT ID";
                 }
                 
                 // Inject product attributes into search result
