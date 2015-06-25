@@ -76,6 +76,9 @@ angular.module('web').factory('productService',['$q', '$http',
         };
 
         service.getUserStores = function(page) {
+            if (!page){
+				service.userStores = [];
+			}
             page = page || 1;
             var deferred = $q.defer();
 
