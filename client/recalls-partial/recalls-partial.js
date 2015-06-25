@@ -6,16 +6,17 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
         $scope.store_purchases = [];
         $scope.recalls = [];
         var dayLimit = 365;
+        var minScore = 0.5;
 
         function getPageOfPurchases(page){
             productService.getUserPurchases(dayLimit, page).then(function(response){
-                console.log(response.meta);
                 $scope.store_purchases = response.result;
 
                 //loop through purchases and match
                 for(var i = 0, orders; orders = $scope.store_purchases[i]; i++){
                     for(var j = 0, item; item = orders.purchase_items[j]; j++){
                         $scope.num_purchases++;
+                        item.date = orders.date; //pass the date to the php
                         productMatch(item);
                     }
                 }
@@ -30,7 +31,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
         }
 
         function productMatch(product){
-            openfdaService.productMatch(product).then(function(response){
+            openfdaService.productMatch(product, minScore).then(function(response){
                 if(response.code !== 'success'){
                     //TODO Handle error
                     return;
