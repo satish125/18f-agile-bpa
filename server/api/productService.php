@@ -147,7 +147,7 @@ function productsAddUser() {
 
     try {
         $request = Slim::getInstance()->request();
-        $body = json_decode($request->getBody());
+
         $db = getConnection();
 
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
@@ -440,7 +440,7 @@ function productsGetUserPurchases($daylimit, $page){
         $days = trim($daylimit);
     }
 
-    $purchase_date_from = date("Ymd", strtotime("-".$days." days"));
+    $purchaseDateFrom = date("Ymd", strtotime("-".$days." days"));
 
     try{
         $db = getConnection();
@@ -482,7 +482,7 @@ function productsGetUserPurchases($daylimit, $page){
 
         //build the URL
         $userId = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/purchases?full_resp=true&purchase_date_from=".$purchase_date_from."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
         $options = array(
             "http" => array(
@@ -766,7 +766,7 @@ function productsUpdateUserStore() {
 
 function productsGetProduct($productId) {
     $response = new restResponse;
-    $sessionId = session_id();
+
 
     try {
         $db = getConnection();
@@ -809,7 +809,7 @@ function productsGetProduct($productId) {
 
 function productsGetProductLocalAPI($productId) {
     $response = new restResponse;
-    $sessionId = session_id();
+    
 
     try {
         $db = getConnection();
