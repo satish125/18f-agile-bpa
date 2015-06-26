@@ -24,3 +24,9 @@ For complete list, see [package.json](../package.json)
 *	[Apache] – application server
 *	[MySQL] – open source database
 *	[GitHub] – code repository
+
+## Jenkins build and deploy output
+![Jenkins build and deploy output](/docs/images/Jenkins build and deploy screenshot.png)
+
+## Sonar output 
+![Sonar output screenshot](/docs/images/Sonar output screenshot.png)
