@@ -1,3 +1,72 @@
+.teaser{
+	background-image: url('images/brand-background-bw.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	padding-bottom: 0px !important;
+
+	hgroup{
+		.make-sm-column(6);
+		padding: 200px 30px 150px 50px;
+		//color: @primary;
+	}
+
+	.brand{
+		font-size:2em;
+	}
+
+	h2{
+		font-size: 1.3em;
+	}
+	h1{
+		color: @primary;
+	}
+
+	.squirrel{
+		.make-sm-column(6);
+		background-image: url('images/arctic-ground-squirrel.gif');
+		background-size:contain;
+		background-repeat:no-repeat;
+		background-position:center bottom;
+	}
+
+	.container{
+		display:table;
+	}
+
+	.row{
+		display:table-row;
+		height:100%;
+	}
+
+	hgroup, .squirrel{
+		float:none;
+		display:table-cell;
+	}
+
+	/* mobile adjustments */
+	@media screen and (max-width: @screen-sm-max){
+		hgroup{
+			padding-top:90px;
+			padding-bottom:80px;
+		}
+	}
+
+	/* mobile adjustments */
+	@media screen and (max-width: @screen-xs-max){
+		.squirrel{
+			display:none;
+		}
+		hgroup{
+			padding-top:80px;
+			padding-bottom:80px;
+			float:left;
+		}
+		h1,h2{
+			background-color:white;
+		}
+	}
+}
+
 .three-line-list{
 	padding-left:0;
 	list-style:none;
@@ -14,5 +83,11 @@
 
 	.list-group-item-subheading{
 		margin-top:0;
+	}
+}
+
+@media(max-width: @screen-xs-max){
+	.list-group .list-group-item .row-content{
+		width:100%;
 	}
 }

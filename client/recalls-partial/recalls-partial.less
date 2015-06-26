@@ -14,7 +14,7 @@
 }
 
 .recall .card{
-	padding: 15px;
+	padding: 15px 0px;
 	height: 250px;
 	margin-bottom: 30px;
 	overflow:auto;
@@ -39,12 +39,14 @@
 	h1{
 		font-size: 18px;
 	}
+
+	.productInfo{
+		.make-lg-column(12);
+	}
 }
 
 /* EXPANDED */
 .recall.expanded{
-	.make-sm-column(12);
-	.make-md-column(12);
 	.make-lg-column(12);
 
 	.matchesList{
@@ -53,7 +55,6 @@
 
 	.productInfo{
 		.make-sm-column(4);
-		.make-md-column(3);
 		.make-lg-column(3);
 	}
 }
