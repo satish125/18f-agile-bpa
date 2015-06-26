@@ -1,7 +1,16 @@
 angular.module('web').controller('StoresPartialCtrl',['$scope','productService',function($scope,productService){
 
+	$scope.stores = [];
+
 	$scope.getUserStores = function(){
-		return productService.userStores;
+		return productService.userStores.map(function(userStore){
+			userStore.status = function(){
+				return this.credentials_status === 'Invalid' ? 'Invalid Credentials'
+					: this.credentials_status !== 'Verified' ? 'Connecting'
+					: this.scrape_status === 'Done' ? 'Ready' : 'Purchase Review';
+			};
+			return userStore;
+		});
 	};
 
 	$scope.getUserStoreMap = function(){
@@ -12,7 +21,7 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		return userStoreMap;
 	};
 
-	$scope.getStores = function(){
+	function buildScopeStores(){
 		$scope.stores = productService.stores.map(function(store){
 			store.isConnecting = false;
 			store.isDisconnecting = false;
@@ -29,32 +38,60 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 			return store;
 		});
 		$scope.stores = $scope.$eval('stores | orderBy:[\'-hasConnectionAttempt()\',\'name\']'); // one-time orderBy
+	}
+
+	$scope.getStores = function(){
+		if ($scope.stores.length !== productService.stores.length){
+			buildScopeStores();
+		}
 		return $scope.stores;
 	};
 
 	if (!productService.stores.length){
 		productService.getStores();
 	}
-	productService.getUserStores();
+	productService.getUserStores().then(buildScopeStores);
 	// rebuilding on every scope change
-	// we should probably tie user-dependent data into the logout function
+	// future release - cleanup user-dependent data into the logout function if it persists in angular services
 
 	$scope.doStoreConnect = function(store){
 		var action = {};
 		store.isConnecting = true;
 		if (store.hasConnectionAttempt()){
-			action = productService.updateUserStore(store.userStore().id, store.username, store.password);
+			action = productService.updateUserStore(store.userStore().id, store.username, store.password).then(function(response){
+				for(var i = 0; i < productService.userStores.length; i++){
+					if(productService.userStores[i].id === store.userStore().id){
+						productService.userStores[i] = response.payload.result; // update the userStore list
+					}
+				}
+			});
 		}else{
-			action = productService.addUserStore(store.id, store.username, store.password);
+			action = productService.addUserStore(store.id, store.username, store.password).then(function(response){
+				response.payload.result.supermarket_id = store.id; // success response object model doesn't match userStore fetch
+				productService.userStores.push(response.payload.result); // add to the userStore list
+			});
 		}
 		action.finally(function(){store.isConnecting = false;});
-		// if credentials are unverified, set a timeout, pull back a single store
-		// repeat until no longer unverified
 	};
 
 	$scope.doStoreDisconnect = function(store){
 		store.isDisconnecting = true;
-		productService.deleteUserStore(store.userStore().id).finally(function(){store.isDisconnecting = false;});
+		productService.deleteUserStore(store.userStore().id)
+		.then(function(){
+			var userStoreId = store.userStore().id;
+			for(var i = 0; i < productService.userStores.length; i++){
+				if(productService.userStores[i].id === userStoreId){
+					productService.userStores.splice(i,1); // remove from userStore list
+					store.isDisconnecting = false;
+					return;
+				}
+			}
+		})
+		.finally(function(){
+			// redundancy in case of error
+			// kept original so userStore removal completed at the same time as the disconnect process
+			store.isDisconnecting = false;
+		});
 	};
 
 }]);
