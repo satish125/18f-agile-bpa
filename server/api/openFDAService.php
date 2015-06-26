@@ -259,7 +259,7 @@ function openFDAProductMatch($type, $days, $minScore) {
         $productBrand = null;
         $productCategory = null;
         
-        if ($productId !== "" and $foundAMatch) {
+        if ($productId !== "" && $foundAMatch) {
             try {
                 $productQuery = productsGetProductLocalAPI($productId);
              
