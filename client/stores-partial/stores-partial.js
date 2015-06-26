@@ -50,7 +50,10 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	if (!productService.stores.length){
 		productService.getStores();
 	}
-	productService.getUserStores().then(buildScopeStores);
+	$scope.refreshUserStores = function(){
+		productService.getUserStores().then(buildScopeStores);
+	};
+	$scope.refreshUserStores();
 	// rebuilding on every scope change
 	// future release - cleanup user-dependent data into the logout function if it persists in angular services
 
@@ -61,7 +64,10 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 			action = productService.updateUserStore(store.userStore().id, store.username, store.password).then(function(response){
 				for(var i = 0; i < productService.userStores.length; i++){
 					if(productService.userStores[i].id === store.userStore().id){
-						productService.userStores[i] = response.payload.result; // update the userStore list
+						// the payload result is only a string... "Updated"
+						// it doesn't return a store object like adding does
+						productService.userStores[i].credentials_status = 'Not defined';
+						productService.userStores[i].scrape_status = 'Not defined';
 					}
 				}
 			});

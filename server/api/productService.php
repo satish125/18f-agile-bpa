@@ -226,29 +226,29 @@ function productsAddUserLocalAPI() {
 
     try {
         $db = getConnection();
-        
+
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
         $sessionData = $stmt->fetchObject();
-        
+
         if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", array());
             return;
         }
-        
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", array());
             return;
         }
-        
+
         $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
@@ -805,9 +805,9 @@ function productsUpdateUserStore() {
         }
 
         $userId = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores/" .$body->user_store_id. "/?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
-        $data = array("user_store_id" => $body->user_store_id, "username" => $body->username, "password" => $body->password);
+        $data = array("username" => $body->username, "password" => $body->password);
 
         $jsonData = json_encode($data);
 
@@ -886,7 +886,7 @@ function productsGetProduct($productId) {
 
 function productsGetProductLocalAPI($productId) {
     $response = new restResponse;
-    
+
 
     try {
         $db = getConnection();
