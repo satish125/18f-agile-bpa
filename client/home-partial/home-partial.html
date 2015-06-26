@@ -1,20 +1,27 @@
 <div ng-controller="HomePartialCtrl">
-	<div class="jumbotron">
-		<div class="container">
-			<h1>Know when your purchases are recalled</h1>
-			<h3>Automatically import online & loyalty card purchases, and get notified of recalls.</h3>
-			<a ng-if="isLoggedIn()===false" href="/#/signup" class="btn btn-lg btn-primary">Sign up</a>
+	<div class="jumbotron teaser">
+		<div class="container-fluid">
+			<div class="row">
+				<hgroup>
+					<h1>Monitor your purchases automatically for recalls</h1>
+					<h2>RecallRodent is the only way to track all your purchases made at some of the most popular stores and monitor them for recent recalls.  Sign up, monitor your purchases, keep your family safe.</h2>
+					<a ng-if="isLoggedIn()===false" href="/#/signup" class="btn btn-lg btn-primary">Create a free account</a>
+				</hgroup>
+				<div class="squirrel">
+
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="container">
 		<h1>Recent Recalls</h1>
 		<div class="list-group three-line-list">
 			<div class="list-group-item" ng-repeat="product in recentRecalls_model | orderBy:'-recall_initiation_date'">
-				<div class="row-picture">
-					<img class="circle" ng-src="http://lorempixel.com/56/56/food/{{ $index % 11 }}" alt="Rnadom image of food #{{ $index % 11 }}">
+				<div class="row-picture hidden-xs">
+					<img class="circle" ng-src="//lorempixel.com/56/56/food/{{ $index % 11 }}" alt="Rnadom image of food #{{ $index % 11 }}">
 				</div>
 				<div class="row-content">
-					<div class="least-content">{{ product.recall_initiation_date | date }}</div>
+					<div class="least-content hidden-xs">{{ product.recall_initiation_date | date }}</div>
 					<h4 class="list-group-item-heading">{{ product.product_description }}</h4>
 					<p class="list-group-item-text">
 						<span class="list-group-item-subheading">{{ product.recalling_firm }}</span>
