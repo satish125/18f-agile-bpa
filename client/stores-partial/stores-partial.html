@@ -1,5 +1,13 @@
-<div class="container" ng-controller="StoresPartialCtrl">
-	<h1>Connect Stores</h1>
+<div class="container connect-stores" ng-controller="StoresPartialCtrl">
+	<div class="row">
+		<h1 class="col-md-8 col-sm-6">Connect Stores</h1>
+		<form class="col-md-4 col-sm-6 col-xs-12">
+			<div class="input-group search-group">
+				<span class="input-group-addon" id="basic-addon2"><i class="fa fa-search"></i></span>
+				<input type="search" class="form-control empty" id="storeSearch" ng-model="storeSearch.name" placeholder="search for store">
+			</div>
+		</form>
+	</div>
 	<div ng-repeat="error in errors track by $index" class="clearfix">
 	   <div class="alert alert-danger alert-dismissible" role="alert">
 		 <button type="button" ng-click="errors.splice($index,1)" class="close" data-dismiss="alert" aria-label="Close"><span class="fa fa-close" aria-hidden="true"></span></button>
@@ -7,11 +15,7 @@
 	   </div>
 	</div>
 
-	<form class="col-md-3">
-		<input type="search" class="form-control empty" id="storeSearch" ng-model="storeSearch.name" placeholder="search for store">
-	</form>
-
-	<div class="col-md-12">
+	<div>
 		<ul class="media-list">
 			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch">
 				<div class="media-left">
