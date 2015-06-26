@@ -206,6 +206,8 @@ function openFDAProductMatch($type, $days, $minScore) {
             return;
         }
         
+        $foundAMatch = false;
+        
         // Iterate thru each search result
         foreach ($bigArr['results'] as $idx => $idxVal) {
            
@@ -241,7 +243,7 @@ function openFDAProductMatch($type, $days, $minScore) {
             if ($matchingScore >= $minScore) {
                 // Store 
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
-                
+                $foundAMatch = true;
             } else {
                 unset($bigArr['results'][$idx]);
             }
@@ -257,7 +259,7 @@ function openFDAProductMatch($type, $days, $minScore) {
         $productBrand = null;
         $productCategory = null;
         
-        if ($productId !== "") {
+        if ($productId !== "" and $foundAMatch) {
             try {
                 $productQuery = productsGetProductLocalAPI($productId);
              
