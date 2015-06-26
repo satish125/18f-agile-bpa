@@ -25,35 +25,3 @@ A third round of usability testing helped us to refine our Home page to better d
 
 In keeping with the Arctic Ground Squirrel we researched as a result of the 18F blog announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows, and one of which we are very proud.
 
-
-
-
-
-
-
-
-
-## Prerequisites
-
-* [Node.js](https://nodejs.org)
-* LAMP Framework (Linux/Apache/MySQL/Php)
-
-## Install
-
-[View Installation Instructions](/docs/installation.md)
-
-## Commands
-
-* *grunt serve* - runs a localhost server and listens to changes in files. This does not build the app into /dist.
-* *grunt test* - runs karma unit tests on angular code
-* *grunt build* - builds the app into /dist
-
-## Apache Changes
-
-* Turn on rewrite engine for .htaccess to hide index.php in /api
-* Modify /etc/apache2/sites-available/000-default.conf and rewrite directive for SSL redirect
-  * Redirect permanent / https://ec2-54-152-245-25.compute-1.amazonaws.com/
-
-
-
-
