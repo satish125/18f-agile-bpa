@@ -19,7 +19,7 @@
 
 ## Sample Windows Install
 
-[View Detailed Windows Installation Instructions](detailed-windows-installation.md)
+[View Detailed Windows Installation Instructions](/docs/detailed-windows-installation.md)
 
 ## Commands
 
