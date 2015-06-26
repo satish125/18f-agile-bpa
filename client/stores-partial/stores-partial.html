@@ -30,13 +30,13 @@
 								READY
 								<span class="fa fa-check text-success" aria-hidden="true"></span>
 							</span>
-							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected()">
+							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
 								<input style="display:none" type="text">
 								<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
 								<label for="username{{store.id}}" class="floating-label">user</label>
 								<span class="material-input"></span>
 							</div>
-							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected()">
+							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
 								<input style="display:none" type="password">
 								<input id="password{{store.id}}" name="password{{store.id}}" type="password" ng-model="store.password" class="form-control empty" required autocomplete="off">
 								<label for="password{{store.id}}" class="floating-label">password</label>
@@ -60,6 +60,9 @@
 							</div>
 							<div class="small" ng-if="store.userStore().status() === 'Connecting' || store.userStore().status() === 'Purchase Review'">
 								Check back in a bit, or refresh
+								<button type="button" title="refresh" class="btn btn-default btn-flat btn-tight" ng-click="refreshUserStores()">
+									<span class="fa fa-refresh" aria-hidden="true"></span>
+								</button>
 							</div>
 						</span>
 

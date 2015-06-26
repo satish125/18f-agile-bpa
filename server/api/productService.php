@@ -226,29 +226,29 @@ function productsAddUserLocalAPI() {
 
     try {
         $db = getConnection();
-        
+
         $sql = "SELECT user_id FROM user_session where session_id=:session_id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("session_id", $sessionId);
         $stmt->execute();
         $sessionData = $stmt->fetchObject();
-        
+
         if ($sessionData == null) {
             $response->set("not_logged_on","You are not currently logged into the system", array());
             return;
         }
-        
+
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $iamdata = $stmt->fetchObject();
-        
+
         if ($iamdata == null) {
             $response->set("service_failure","product api keys are not configured", array());
             return;
         }
-        
+
         $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $db = getConnection();
         $stmt = $db->prepare($sql);
@@ -834,7 +834,7 @@ function productsUpdateUserStore() {
             $response->set("service_failure", "Service failed to update data", array() );
         }
     } catch(Exception $e) {
-        $response->set("system_failure","System error occurred, unable to update data", array());
+        $response->set("system_failure",$e->getMessage(), array());
     } finally {
         $db = null;
         $response->toJSON();
@@ -886,7 +886,7 @@ function productsGetProduct($productId) {
 
 function productsGetProductLocalAPI($productId) {
     $response = new restResponse;
-    
+
 
     try {
         $db = getConnection();
