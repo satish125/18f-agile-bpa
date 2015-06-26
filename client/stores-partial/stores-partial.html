@@ -23,7 +23,7 @@
 				</div>
 				<div class="media-body">
 					<form name="connectForm" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
-						<span class="float-left">
+						<span class="pull-left">
 							<span class="h4" ng-show="store.isConnected()">
 								CONNECTED
 								<span class="fa fa-check text-success" aria-hidden="true"></span>
@@ -45,7 +45,7 @@
 								<span class="material-input"></span>
 							</div>
 						</span>
-						<span class="float-left">
+						<span class="pull-left top-half-gutter">
 							<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="store.isWorking() || (store.userStore().credentials_status && store.userStore().credentials_status !== 'Invalid')" ng-show="!store.isConnected()">
 								<span class="fa fa-link fa-rotate-90" ng-class="store.isConnecting?'fa-spin':''" aria-hidden="true"></span> Connect
 							</button>
@@ -53,7 +53,7 @@
 								<span class="fa fa-unlink" ng-class="store.isDisconnecting?'fa-spin':''" aria-hidden="true"></span> Disconnect
 							</button>
 						</span>
-						<span class="float-left" ng-show="store.hasConnectionAttempt()">
+						<span class="pull-left top-half-gutter" ng-show="store.hasConnectionAttempt()">
 							<div class="h4 text-uppercase" ng-switch="store.userStore().status()" ng-if="store.userStore().status() !== 'Ready'">
 								{{store.userStore().status()}}
 								<span class="fa fa-share text-success" ng-switch-when="Connecting" aria-hidden="true"></span>
