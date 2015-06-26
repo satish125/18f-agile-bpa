@@ -1,23 +1,35 @@
 angular.module('web').controller('StoresPartialCtrl',['$scope','productService',function($scope,productService){
 
-	$scope.getStores = function(){
-		// filtering userStores out of the full list of stores
-		/*
-		return productService.stores.filter(function(store){
-			return 0 === $scope.getUserStores().filter(function(userStore){
-				return userStore.supermarket_id === store.id;
-			}).length;
-		});
-		*/
-		return productService.stores.map(function(store){
-			store.isConnected = 0 !== $scope.getUserStores().filter(function(userStore){
-				return userStore.supermarket_id === store.id;
-			}).length;
-			return store;
-		});
-	};
 	$scope.getUserStores = function(){
 		return productService.userStores;
+	};
+
+	$scope.getUserStoreMap = function(){
+		var userStoreMap = {};
+		for (var i = 0; i < $scope.getUserStores().length; i++){
+			userStoreMap[$scope.getUserStores()[i].supermarket_id] = $scope.getUserStores()[i];
+		}
+		return userStoreMap;
+	};
+
+	$scope.getStores = function(){
+		$scope.stores = productService.stores.map(function(store){
+			store.isConnecting = false;
+			store.isDisconnecting = false;
+			store.isWorking = function(){return this.isConnecting || this.isDisconnecting;};
+			store.hasConnectionAttempt = function(){
+				return this.id in $scope.getUserStoreMap();
+			};
+			store.userStore = function(){
+				return $scope.getUserStoreMap()[this.id] || {};
+			};
+			store.isConnected = function(){
+				return this.userStore().credentials_status === 'Verified';
+			};
+			return store;
+		});
+		$scope.stores = $scope.$eval('stores | orderBy:[\'-hasConnectionAttempt()\',\'name\']'); // one-time orderBy
+		return $scope.stores;
 	};
 
 	if (!productService.stores.length){
@@ -28,9 +40,21 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	// we should probably tie user-dependent data into the logout function
 
 	$scope.doStoreConnect = function(store){
-		productService.addUserStore(store.id, store.username, store.password).then(function(response){
-			console.log(response);
-		});
+		var action = {};
+		store.isConnecting = true;
+		if (store.hasConnectionAttempt()){
+			action = productService.updateUserStore(store.userStore().id, store.username, store.password);
+		}else{
+			action = productService.addUserStore(store.id, store.username, store.password);
+		}
+		action.finally(function(){store.isConnecting = false;});
+		// if credentials are unverified, set a timeout, pull back a single store
+		// repeat until no longer unverified
+	};
+
+	$scope.doStoreDisconnect = function(store){
+		store.isDisconnecting = true;
+		productService.deleteUserStore(store.userStore().id).finally(function(){store.isDisconnecting = false;});
 	};
 
 }]);
