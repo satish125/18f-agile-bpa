@@ -2,7 +2,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
     function($scope, openfdaService, productService){
 
         var dayLimit = 365;
-        var minScore = 0.75;
+        var minScore = 0.6;
 
          function init(){
             $scope.store_purchases = null; //array of stores and purchases
