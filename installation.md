@@ -62,7 +62,7 @@ The follow steps were copied from the website http://forum.wampserver.com/read.p
 #### 3a) In httpd.conf file, remove the comment '#' at the line which says: LoadModule ssl_module modules/mod_ssl.so
 #### 3b) In httpd.conf, remove the comment '#' at the line which says: 
 #### 	 Include conf/extra/httpd_ssl.conf
-#### Then move that line after this block <IfModule ssl_module>.... </IfModule>
+#### Then move that line after this block &lt;IfModule ssl_module&gt;.... &lt;/IfModule&gt;
 
 #### 3c) Open the php.ini file located in apache2.4.9\bin folder, remove the comment ';' at the line which says: 
 #### 	 extension=php_openssl.dll
@@ -78,7 +78,7 @@ The follow steps were copied from the website http://forum.wampserver.com/read.p
 
 #### 4d) SSL key file: Change the line SSLCertificateKeyFile "c:/Apache24/conf/server.key" to SSLCertificateKeyFile "conf/ssl.key/server.key"
 
-#### 4e) Change the line which says &lt;Directory "C:/Program Files/Apache Software Foundation/Apache2.4/cgi-bin"&gt; or something, similar to &lt;Directory "C:/wamp/www/"&gt; and add the following lines inside those &lt;Directory ... &gt;...&lt;/Directory&gt; tags:
+#### 4e) Change the line which says &lt;Directory "C:/Program Files/Apache Software Foundation/Apache2.4/cgi-bin"&gt; or something similar, to &lt;Directory "C:/wamp/www/"&gt; and add the following lines inside those &lt;Directory ... &gt;...&lt;/Directory&gt; tags:
 
 #### 	 Options Indexes FollowSymLinks MultiViews
 #### 	 AllowOverride All
@@ -97,10 +97,11 @@ The follow steps were copied from the website http://forum.wampserver.com/read.p
 #### 7. If restart is successful, then open the browser and enter "localhost" (without quotes).
 
 ##Additional Steps (Not included in http://forum.wampserver.com/read.php?2,32986)
-#### 1.	If the error depicted below occurs during Step 5 above, uncomment the line: LoadModule socache_shmcb_module modules/mod_socache_memcache.so in httpd.conf.
+#### 1.	Uncomment the line “LoadModule rewrite_module modules/mod_rewrite.so” by removing the “#”.
+#### 2.	If the error depicted below occurs during Step 5 above, uncomment the line: LoadModule socache_shmcb_module modules/mod_socache_memcache.so in httpd.conf.
 ![WAMP alt text](/docs/images/wamp_syntax_error.jpg)
  
-#### 2.	It is also recommended that the webserver redirects any HTTP requests to HTTPS or that port 80 is disabled to prevent unsecured access.
+#### 3.	It is also recommended that the webserver redirects any HTTP requests to HTTPS or that port 80 is disabled to prevent unsecured access.
 
 ## MySQL Workbench (Optional)
 #### The WAMP installation includes the MySQL console but MySQL Workbench is a user-friendly application that aids in development. Use the following steps to install the application if preferred over using the MySQL console.
@@ -181,7 +182,7 @@ Type “bower install” (without quotes) and answer the prompt “May bower ano
 ## Copy the Built Website Files to the WWW Directory
 #### 1.	Open two Windows Explorer windows: one to view the contents of \18f-agile-bpa\server and the other view the contents of C:\wamp\www
 #### 2.	Select the folder named “api” from the \18f-agile-bpa\server directory and copy it to C:\wamp\www.
-#### 3.	In the \18f-agile-bpa\server window, go up one directory to \18f-agile-bpa, select the folder named “dist”, and copy it to C:\wamp\www.
+#### 3.	In the \18f-agile-bpa\server window, go up one directory to \18f-agile-bpa, open the folder named “dist”, and copy it's contents directly into C:\wamp\www.
 
 ## Restart the WAMP Server
 #### 1.	Click on the system tray arrow to display the application shortcuts and left-click the WAMP server icon.
