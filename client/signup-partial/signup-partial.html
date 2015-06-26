@@ -7,7 +7,7 @@
 					<h3>Create a new account</h3>
 					<div class="form-group" ng-class="{'has-error': signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused}">
 						<div class="form-control-wrapper floating-label-wrapper">
-							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/" class="form-control empty" ng-focus required>
+							<input id="email" name="email" ng-model="signup.email" type="email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/" class="form-control empty" ng-focus required autofocus>
 							<div class="hint error" ng-show="signupForm.email.$dirty && signupForm.email.$invalid && !signupForm.email.$focused">
 								<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
 								<span ng-show="signupForm.email.$error.required">An email is required</span>

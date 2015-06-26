@@ -1,7 +1,7 @@
 angular.module('web').factory('userService',['$q', '$http',
 
     function($q, $http) {
-        var service = {user:{},isLoggedIn:false};
+        var service = {user:{},isLoggedIn:undefined};
 
         service.loginUser = function(email, password) {
             var deferred = $q.defer();
@@ -35,13 +35,12 @@ angular.module('web').factory('userService',['$q', '$http',
         service.logoutUser = function() {
             var deferred = $q.defer();
 
+			service.user = {};
+			service.isLoggedIn = false;
+
             $http.get("/api/user/logout").then(
 				function(response) {
                     deferred.resolve(response.data);
-                    if (response.data.code === "success") {
-					    service.user = {};
-					    service.isLoggedIn = false;
-                    }
                 },
                 function(error) {
                     deferred.reject(error);

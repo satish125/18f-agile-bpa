@@ -30,6 +30,9 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
             $scope.RecentRecallsInProgress = false;
         });
 
+		$scope.isLoggedIn = function(){
+			return userService.isLoggedIn;
+		};
         if ($stateParams.logout){
 			userService.logoutUser();
 		}
