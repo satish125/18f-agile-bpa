@@ -1,4 +1,4 @@
-# Technical Stack Document
+# Technical Stack
 
 ## Frontend libraries 
 For complete list, see [bower.json](../bower.json)
