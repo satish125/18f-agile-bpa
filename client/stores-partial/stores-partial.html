@@ -26,6 +26,10 @@
 								CONNECTED
 								<span class="fa fa-check text-success" aria-hidden="true"></span>
 							</span>
+							<span class="h4" ng-show="store.isConnected()">
+								READY
+								<span class="fa fa-check text-success" aria-hidden="true"></span-->
+							</span>
 							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected()">
 								<input style="display:none" type="text">
 								<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
@@ -43,17 +47,22 @@
 							<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="store.isWorking() || (store.userStore().credentials_status && store.userStore().credentials_status !== 'Invalid')" ng-show="!store.isConnected()">
 								<span class="fa fa-link fa-rotate-90" ng-class="store.isConnecting?'fa-spin':''" aria-hidden="true"></span> Connect
 							</button>
-							<button type="button" class="btn btn-default btn-flat btn-tight" ng-show="store.hasConnectionAttempt()" ng-disabled="store.isWorking()" ng-click="doStoreDisconnect(store)">
+							<button type="button" class="btn btn-default btn-flat btn-tight" ng-show="store.hasConnectionAttempt()" ng-disabled="store.isWorking() || store.userStore().status() === 'Connecting'" ng-click="doStoreDisconnect(store)">
 								<span class="fa fa-unlink" ng-class="store.isDisconnecting?'fa-spin':''" aria-hidden="true"></span> Disconnect
 							</button>
 						</span>
-						<span class="float-left h4 text-uppercase" ng-show="store.hasConnectionAttempt()" ng-switch="store.userStore().status()">
-							{{store.userStore().status()}}
-							<span class="fa fa-spinner fa-pulse" ng-switch-when="Connecting" aria-hidden="true"></span>
-							<span class="fa fa-times text-danger" ng-switch-when="Invalid Credentials" aria-hidden="true"></span>
-							<span class="fa fa-shopping-cart fa-pulse" ng-switch-when="Purchase Review" aria-hidden="true"></span>
-							<span class="fa fa-check text-success" ng-switch-when="Ready" aria-hidden="true"></span>
+						<span class="float-left h4 text-uppercase" ng-show="store.hasConnectionAttempt()">
+							<div ng-switch="store.userStore().status()" ng-if="store.userStore().status() !== 'Ready'">
+								{{store.userStore().status()}}
+								<span class="fa fa-share text-success" ng-switch-when="Connecting" aria-hidden="true"></span>
+								<span class="fa fa-times text-danger" ng-switch-when="Invalid Credentials" aria-hidden="true"></span>
+								<span class="fa fa-shopping-cart fa-pulse" ng-switch-when="Purchase Review" aria-hidden="true"></span>
+							</div>
+							<div class="small" ng-if="store.userStore().status() === 'Connecting' || store.userStore().status() === 'Purchase Review'">
+								Check back in a bit, or refresh
+							</div>
 						</span>
+
 					</form>
 				</div>
 			</li>
