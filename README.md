@@ -1,12 +1,13 @@
 # RecallRodent 
 
-[![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c)
-[![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242)
+[![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c) (npm)
+
+[![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242) (bower)
 
 ![Squirrel alt text](/docs/images/Squirrel.jpg)
 
 
-Guident (acquired by CRGT in December 2012) formed Team 4840West to respond to this RFQ.  Team 4840West’s approach to the GSA RFQ has been to create a prototype utilizing agile methodologies, work with an experienced, knowledgeable team of people, and employ a modern and open source technology stack.  Our team brings over 45 years of combined experience in securing digital services, as well as over 60 years of combined experience creating high-traffic digital services and mobile and web applications (Play 7).
+Guident (acquired by CRGT in December 2012) formed Team 4840West to respond to this RFQ.  Team 4840West’s approach to the GSA RFQ has been to create a prototype utilizing [agile methodologies] (/docs/images/Agile Methodologies.JPG), work with an experienced, knowledgeable team of people, and employ a modern and open source technology stack.  Our team brings over 45 years of combined experience in securing digital services, as well as over 60 years of combined experience creating high-traffic digital services and mobile and web applications (Play 7).
 
 To kick off the project, our team moved into the “war room” located within our Agile Center of Excellence and started tracking our sprints first using a physical scrum board, and later switching to Asana. We had twice daily standups and utilized Slack for group messaging, while Github acted as our source code version control system (Play 4).  Our embedded Product Owner exercised full authority over adding and removing features, and prioritizing the Features Backlog based on user feedback and team progress.  We defined team roles as closely to the pure agile structure as possible (Play 6). To give focus and ensure a solid product and timely delivery CRGT created a dedicated fund and time charge code for the members of team 4840W. (Play5)
 
