@@ -2,7 +2,7 @@
 
 // Establish a session
 $session_name = 'SESSION_ID'; // Set a custom session name
-$secure = false; // Set to true if using https else leave as false
+$secure = true; // Set to true if using https else leave as false
 $httponly = true; // This stops javascript being able to access the session id
 ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies.
 ini_set('session.entropy_file', '/dev/urandom'); // better session id's
