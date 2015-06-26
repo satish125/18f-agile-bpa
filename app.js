@@ -76,8 +76,9 @@ angular.module('web').run(['$rootScope','$state','$location','userService',funct
 					$state.go('recalls-partial'); // may need to determine if user has stores already
 				}
 			}else{
+				var action = userService.getUser();
 				if (currentPath !== '' && currentPath !== '/' && currentPath !== '/login' && currentPath !== '/signup'){
-					userService.getUser().then(function(){
+					action.then(function(){
 						if (!userService.isLoggedIn){
 							$state.go('login');
 						}

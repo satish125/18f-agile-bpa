@@ -1,7 +1,7 @@
 angular.module('web').factory('userService',['$q', '$http',
 
     function($q, $http) {
-        var service = {user:{},isLoggedIn:false};
+        var service = {user:{},isLoggedIn:undefined};
 
         service.loginUser = function(email, password) {
             var deferred = $q.defer();
