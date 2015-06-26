@@ -1,9 +1,5 @@
 # RecallRodent 
 
-[![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c) (npm)
-
-[![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242) (bower)
-
 ![Squirrel alt text](/docs/images/Squirrel.jpg)
 
 
