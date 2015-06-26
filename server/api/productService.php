@@ -834,7 +834,7 @@ function productsUpdateUserStore() {
             $response->set("service_failure", "Service failed to update data", array() );
         }
     } catch(Exception $e) {
-        $response->set("system_failure",$e->getMessage(), array());
+        $response->set("system_failure","System error occurred, unable to update data", array());
     } finally {
         $db = null;
         $response->toJSON();
