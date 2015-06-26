@@ -50,7 +50,10 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	if (!productService.stores.length){
 		productService.getStores();
 	}
-	productService.getUserStores().then(buildScopeStores);
+	$scope.refreshUserStores = function(){
+		productService.getUserStores().then(buildScopeStores);
+	};
+	$scope.refreshUserStores();
 	// rebuilding on every scope change
 	// future release - cleanup user-dependent data into the logout function if it persists in angular services
 
