@@ -28,4 +28,4 @@ Recalls are almost always voluntary, meaning a company discovers a problem and r
 
 
 ####Information Machine - [iam api] (http://iamdata.co/#api)
-This is the APIs that capture product level purchase data from online or loyalty card transactions.  The servic provider collects item level purchase data from the largest merchants in the world. The APIs expose this purchase level data with details about the indvidual product information.
+This is the api that exposes product level purchase data from online or loyalty card transactions.  The servic provider collects item level purchase data from the largest merchants in the world. The api exposes this purchase level data with detailed product level information.
