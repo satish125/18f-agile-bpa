@@ -39,7 +39,7 @@ In keeping with the Arctic Ground Squirrel we researched as a result of the 18F 
 
 ## Install
 
-[View Installation Instructions](installation.md)
+[View Installation Instructions](/docs/installation.md)
 
 ## Commands
 
