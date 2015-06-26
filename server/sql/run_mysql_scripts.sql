@@ -6,4 +6,3 @@ source C:/GitHub/18f-agile-bpa/server/sql/create_table_api_key.sql;
 source C:/GitHub/18f-agile-bpa/server/sql/create_table_iamdata_properties.sql;
 source C:/GitHub/18f-agile-bpa/server/sql/insert_table_api_key.sql;
 source C:/GitHub/18f-agile-bpa/server/sql/insert_table_iamdata_properties.sql;
-source C:/GitHub/18f-agile-bpa/server/sql/upd_iamdata_properties.sql;
