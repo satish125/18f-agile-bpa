@@ -805,9 +805,9 @@ function productsUpdateUserStore() {
         }
 
         $userId = $iamdata->client_id ."_". $userData->user_id;
-        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
+        $url = "https://api.iamdata.co:443/v1/users/" .$userId. "/stores/" .$body->user_store_id. "/?client_id=" .$iamdata->client_id. "&client_secret=" .$iamdata->client_secret;
 
-        $data = array("user_store_id" => $body->user_store_id, "username" => $body->username, "password" => $body->password);
+        $data = array("username" => $body->username, "password" => $body->password);
 
         $jsonData = json_encode($data);
 
