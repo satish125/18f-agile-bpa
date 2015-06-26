@@ -1,18 +1,18 @@
 # Technical Stack
 
-[![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c) (npm)
-
-[![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242) (bower)
-
 ## Frontend libraries 
-For complete list, see [bower.json](../bower.json)
+For complete list, see [bower.json](../bower.json) 
+
+[![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242)
 
 *	[AngularJS] - MVC framework for data-binding, front-end routing, and awesomeness
 *	[UI-router] - Client side URL routing
 *	[UI-Bootstrap] - UI boilerplate framework built on top of AngularJS
 
 ## Frontend development/build tools
-For complete list, see [package.json](../package.json)
+For complete list, see [package.json](../package.json) 
+
+[![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c)
 *	[Less] - CSS preprocessor
 *	[Karma] - JavaScript unit testing
 *	[Yeoman] - Scaffolding tool that includes Grunt.js and Bower.js - requires Node.js installed
