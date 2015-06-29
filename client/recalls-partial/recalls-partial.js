@@ -57,22 +57,36 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
          */
         function getPageOfPurchases(page){
             return productService.getUserPurchases(dayLimit, page).then(function(response){
-
-                //add this page of store purchases to our saved array
+                //instatiate an empty array, so we know we're done retrieving results
                 if($scope.store_purchases == null){
                     $scope.store_purchases = [];
                 }
+
+                //no results found, leave the array empty
+                if(!response.result){
+                    $scope.progress = 100;
+                    return; 
+                }
+
+                //add this page of store purchases to our saved array
                 $scope.store_purchases = $scope.store_purchases.concat(response.result);
 
                 //loop through purchases and match
-                for(var i = 0, orders; orders = $scope.store_purchases[i]; i++){
-                    for(var j = 0, item; item = orders.purchase_items[j]; j++){
+                for(var i = 0, order; order = $scope.store_purchases[i]; i++){
+                    for(var j = 0, item; item = order.purchase_items[j]; j++){
                         $scope.num_purchases++;
-                        item.date = orders.date; //pass the date to the php
+
+                        //pass the date to the php
+                        item.date = order.date;
+
+                        //pass the store to the product for display
+                        item.store = order.user_store.store_name;
+
                         productMatch(item);
                     }
                 }
 
+                //sum number of orders
                 $scope.num_orders+= response.result.length;
 
                 //re-run this function if more pages to get
@@ -88,9 +102,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             //check cached recalls for the product
             var cachedProduct = $scope.match_results[product.id];
             if(typeof cachedProduct !== 'undefined'){
-                console.log('product '+product.id+' has already been searched for');
                 if(cachedProduct!=null){
-                    console.log('product '+product.id+' has cached matches');
                     $scope.recalls[product.id] = cachedProduct;
                 }
                 $scope.num_checked++;
@@ -98,8 +110,6 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 setProgress();
                 return;
             }
-
-            console.log('product '+product.id+' is not cached');
 
             return openfdaService.productMatch(item, minScore).then(function(response){
                 //error
