@@ -5,21 +5,15 @@ angular.module('web').controller('HomePartialCtrl',[ '$scope', '$state', '$state
         $scope.dayLimit = 90;
         $scope.recordLimit = 100;
         $scope.errorMsg = null;
-
-        $scope.recentRecalls_model = null;
+        $scope.recentRecalls = [];
 
         angular.element(document).ready(function () {
             $.material.ripples('.btn');
         });
 
-        openfdaService.recentRecalls($scope.dayLimit, $scope.recordLimit).then(function(recallData) {
-            $scope.recentRecalls_model = recallData.payload.map(function(obj){
-            	obj.recall_initiation_date = new Date(
-            		obj.recall_initiation_date.substring(0,4),
-            		(Number(obj.recall_initiation_date.substring(4,6))-1),
-            		obj.recall_initiation_date.substring(6,8));
-            	return obj;
-            });
+        openfdaService.recentRecalls($scope.dayLimit, $scope.recordLimit)
+        .then(function(recallData) {
+            $scope.recentRecalls = recallData.payload;
 
             if (recallData.code !== "success") {
                 $scope.errorMsg = recallData.msg;
