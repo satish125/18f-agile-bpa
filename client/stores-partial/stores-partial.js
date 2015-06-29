@@ -1,5 +1,7 @@
 angular.module('web').controller('StoresPartialCtrl',['$scope','productService',function($scope,productService){
 
+	$scope.encodeURIComponent = encodeURIComponent;
+
 	$scope.stores = [];
 
 	$scope.getUserStores = function(){
