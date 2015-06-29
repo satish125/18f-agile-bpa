@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-Review the prerequisites listed on the [Quick Start Guide] (installation.md).
+Review the prerequisites listed on the [Installation Guide] (../installation.md).
 
 ## Install WAMP 
 
