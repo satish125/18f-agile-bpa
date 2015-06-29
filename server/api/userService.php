@@ -33,7 +33,7 @@ function userLogin() {
 		}
 		else
 		{
-			if ($body->password == validate_hashed_password($body->password, $userData->password)) {
+			if ($body->password == validateHashedPassword($body->password, $userData->password)) {
 				try {
 					$sql = "update user set last_login= now() WHERE user_id=:user_id";
 					$stmt = $db->prepare($sql);
@@ -109,7 +109,7 @@ function userRegister() {
 		{
             
             // Has Password
-            $passwordHash = create_hashed_password($body->password);
+            $passwordHash = createHashedPassword($body->password);
             
             // Create user record 
             $sql = "insert into user (email, zip, password, last_login) values (:email, :zip, :password, now())";

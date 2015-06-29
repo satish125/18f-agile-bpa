@@ -39,8 +39,7 @@ define("HASH_ITERATION_INDEX", 1);
 define("HASH_SALT_INDEX", 2);
 define("HASH_PBKDF2_INDEX", 3);
 
-function create_hashed_password($password)
-{
+function createHashedPassword($password) {
     // format: algorithm:iterations:salt:hash
     $salt = base64_encode(mcrypt_create_iv(PBKDF2_SALT_BYTE_SIZE, MCRYPT_DEV_URANDOM));
     return PBKDF2_HASH_ALGORITHM . ":" . PBKDF2_ITERATIONS . ":" .  $salt . ":" .
@@ -54,13 +53,13 @@ function create_hashed_password($password)
         ));
 }
 
-function validate_hashed_password($password, $correct_hash)
-{
-    $params = explode(":", $correct_hash);
-    if(count($params) < HASH_SECTIONS)
+function validateHashedPassword($password, $correctHash) {
+    $params = explode(":", $correctHash);
+    if(count($params) < HASH_SECTIONS) {
        return false;
+    }
     $pbkdf2 = base64_decode($params[HASH_PBKDF2_INDEX]);
-    return slow_equals(
+    return slowEquals(
         $pbkdf2,
         pbkdf2(
             $params[HASH_ALGORITHM_INDEX],
@@ -74,11 +73,9 @@ function validate_hashed_password($password, $correct_hash)
 }
 
 // Compares two strings $a and $b in length-constant time.
-function slow_equals($a, $b)
-{
+function slowEquals($a, $b) {
     $diff = strlen($a) ^ strlen($b);
-    for($i = 0; $i < strlen($a) && $i < strlen($b); $i++)
-    {
+    for($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
         $diff |= ord($a[$i]) ^ ord($b[$i]);
     }
     return $diff === 0;
@@ -90,36 +87,36 @@ function slow_equals($a, $b)
  * $password - The password.
  * $salt - A salt that is unique to the password.
  * $count - Iteration count. Higher is better, but slower. Recommended: At least 1000.
- * $key_length - The length of the derived key in bytes.
- * $raw_output - If true, the key is returned in raw binary format. Hex encoded otherwise.
- * Returns: A $key_length-byte key derived from the password and salt.
+ * $keyLength - The length of the derived key in bytes.
+ * $rawOutput - If true, the key is returned in raw binary format. Hex encoded otherwise.
+ * Returns: A $keyLength-byte key derived from the password and salt.
  *
  * Test vectors can be found here: https://www.ietf.org/rfc/rfc6070.txt
  *
  * This implementation of PBKDF2 was originally created by https://defuse.ca
  * With improvements by http://www.variations-of-shadow.com
  */
-function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
-{
+function pbkdf2($algorithm, $password, $salt, $count, $keyLength, $rawOutput = false) {
     $algorithm = strtolower($algorithm);
-    if(!in_array($algorithm, hash_algos(), true))
+    if(!in_array($algorithm, hash_algos(), true)) {
         trigger_error('PBKDF2 ERROR: Invalid hash algorithm.', E_USER_ERROR);
-    if($count <= 0 || $key_length <= 0)
+    }
+    if($count <= 0 || $keyLength <= 0) {
         trigger_error('PBKDF2 ERROR: Invalid parameters.', E_USER_ERROR);
-
+    }
     if (function_exists("hash_pbkdf2")) {
-        // The output length is in NIBBLES (4-bits) if $raw_output is false!
-        if (!$raw_output) {
-            $key_length = $key_length * 2;
+        // The output length is in NIBBLES (4-bits) if $rawOutput is false!
+        if (!$rawOutput) {
+            $keyLength = $keyLength * 2;
         }
-        return hash_pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output);
+        return hash_pbkdf2($algorithm, $password, $salt, $count, $keyLength, $rawOutput);
     }
 
-    $hash_length = strlen(hash($algorithm, "", true));
-    $block_count = ceil($key_length / $hash_length);
+    $hashLength = strlen(hash($algorithm, "", true));
+    $blockCount = ceil($keyLength / $hashLength);
 
     $output = "";
-    for($i = 1; $i <= $block_count; $i++) {
+    for($i = 1; $i <= $blockCount; $i++) {
         // $i encoded as 4 bytes, big endian.
         $last = $salt . pack("N", $i);
         // first iteration
@@ -131,9 +128,9 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
         $output .= $xorsum;
     }
 
-    if($raw_output)
-        return substr($output, 0, $key_length);
+    if($rawOutput)
+        return substr($output, 0, $keyLength);
     else
-        return bin2hex(substr($output, 0, $key_length));
+        return bin2hex(substr($output, 0, $keyLength));
 }
 ?>
