@@ -22,9 +22,11 @@
 		<ul class="media-list">
 			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch">
 				<div class="media-left">
-					<div class="store-logo-container">
-						<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
-					</div>
+					<a href="https://www.google.com/search?q={{store.name}}&btnI" target="_blank">
+						<div class="store-logo-container">
+							<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
+						</div>
+					</a>
 				</div>
 				<div class="media-body">
 					<form name="connectForm" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
