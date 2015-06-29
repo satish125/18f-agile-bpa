@@ -4,7 +4,6 @@ describe('productService', function() {
 
   it('should ...', inject(function(productService) {
 
-	
 
   }));
 

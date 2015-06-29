@@ -25,7 +25,17 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             }
 
             var oldestCacheTime = localStorage['oldestCacheTime'];
-            
+
+            //clear cache if at least 1 day has elapsed
+            if(oldestCacheTime){ 
+                var elapsedMS = (new Date()) - (new Date(oldestCacheTime)); 
+                var days = elapsedMS/1000/60/60/24; 
+                if(days > 1){
+                    localStorage['matches'] = "{}";
+                }
+            }
+
+            //TODO: Set oldest cache time
 
             try{ 
                 return JSON.parse(localStorage['matches']);

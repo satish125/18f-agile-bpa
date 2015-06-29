@@ -4,8 +4,6 @@ describe('userService', function() {
 
   it('should ...', inject(function(userService) {
 
-
-
   }));
 
 });
