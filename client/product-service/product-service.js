@@ -1,9 +1,38 @@
 angular.module('web').factory('productService',['$q', '$http',
 
     function($q, $http) {
+        var userStoreMap = {};
+
         var service = {
 			stores: [],
 			userStores: []
+		};
+
+		var map = {
+			store: function(store){
+				store.isConnecting = false;
+				store.isDisconnecting = false;
+				store.isWorking = function(){return this.isConnecting || this.isDisconnecting;};
+				store.href = 'https://www.google.com/search?q='+encodeURIComponent(store.name)+'&btnI';
+				store.hasConnectionAttempt = function(){
+					return this.id in userStoreMap;
+				};
+				store.userStore = function(){
+					return userStoreMap[this.id] || {};
+				};
+				store.isConnected = function(){
+					return this.userStore().credentials_status === 'Verified';
+				};
+				return store;
+			},
+			userStore: function(userStore){
+				userStore.status = function(){
+					return this.credentials_status === 'Invalid' ? 'Invalid Credentials'
+						: this.credentials_status !== 'Verified' ? 'Connecting'
+						: this.scrape_status === 'Done' ? 'Ready' : 'Purchase Review';
+				};
+				return userStore;
+			}
 		};
 
         service.getUser = function() {
@@ -64,7 +93,7 @@ angular.module('web').factory('productService',['$q', '$http',
 				function(response) {
                     for(var resultIndex in response.data.payload){
 						// it's stored as {"0":x,"1":y}
-                        service.stores.push(response.data.payload[resultIndex]);
+                        service.stores.push(map.store(response.data.payload[resultIndex]));
                     }
                     response.data.payload = service.stores;
                     deferred.resolve(response.data);
@@ -88,7 +117,14 @@ angular.module('web').factory('productService',['$q', '$http',
 
             $http.get("/api/products/getUserStores/"+page).then(
 				function(response) {
-					Array.prototype.push.apply(service.userStores,response.data.payload.result);
+					Array.prototype.push.apply(service.userStores,response.data.payload.result.map(map.userStore));
+
+					// for ease of lookup
+					userStoreMap = {};
+					for (var i = 0; i < service.userStores.length; i++){
+						userStoreMap[service.userStores[i].supermarket_id] = service.userStores[i];
+					}
+
 					if (response.data.payload.meta.next_page) {
 						service.getUserStores(response.data.payload.meta.next_page);
 					}
@@ -133,6 +169,9 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.post("/api/products/addUserStore", postData).then(
 				function(response) {
                     deferred.resolve(response.data);
+                    response.data.payload.result.supermarket_id = storeid; // success response object model doesn't match userStore fetch
+					service.userStores.push(response.data.payload.result); // add to the userStore list
+					userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
                 },
                 function(error) {
                     deferred.reject(error);
@@ -150,6 +189,13 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.delete("/api/products/deleteUserStore/" + userStoreId).then(
 				function(response) {
                     deferred.resolve(response.data);
+					for(var i = 0; i < service.userStores.length; i++){
+						if(service.userStores[i].id === userStoreId){
+							delete userStoreMap[service.userStores[i].supermarket_id];
+							service.userStores.splice(i,1); // remove from userStore list
+							break;
+						}
+					}
                 },
                 function(error) {
                     deferred.reject(error);
@@ -173,6 +219,15 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.put("/api/products/updateUserStore", postData).then(
 				function(response) {
                     deferred.resolve(response.data);
+                    for(var i = 0; i < service.userStores.length; i++){
+						if(service.userStores[i].id === userStoreId){
+							// the payload result is only a string... "Updated"
+							// it doesn't return a store object like adding does
+							service.userStores[i].credentials_status = 'Not defined';
+							service.userStores[i].scrape_status = 'Not defined';
+							break;
+						}
+					}
                 },
                 function(error) {
                     deferred.reject(error);
