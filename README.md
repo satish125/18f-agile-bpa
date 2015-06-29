@@ -1,6 +1,6 @@
 # RecallRodent 
 
-![Squirrel alt text](/docs/images/4840west.jpg)
+![4840West alt text](/docs/images/4840West.jpg)
 
 
 Guident (acquired by CRGT in December 2012) formed Team 4840West to respond to this RFQ.  Team 4840West’s approach to the GSA RFQ has been to create a prototype utilizing [agile methodologies] (/docs/images/Agile Methodologies.JPG), work with an experienced, knowledgeable team of [people] (http://4840west.tumblr.com/post/121944264253/team-4840west), and employ a modern and open source [technology stack] (/docs/tech-stack.md).  Our team brings over 45 years of combined experience in securing digital services, as well as over 60 years of combined experience creating high-traffic digital services and mobile and web applications (full story on our blog [here] (http://4840west.tumblr.com/))(Play 7).
