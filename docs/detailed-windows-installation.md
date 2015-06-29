@@ -69,9 +69,11 @@ In the previous DOS Command windows, enter httpd -t . If it displays “Syntax i
 <li>If restart is successful, then open the browser and enter "localhost" (without quotes).</li>
 </ol>
 ##Additional Steps (Not included in http://forum.wampserver.com/read.php?2,32986)
-1.	Uncomment the line “LoadModule rewrite_module modules/mod_rewrite.so” by removing the “#”.
+1.	Uncomment the line “LoadModule rewrite_module modules/mod_rewrite.so” by removing the “#” in the httpd.conf file.
 2.	If the error depicted below occurs during Step 5 above, uncomment the line: LoadModule socache_shmcb_module modules/mod_socache_memcache.so in httpd.conf.<br>
 ![WAMP alt text](/docs/images/wamp_syntax_error.jpg)
+4.  Add the following line to the httpd_ssl.conf file above the &lt;VirtualHost&gt; section:<br>
+SSLProtocol TLSv1 TLSv1.1 TLSv1.2
 3.	It is also recommended that the webserver redirects any HTTP requests to HTTPS or that port 80 is disabled to prevent unsecured access.
 
 ## MySQL Workbench (Optional)
