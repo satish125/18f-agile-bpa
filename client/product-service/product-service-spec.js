@@ -4,7 +4,7 @@ describe('productService', function() {
 
   it('should ...', inject(function(productService) {
 
-	//expect(productService.doSomething()).toEqual('something');
+	
 
   }));
 

@@ -4,7 +4,7 @@ describe('openfdaService', function() {
 
   it('should ...', inject(function(openfdaService) {
 
-	//expect(openfdaService.doSomething()).toEqual('something');
+	
 
   }));
 

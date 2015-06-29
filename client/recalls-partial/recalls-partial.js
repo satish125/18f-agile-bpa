@@ -25,7 +25,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             }
 
             var oldestCacheTime = localStorage['oldestCacheTime'];
-            ///if(oldestCacheTime){ var elapsedMS = (new Date()) - (new Date(oldestCacheTime)); var days = elapsedMS/1000/60/60/24; }
+            
 
             try{ 
                 return JSON.parse(localStorage['matches']);
