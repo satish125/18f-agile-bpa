@@ -63,7 +63,7 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.get("/api/products/getStores").then(
 				function(response) {
                     for(var resultIndex in response.data.payload){
-						// it's stored as {"0":x,"1":y}
+						// the format of the response is {"0":x,"1":y}
                         service.stores.push(response.data.payload[resultIndex]);
                     }
                     response.data.payload = service.stores;
