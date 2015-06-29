@@ -20,9 +20,9 @@
 
 	<div>
 		<ul class="media-list">
-			<li class="media card" ng-repeat="store in getStores() | filter:storeSearch">
+			<li class="media card" ng-repeat="store in stores | filter:storeSearch">
 				<div class="media-left">
-					<a href="https://www.google.com/search?q={{encodeURIComponent(store.name)}}&btnI" target="_blank">
+					<a href="{{store.href}}" target="_blank">
 						<div class="store-logo-container">
 							<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
 						</div>
@@ -30,15 +30,13 @@
 				</div>
 				<div class="media-body">
 					<form name="connectForm" class="form-inline" ng-submit="doStoreConnect(store)" autocomplete="off">
+						<span class="pull-left top-half-gutter" ng-show="store.isConnected()">
+							<div class="h4 text-uppercase">
+								Connected
+								<span class="fa fa-check text-success" aria-hidden="true"></span>
+							</div>
+						</span>
 						<span class="pull-left">
-							<span class="h4" ng-show="store.isConnected()">
-								CONNECTED
-								<span class="fa fa-check text-success" aria-hidden="true"></span>
-							</span>
-							<span class="h4" ng-show="store.isConnected()">
-								READY
-								<span class="fa fa-check text-success" aria-hidden="true"></span>
-							</span>
 							<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
 								<input style="display:none" type="text">
 								<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
@@ -74,7 +72,6 @@
 								</button>
 							</div>
 						</span>
-
 					</form>
 				</div>
 			</li>
