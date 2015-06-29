@@ -1,5 +1,7 @@
 <?php
 
+require 'passwordHash.php';
+
 function userLogin() {
 	$response = new restResponse;
 	$sessionId = session_id();
@@ -31,7 +33,7 @@ function userLogin() {
 		}
 		else
 		{
-			if ($body->password == $userData->password) {
+			if ($body->password == validate_hashed_password($body->password, $userData->password)) {
 				try {
 					$sql = "update user set last_login= now() WHERE user_id=:user_id";
 					$stmt = $db->prepare($sql);
@@ -61,7 +63,7 @@ function userLogin() {
 			}
         }
     } catch(Exception $e) {
-		$response->set("system_failure", "System error occurred, unable to login", array());
+		$response->set("system_failure", $e->getMessage(), array());
     } finally {
 		$db = null;
 		$response->toJSON();
@@ -105,16 +107,20 @@ function userRegister() {
 		}
 		else
 		{
+            
+            // Has Password
+            $passwordHash = create_hashed_password($body->password);
+            
             // Create user record 
             $sql = "insert into user (email, zip, password, last_login) values (:email, :zip, :password, now())";
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam("email",  $body->email);
 			$stmt->bindParam("zip",  $body->zipcode);
-			$stmt->bindParam("password",  $body->password);
+			$stmt->bindParam("password",  $passwordHash);
 			$stmt->execute();
 
             // Retrieve user data
-			$sql = "SELECT user_id, password, zip FROM user WHERE upper(email)=:email";
+			$sql = "SELECT user_id FROM user WHERE upper(email)=:email";
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam("email", $email);
 			$stmt->execute();
