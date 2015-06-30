@@ -3,11 +3,11 @@
         <i class="fa fa-undo"></i> Recheck All
     </button>
     <h1>Recalls</h1>
-    <p ng-show="store_purchases == null">
+    <p ng-show="stores === null">
         Retrieving your purchases
     </p>
-    <p ng-show="progress<100 && store_purchases != null">
-        Checking {{num_attempted}} of {{num_purchases}} purchases.
+    <p ng-show="progress<100 && stores !== null">
+        Checking {{attemptCount}} of {{purchaseCount}} purchases.
     </p>
     <div ng-show="progress<100" class="progress progress-striped active">
         <div class="progress-bar" style="width: {{progress}}%"></div>
@@ -21,7 +21,7 @@
                     <div class="imageBG">
                         <img ng-src="{{recall.purchase.large_image}}" alt="{{recall.purchase.store}}" />
                     </div>
-                    
+
                     <h1>{{recall.purchase.name}}</h1>
                     <div class="recalls-count">
                         {{ sizeOf(recall.results) }} possible recalls
@@ -40,10 +40,10 @@
             </div>
         </div.
     </div>
-    <div ng-show="progress==100 && num_purchases==0">
+    <div ng-show="progress==100 && purchaseCount==0">
         <p>We didn't get any purchases from your connected stores. Try <a href="/#/connect">connecting more stores</a>.</p>
     </div>
-    <div ng-show="progress==100 && !sizeOf(recalls) && num_purchases>0">
-        <p>We checked {{num_checked}} of your {{num_purchases}} purchases, and nothing has been recalled.</p>
+    <div ng-show="progress==100 && !sizeOf(recalls) && purchaseCount>0">
+        <p>We checked {{checkCount}} of your {{purchaseCount}} purchases, and nothing has been recalled.</p>
     </div>
 </div>
