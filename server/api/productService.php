@@ -345,8 +345,11 @@ function productsGetStores() {
 
             //filter for objects with canScrape true
             $results = array_filter($results, function($obj){
-                if ($obj["can_scrape"] == 0) return false;
-                return true;
+                if ($obj["can_scrape"] == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
             });
 
             $response->set("success", "Data successfully fetched from service", $results );

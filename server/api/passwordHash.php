@@ -128,9 +128,10 @@ function pbkdf2($algorithm, $password, $salt, $count, $keyLength, $rawOutput = f
         $output .= $xorsum;
     }
 
-    if($rawOutput)
+    if($rawOutput) {
         return substr($output, 0, $keyLength);
-    else
+    } else {
         return bin2hex(substr($output, 0, $keyLength));
+    }
 }
 ?>
