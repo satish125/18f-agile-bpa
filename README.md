@@ -1,6 +1,10 @@
-# [RecallRodent] (https://recallrodent.crgt.com/#/) 
+# RecallRodent
+######https://recallrodent.crgt.com
+
 
 ![4840West alt text](/docs/images/4840West.jpg)
+
+
 
 
 Guident (acquired by CRGT in December 2012) formed Team 4840West to respond to this RFQ.  Team 4840West’s approach to the GSA RFQ has been to create a prototype utilizing [agile methodologies] (/docs/images/Agile Methodologies.JPG), work with an experienced, knowledgeable team of [people] (http://4840west.tumblr.com/post/121944264253/team-4840west), and employ a modern and open source [technical stack] (/docs/tech-stack.md).  Our team brings over 45 years of combined experience in securing digital services, as well as over 60 years of combined experience creating high-traffic digital services and mobile and web applications (full story on our blog [here] (http://4840west.tumblr.com/))(Play 7).
@@ -13,11 +17,11 @@ We then began making [wireframes] (/docs/wireframes) for [usability testing] (/d
 
 Based on this and additional usability testing, we were able to create the application’s [User Personas] (/docs/agile/User Personas.pdf) using the Xtensio tool.
 
-Throughout our development process, we utilized a consistent and modern [style] (https://www.google.com/design/spec/material-design/introduction.html) that was modeled on government sites such as openFDA and whitehouse.gov.  We used the [WAVE tool] (/docs/images/WAVE Tool Usage.jpg) during development to ensure all pages are 508 compliant (Play 3).  We employed a comprehensive, modern open source [technical stack] (/docs/tech-stack.md) that mirrors those used by successful private sector technology companies (Play 8).  Our service is hosted by Amazon AWS Cloud Services and run by Linux servers to utilize elastic resource provisioning.  We crafted the service in a scalable and flexible model that allows for future capabilities to be easily added (Play 9). For Continuous Integration and Deployment, we deployed [Jenkins] (/docs/images/Jenkins build and deploy screenshot.png) to automatically build code, run [Karma] (/docs/images/Karma_unit_test_for_Login.png) unit and integration tests, run [Sonar] (/docs/images/Sonar output screenshot.png) code analysis, and deploy the build (Play 10).
+Throughout our development process, we utilized a consistent and modern [style] (https://www.google.com/design/spec/material-design/introduction.html) that was modeled on government sites such as openFDA and whitehouse.gov.  We used the [WAVE tool] (/docs/images/WAVE Tool Usage.jpg) during development to ensure all pages are 508 compliant (Play 3).  We employed a comprehensive, modern open source [technical stack] (/docs/tech-stack.md) that mirrors those used by successful private sector technology companies (Play 8).  Our service is hosted by Amazon AWS Cloud Services and run by Linux servers to utilize elastic resource provisioning.  We crafted the service in a scalable and flexible [model] (/docs/agile/system_diagram.pdf) that allows for future capabilities to be easily added (Play 9). For Continuous Integration and Deployment, we deployed [Jenkins] (/docs/images/Jenkins build and deploy screenshot.png) to automatically build code, run [Karma] (/docs/images/Karma_unit_test_for_Login.png) unit and integration tests, run [Sonar] (/docs/images/Sonar output screenshot.png) code analysis, and deploy the build (Play 10).
 
 To protect user data, we incorporated secure cookies, SSL, and we pass all outside API services through our API service to reduce the chance of API key exposure.  We have a strong password hash with a unique salt for each password.  Additionally, we chose not to store any product data associated to users in our database – instead, it is held outside of the system and available only through APIs (Play 11).
 
 A third round of usability testing helped us to refine our Home page to better define what users should expect when they register for an account.  We added stories to the backlog to be included in future iterations (Play 13) to address performance monitoring (Play 12) and the capability for users to report bugs and issues.  Finally, we have created a demo user account (usage instructions [here] (/docs/agile/Usage Instructions.pdf)) that comes pre-loaded with connected store loyalty cards and has matching recalled products in the account.
 
-Inspired by the [Arctic Ground Squirrel] (http://www.nps.gov/dena/learn/nature/images/as-2_5.jpg) found on the 18F [blogpost] (https://18f.gsa.gov/2015/06/15/agile-bpa-is-here/) announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows, and one of which we are very proud.
+Inspired by the [Arctic Ground Squirrel] (http://www.nps.gov/dena/learn/nature/images/as-2_5.jpg) found on the 18F [blogpost] (https://18f.gsa.gov/2015/06/15/agile-bpa-is-here/) announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows - one of which we are very proud.
 
