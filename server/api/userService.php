@@ -30,9 +30,7 @@ function userLogin() {
 
         if ($userData == null) {
 			$response->set("invalid_user_id_password","Email address and/or password was invalid", array());
-		}
-		else
-		{
+		} else {
 			if ($body->password == validateHashedPassword($body->password, $userData->password)) {
 				try {
 					$sql = "update user set last_login= now() WHERE user_id=:user_id";
@@ -56,9 +54,7 @@ function userLogin() {
 				} catch(Exception $e) {
 					$response->set("system_failure","System error occurred, unable to login", array());
 				}
-			}
-			else
-			{
+			} else {
 				$response->set("invalid_user_id_password","Email address and/or password was invalid", array());
 			}
         }
@@ -104,9 +100,7 @@ function userRegister() {
         
 		if ($userData != null) {
 			$response->set("user_already_exists","User with Email address already exists", array());
-		}
-		else
-		{
+		} else {
             
             // Has Password
             $passwordHash = createHashedPassword($body->password);
@@ -195,9 +189,7 @@ function userGet() {
 
         if ($userData == null) {
 			$response->set("user_not_found","User was not found", array());
-		}
-		else
-		{
+		} else {
 			$response->set("success","User is logged into the system", $userData);
         }
     } catch(Exception $e) {
