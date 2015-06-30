@@ -76,7 +76,7 @@ function openFDAProductMatch($type, $days, $minScore) {
              "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
              "spite,instead,on,account,the,and,aboard,along,amid,among,as,behind,but,concerning,considering,despite,".
              "excepting,excluding,following,minus,of,on,onto,opposite,past,per,plus,regarding,round,save,than,then,".
-             "towards,underneath,unlike,versus,via,within";
+             "towards,underneath,unlike,versus,via,within,&";
 
     $wordListMap = array_map('strtolower', explode(",", $words));
 
