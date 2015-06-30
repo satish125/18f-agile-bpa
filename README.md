@@ -1,4 +1,4 @@
-# [RecallRodent] (https://recallrodent.crgt.com/#/) 
+# RecallRodent
 ######https://recallrodent.crgt.com
 
 
@@ -23,5 +23,5 @@ To protect user data, we incorporated secure cookies, SSL, and we pass all outsi
 
 A third round of usability testing helped us to refine our Home page to better define what users should expect when they register for an account.  We added stories to the backlog to be included in future iterations (Play 13) to address performance monitoring (Play 12) and the capability for users to report bugs and issues.  Finally, we have created a demo user account (usage instructions [here] (/docs/agile/Usage Instructions.pdf)) that comes pre-loaded with connected store loyalty cards and has matching recalled products in the account.
 
-Inspired by the [Arctic Ground Squirrel] (http://www.nps.gov/dena/learn/nature/images/as-2_5.jpg) found on the 18F [blogpost] (https://18f.gsa.gov/2015/06/15/agile-bpa-is-here/) announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows, and one of which we are very proud.
+Inspired by the [Arctic Ground Squirrel] (http://www.nps.gov/dena/learn/nature/images/as-2_5.jpg) found on the 18F [blogpost] (https://18f.gsa.gov/2015/06/15/agile-bpa-is-here/) announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows - one of which we are very proud.
 
