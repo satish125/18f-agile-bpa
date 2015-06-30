@@ -50,7 +50,13 @@ function wordListParser($text, $wordListMap) {
 
     // Build array of search terms for product name, filter out common words and special characters
     $wordList = array();
-
+    
+    // Remove Special Characters
+    $text = preg_replace('/[^a-zA-Z0-9]+/', ' ', $text);
+    
+    // Remove extra spaces
+    $text = preg_replace('!\s{2,}!', ' ', $text);
+    
     foreach (explode(" ", $text) as &$value) {
         if ( ! in_array($value, $wordListMap) ) {
             $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value);
@@ -72,11 +78,11 @@ function openFDAProductMatch($type, $days, $minScore) {
 
     // Word exclusion list that will not be searched upon or scored upon
     $words = "about,above,across,after,against,around,at,before,behind,below,beneath,beside,besides,between,beyond,".
-             "by,down,during,except,for,from,in,inside,into,like,near,,off,out,outside,over,since,through,throughout,".
+             "by,down,during,except,for,from,in,inside,into,like,near,off,out,outside,over,since,through,throughout,".
              "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
              "spite,instead,on,account,the,and,aboard,along,amid,among,as,behind,but,concerning,considering,despite,".
              "excepting,excluding,following,minus,of,on,onto,opposite,past,per,plus,regarding,round,save,than,then,".
-             "towards,underneath,unlike,versus,via,within,&";
+             "towards,underneath,unlike,versus,via,within";
 
     $wordListMap = array_map('strtolower', explode(",", $words));
 
