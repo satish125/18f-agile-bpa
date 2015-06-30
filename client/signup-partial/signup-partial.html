@@ -47,7 +47,7 @@
 							<div class="hint error" ng-show="signupForm.confirm.$dirty && signupForm.confirm.$invalid && !signupForm.confirm.$focused">
 								<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
 								<span ng-show="signupForm.confirm.$error.required">A password confirmation is required</span>
-								<span ng-show="signupForm.confirm.$error.minlength">The password confirmation must match</span>
+								<span ng-show="signupForm.confirm.$error.pattern">The password confirmation must match</span>
 							</div>
 							<label for="confirm" class="floating-label">confirm password</label>
 							<span class="material-input"></span>
