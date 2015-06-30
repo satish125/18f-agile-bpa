@@ -46,13 +46,17 @@ function openFDARecentRecalls($type, $days, $limit) {
  * POST body - the purchase
  */
 
-function wordListParser($text, $wordListMap) {
+function wordListParser($text, $wordListMap, $removeNumericValues) {
 
     // Build array of search terms for product name, filter out common words and special characters
     $wordList = array();
     
     // Remove Special Characters
-    $text = preg_replace('/[^a-zA-Z0-9]+/', ' ', $text);
+    if ($removeNumericValues) {
+        $text = preg_replace('/[^a-zA-Z]+/', ' ', $text);
+    } else {
+        $text = preg_replace('/[^a-zA-Z0-9]+/', ' ', $text);
+    }
     
     // Remove extra spaces
     $text = preg_replace('!\s{2,}!', ' ', $text);
@@ -60,7 +64,7 @@ function wordListParser($text, $wordListMap) {
     foreach (explode(" ", $text) as &$value) {
         if ( ! in_array($value, $wordListMap) ) {
             $safeString=preg_replace('/[^A-Za-z0-9\-]/', '', $value);
-            if (! in_array($safeString, $wordList)) {
+            if (! in_array($safeString, $wordList) && $safeString !== "") {
                 array_push($wordList, $safeString);
             }
         }
@@ -82,7 +86,7 @@ function openFDAProductMatch($type, $days, $minScore) {
              "till,toward,under,until,up,upon,with,without,according,to,because,addition,front,place,regard,".
              "spite,instead,on,account,the,and,aboard,along,amid,among,as,behind,but,concerning,considering,despite,".
              "excepting,excluding,following,minus,of,on,onto,opposite,past,per,plus,regarding,round,save,than,then,".
-             "towards,underneath,unlike,versus,via,within";
+             "towards,underneath,unlike,versus,via,within,oz";
 
     $wordListMap = array_map('strtolower', explode(",", $words));
 
@@ -133,13 +137,13 @@ function openFDAProductMatch($type, $days, $minScore) {
         $productName = str_replace('-', ' ', strtolower($productName));
 
         // Build array of search terms for product name, filter out common words and special characters
-        $productNamePieces = wordListParser($productName, $wordListMap);
-
+        $productNamePieces = wordListParser($productName, $wordListMap, true);  
+        
         // Remove all hyphens in the product upc and convert to lower case
         $productUpc = str_replace('-', '', strtolower($productUpc));
 
         // Build array of search terms for product name, filter out common words and special characters
-        $productUpcPieces = wordListParser($productUpc, $wordListMap);
+        $productUpcPieces = wordListParser($productUpc, $wordListMap, false);
 
         //get openFDA api key
         $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
@@ -152,7 +156,7 @@ function openFDAProductMatch($type, $days, $minScore) {
             return;
         }
 
-        $searchParams="search=(";
+        $searchParams="(";
 
         $first=true;
 
@@ -163,7 +167,7 @@ function openFDAProductMatch($type, $days, $minScore) {
             } else {
                 $first=false;
             }
-            $searchParams .= "product_description:" .$value. "+code_info:" .$value;
+            $searchParams .= "product_description:" .$value;
         }
 
         // Build Searches for product upc
@@ -179,11 +183,8 @@ function openFDAProductMatch($type, $days, $minScore) {
         // Add search dates
         $searchParams .= ")+AND+report_date:[" .$start. "+TO+" .$end. "]";
 
-        // Add limit
-        $searchParams .= "&limit=".$limit;
-
         // Build the URL
-        $url = "https://api.fda.gov/".$type."/enforcement.json?" .$searchParams. "&api_key=" .$apiData->api_key;
+        $url = "https://api.fda.gov/".$type."/enforcement.json?search=" .$searchParams. "&limit=100&api_key=" .$apiData->api_key;
 
         // HTTP options
         $options = array(
@@ -222,43 +223,48 @@ function openFDAProductMatch($type, $days, $minScore) {
                 $resultProductNamePieces = array();
             } else {
                 $resultProductName =  str_replace('-', ' ', strtolower($idxVal['product_description']));
-                $resultProductNamePieces = wordListParser($resultProductName, $wordListMap);
+                $resultProductNamePieces = wordListParser($resultProductName, $wordListMap, true);
             }
-
+            
             // Find matching terms for product upc
             $matchingProductNamePieces = array_intersect ($resultProductNamePieces, $productNamePieces);
-
+            
             // Build array of terms for product ups, filter out common words and special characters
             if (!array_key_exists('code_info', $idxVal)) {
                 $resultProductUpcPieces = array();
             } else {
                 $resultProductUpc =  str_replace('-', ' ', strtolower($idxVal['code_info']));
-                $resultProductUpcPieces = wordListParser($resultProductUpc, $wordListMap);
+                $resultProductUpcPieces = wordListParser($resultProductUpc, $wordListMap, false);               
             }
 
             // Find matching terms
             $matchingProductUpcPieces = array_intersect ($resultProductUpcPieces, $productUpcPieces);
-
+            
             // Calculating matching score
             $nameWeight = count($matchingProductNamePieces)*.5;
             $upcWeight = 1000;
-            if (count($productNamePieces) == 0 || count($productUpcPieces) == 0) {
-                $matchingScore = 0;
-            } else {
-                $matchingScore = ( count($matchingProductNamePieces) / count($productNamePieces) *  $nameWeight) +
-                                 ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );
-
+            
+            // Initialize Matching Score
+            $matchingScore = 0;
+            
+            // Calculate the Product Name matching Score
+            if (count($productNamePieces) > 0) {
+                $matchingScore += ( count($matchingProductNamePieces) / count($productNamePieces) *  $nameWeight);
             }
 
+            // Calculate the Product Upc matching Score
+            if (count($productUpcPieces) > 0) {
+                $matchingScore += ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );;
+            }
+            
             // Remove array entry if minimum score has not been met
             if ($matchingScore >= $minScore) {
-                // Store
+                // Adding matching score to output and flag result as a match
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
-                $foundAMatch = true;
+                $foundAMatch = true;      
             } else {
-                unset($bigArr['results'][$idx]);
+                unset($bigArr['results'][$idx]);                     
             }
-
         }
 
         // Retrieve product information
@@ -301,7 +307,7 @@ function openFDAProductMatch($type, $days, $minScore) {
         $payload["purchase"]->category=$productCategory;
 
         $response->set("success","Data successfully fetched from service", $payload );
-
+        
     } catch(Exception $e) {
         $response->set("system_failure", $e->getMessage(), array());
     } finally {
