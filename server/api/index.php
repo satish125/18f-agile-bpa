@@ -1,17 +1,33 @@
 <?php
 
-// Establish a session
-$session_name = 'SESSION_ID'; // Set a custom session name
-$secure = true; // Set to true if using https else leave as false
-$httponly = true; // This stops javascript being able to access the session id
-ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies.
-ini_set('session.entropy_file', '/dev/urandom'); // better session id's
-ini_set('session.entropy_length', '512'); // and going overkill with entropy length for maximum security
-$cookieParams = session_get_cookie_params(); // Gets current cookies params.
+ // Set a custom session name
+$session_name = 'SESSION_ID'; 
+
+// Set to true if using https else leave as false
+$secure = true;
+
+// This stops javascript being able to access the session id
+$httponly = true;
+
+// Forces sessions to only use cookies.
+ini_set('session.use_only_cookies', 1);
+
+ // better session id's
+ini_set('session.entropy_file', '/dev/urandom');
+
+// and going overkill with entropy length for maximum security
+ini_set('session.entropy_length', '512');
+
+ // Gets current cookies params.
+$cookieParams = session_get_cookie_params();
 
 session_set_cookie_params($cookieParams["lifetime"], "/", $cookieParams["domain"], $secure, $httponly);
-session_name($session_name); // Sets the session name to the one set above.
-session_start(); // Start the php session
+
+// Sets the session name to the one set above.
+session_name($session_name);
+
+// Start the php session
+session_start();
 
 require 'Slim/Slim.php';
 require 'userService.php';
