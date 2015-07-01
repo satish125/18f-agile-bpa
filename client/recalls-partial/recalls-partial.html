@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="RecallsPartialCtrl">
     <button ng-show="progress==100" class="pull-right btn btn-default" ng-click="recheckAll()">
-        <i class="fa fa-undo"></i> Recheck All
+        <span class="fa fa-undo"></span> Recheck All
     </button>
     <h1>Recalls</h1>
     <p ng-hide="purchasesCollected">
@@ -14,7 +14,7 @@
     </div>
     <div class="row recallsGrid">
         <div class="recall" ng-repeat="(productId, recall) in recalls"
-            ng-click="toggleRecall(recall)" ng-class="{'expanded': recall.expanded}"recall-directive>
+            ng-click="toggleRecall(recall)" ng-class="{'expanded': recall.expanded}" recall-directive>
             <div class="card shadow-z-1 row">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="productInfo">
