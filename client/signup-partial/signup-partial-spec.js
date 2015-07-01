@@ -51,16 +51,24 @@ describe('Test suite for SignupPartialCtrl', function() { //NOSONAR Functions sh
 			var msge = "";
 			switch (type) {
 				case 'email':
-					if (val === "") {msge = "An email is required";}
+					if (val === "") {
+						msge = "An email is required";
+					}
 					break;
 				case 'zip':
-					if (val === "") {msge = "A zip code is required";}
+					if (val === "") {
+						msge = "A zip code is required";
+					}
 					break;
 				case 'password':
-					if (val === "") {msge = "A password is required";}
+					if (val === "") {
+						msge = "A password is required";
+					}
 					break;
 				case 'confirm':
-					if (val === "") {msge = "A confirmation password is required";}
+					if (val === "") {
+						msge = "A confirmation password is required";
+					}
 					break;
 			}
 			return msge;
