@@ -9,10 +9,8 @@ describe('recallDirective', function() {
     compile = $compile;
   }));
 
-  it('should ...', function() {
-
+  it('should populate the ShareThis button', function() {
     var element = compile("<span class='st_sharethis_large' displayText='ShareThis'></span>")(scope);
-    console.log(element.text());
     expect(element.text().length > 0);
   });
 });
