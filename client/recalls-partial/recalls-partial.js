@@ -115,8 +115,10 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             }
         }
 
-        $scope.toggleRecall = function(recall){
-            recall.expanded = !recall.expanded;
+        $scope.toggleRecall = function(recall, $event){
+            if(!recall.expanded || (recall.expanded && $event.target.innerHTML === '×')){
+                recall.expanded = !recall.expanded;
+            }
         };
 
         init();
