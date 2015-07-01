@@ -10,7 +10,7 @@
 
 ## Initial concepts
 
-[Product Ideas](/images/product-ideas.jpg)
+![Product Ideas](/images/product-ideas.jpg)
 
 Two product types emerged
 1. A product that collects my purchases and prescriptions, and alerts me to recalls or adverse events.
@@ -18,13 +18,13 @@ Two product types emerged
 
 ## Refining
 
-[Refining product ideas](/images/keep-it-simple.jpg)
+![Refining product ideas](/images/keep-it-simple.jpg)
 
 In discussing and refining idea #1, we knew we didn't want to force users to manually enter purchases.  That could be extensive and tedious for users and a major barrier to entry. We searched for apis to import purchases, so users would not have to manually enter them. We considered MyFitnessPal, BigOven, Walgreens, and others, before we discovered [Information Machine](http://iamdata.co).
 
 
 ## Epics
 
-[Epics](/images/epics.jpg)
+![Epics](/images/Epics.jpg)
 
 After discovering [Information Machine](http://iamdata.co), we settled on the product concept and created epics.
