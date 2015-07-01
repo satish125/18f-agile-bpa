@@ -1,8 +1,8 @@
 angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService',  'productService',
     function($scope, openfdaService, productService){ //NOSONAR Functions should not have too many lines
-        
+
         var dayLimit = 365, minScore = 0.6;
-        
+
         function init(){
             //array of stores and purchases
             $scope.purchasesCollected = false;
@@ -45,7 +45,6 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 
         function putCachedMatches(obj){
             localStorage['matches'] = JSON.stringify(obj);
-                
         }
 
         function setProgress(){
@@ -67,8 +66,10 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 $scope.purchasesCollected = true;
 
                 if(response.result){
-                    for(var i = 0, order; order = response.result[i]; i++){
-                        for(var j = 0, item; item = order.purchase_items[j]; j++){
+                    for(var i = 0, order; i < response.result.length; i++){
+                        order = response.result[i];
+                        for(var j = 0, item; j < order.purchase_items.length; j++){
+                            item = order.purchase_items[j];
                             $scope.purchaseCount++;
                             productMatch($.extend(item,{date: order.date, store: order.user_store.store_name}));
                         }
@@ -92,24 +93,24 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 $scope.checkCount++;
                 setProgress();
             } else {
-				//no cached product, call matching api
+                //no cached product, call matching api
                 openfdaService.productMatch(item, minScore).then(function(response){
-					if(response.code === 'success' || response.code === 'NO_MATCH'){
-						$scope.checkCount++;
-						if($scope.sizeOf(response.payload.results) > 0){
-							$scope.recalls[item.product.id] = response.payload;
-						}
-					}else if(response.code === 'system_failure'){
-                        console.log(response.message);
+                    if(response.code === 'success' || response.code === 'NO_MATCH'){
+                        $scope.checkCount++;
+                        if($scope.sizeOf(response.payload.results) > 0){
+                            $scope.recalls[item.product.id] = response.payload;
+                        }
+                    }else if(response.code === 'system_failure'){
+                        console.log(response);
                     }
-				}).finally(function(){
-					setProgress();
+                }).finally(function(){
+                    setProgress();
 
-					$scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
+                    $scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
 
-					putCachedMatches($scope.matchResults);
-				});
-			}
+                    putCachedMatches($scope.matchResults);
+                });
+            }
         }
 
         $scope.toggleRecall = function(recall){
