@@ -71,8 +71,9 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             } else {
 				openfdaService.productMatch(item, minScore).then(function(response){
 					if(response.code === 'success' || response.code === 'NO_MATCH'){
+						console.log(response.code, response.payload.results);
 						$scope.checkCount++;
-						if(response.payload.results.length > 0){
+						if($scope.sizeOf(response.payload.results) > 0){
 							$scope.recalls[item.product.id] = response.payload;
 						}
 					}
