@@ -6,6 +6,11 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
         function init(){
             $scope.purchasesCollected = false;
             $scope.matchResults = getCachedMatches();
+
+            if($scope.sizeOf($scope.matchResults) === 0){
+                localStorage['matchesDate'] = new Date().getTime();
+            }
+
             $scope.recalls = {};
             $scope.purchaseCount = 0;
             $scope.checkCount = 0;
@@ -19,13 +24,15 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 				if (localStorage['matchesDate'] && (new Date() - new Date(localStorage['matchesDate']))/1000/60/60/24 > 1){
 					return JSON.parse(localStorage['matches']) || {};
 				}
-			}catch(e){}
+			}catch(e){
+                console.log('unable to parse cached matches');
+            }
 			return {};
 		}
 
         function putCachedMatches(obj){
             localStorage['matches'] = JSON.stringify(obj);
-            localStorage['matchesDate'] = new Date().getTime();
+                
         }
 
         function setProgress(){
@@ -62,13 +69,17 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 
         function productMatch(item){
             var cachedProduct = $scope.matchResults[item.product.id];
+
+            //if there is a cached product
             if(typeof cachedProduct !== 'undefined'){
+                //if there are matches
                 if(cachedProduct !== null){
                     $scope.recalls[item.product.id] = cachedProduct;
                 }
                 $scope.checkCount++;
                 setProgress();
             } else {
+                //no cached product, call matching api
 				openfdaService.productMatch(item, minScore).then(function(response){
 					if(response.code === 'success' || response.code === 'NO_MATCH'){
 						$scope.checkCount++;

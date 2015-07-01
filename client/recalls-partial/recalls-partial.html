@@ -14,7 +14,7 @@
     </div>
     <div class="row recallsGrid">
         <div class="recall" ng-repeat="(productId, recall) in recalls"
-            ng-click="toggleRecall(recall)" ng-class="{'expanded': recall.expanded}">
+            ng-click="toggleRecall(recall)" ng-class="{'expanded': recall.expanded}"recall-directive>
             <div class="card shadow-z-1 row">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="productInfo">
