@@ -2,7 +2,8 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
     function($scope, openfdaService, productService){
 
         var dayLimit = 365;
-        var minScore = 0.6;
+        var minMatchingScore = 0.6;
+        var minQualityScore = 0.5;
 
         function init(){
             $scope.stores = null; //array of stores and purchases
@@ -112,7 +113,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 return;
             }
 
-            return openfdaService.productMatch(item, minScore).then(function(response){
+            return openfdaService.productMatch(item, minMatchingScore, minQualityScore).then(function(response){
                 //error
                 if(response.code !== 'success' && response.code !== 'NO_MATCH'){
                     return;
