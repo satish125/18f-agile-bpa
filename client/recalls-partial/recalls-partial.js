@@ -21,7 +21,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 
         function getCachedMatches(){
             try{
-				if (localStorage['matchesDate'] && (new Date() - new Date(localStorage['matchesDate']))/1000/60/60/24 > 1){
+				if (localStorage['matchesDate'] && (new Date() - new Date(Number(localStorage['matchesDate'])))/1000/60/60/24 < 1){
 					return JSON.parse(localStorage['matches']) || {};
 				}
 			}catch(e){
