@@ -92,24 +92,24 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 $scope.checkCount++;
                 setProgress();
             } else {
-                //no cached product, call matching api
+				//no cached product, call matching api
                 openfdaService.productMatch(item, minScore).then(function(response){
-                    if(response.code === 'success' || response.code === 'NO_MATCH'){
-                        $scope.checkCount++;
-                        if($scope.sizeOf(response.payload.results) > 0){
-                            $scope.recalls[item.product.id] = response.payload;
-                        }
-                    }else if(response.code == 'system_failure'){
-                        console.log(response);
+					if(response.code === 'success' || response.code === 'NO_MATCH'){
+						$scope.checkCount++;
+						if($scope.sizeOf(response.payload.results) > 0){
+							$scope.recalls[item.product.id] = response.payload;
+						}
+					}else if(response.code == 'system_failure'){
+                        console.log(response.message);
                     }
-                }).finally(function(){
-                    setProgress();
+				}).finally(function(){
+					setProgress();
 
-                    $scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
+					$scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
 
-                    putCachedMatches($scope.matchResults);
-                });
-            }
+					putCachedMatches($scope.matchResults);
+				});
+			}
         }
 
         $scope.toggleRecall = function(recall){
