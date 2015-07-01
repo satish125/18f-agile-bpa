@@ -99,7 +99,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
 						if($scope.sizeOf(response.payload.results) > 0){
 							$scope.recalls[item.product.id] = response.payload;
 						}
-					}else if(response.code == 'system_failure'){
+					}else if(response.code === 'system_failure'){
                         console.log(response.message);
                     }
 				}).finally(function(){
