@@ -2,9 +2,8 @@
 ######https://recallrodent.crgt.com
 
 
-![4840West alt text](/docs/images/4840West.jpg)
 
-
+![CRGT](/images/CRGT-Logo.png)
 
 
 Guident (acquired by CRGT in December 2012) formed Team 4840West to respond to this RFQ.  Team 4840West’s approach to the GSA RFQ has been to create a prototype utilizing [agile methodologies] (/docs/images/Agile Methodologies.JPG), work with an experienced, knowledgeable team of [people] (http://4840west.tumblr.com/post/121944264253/team-4840west), and employ a modern and open source [technical stack] (/docs/tech-stack.md).  Our team brings over 45 years of combined experience in securing digital services, as well as over 60 years of combined experience creating high-traffic digital services and mobile and web applications (full story on our blog [here] (http://4840west.tumblr.com/))(Play 7).
@@ -25,3 +24,5 @@ A third round of usability testing helped us to refine our Home page to better d
 
 Inspired by the [Arctic Ground Squirrel] (http://www.nps.gov/dena/learn/nature/images/as-2_5.jpg) found on the 18F [blogpost] (https://18f.gsa.gov/2015/06/15/agile-bpa-is-here/) announcing this RFQ, we have named our application “RecallRodent”. It is an application built using agile processes and iterative workflows - one of which we are very proud.
 
+
+![4840West alt text](/docs/images/4840West.jpg)
