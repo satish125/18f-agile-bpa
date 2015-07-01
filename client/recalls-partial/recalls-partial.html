@@ -3,10 +3,10 @@
         <i class="fa fa-undo"></i> Recheck All
     </button>
     <h1>Recalls</h1>
-    <p ng-show="stores === null">
+    <p ng-hide="purchasesCollected">
         Retrieving your purchases
     </p>
-    <p ng-show="progress<100 && stores !== null">
+    <p ng-show="progress < 100 && purchasesCollected && purchaseCount > 0">
         Checking {{attemptCount}} of {{purchaseCount}} purchases.
     </p>
     <div ng-show="progress<100" class="progress progress-striped active">
