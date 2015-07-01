@@ -1,4 +1,4 @@
-describe('Test suite for SignupPartialCtrl', function() {
+describe('Test suite for SignupPartialCtrl', function() { //NOSONAR Functions should not have too many lines
 /*
 	beforeEach(function() {
 		module('web');
