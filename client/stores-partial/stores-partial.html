@@ -21,8 +21,72 @@
 		 <ul class="fa-ul pre"><li><span class="fa-li fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Error: </span>{{error}}</li></ul>
 	   </div>
 	</div>
-
 	<div>
+		<div ng-show="gettingStores">
+			<span class="fa fa-spinner fa-pulse" aria-hidden="true"></span>
+			Loading Stores...
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card clearfix">
+					<div ng-repeat="store in stores" class="store-card">
+						<div class="store-card" ng-if="store.hasConnectionAttempt()">
+							<h4>{{store.name}}</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8">
+				<div class="card clearfix">
+					<div ng-repeat="store in stores | filter:storeSearch" class="store-card" ng-class="store.expanded?'':'col-md-4'">
+						<div class="store-card" ng-if="!store.hasConnectionAttempt()">
+							<a ng-hide="store.expanded" ng-click="toggleStoreConnect(store)" class="small-store">
+								<div class="store-logo-container">
+									<img ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
+								</div>
+								<h4>{{store.name}}</h4>
+							</a>
+
+							<div ng-show="store.expanded" class="store-form shadow-z-2">
+
+								<h4>{{store.name}}</h4>
+
+								<a href="{{store.href}}" target="_blank">
+									<div class="store-logo-container">
+										<img class="media-object" ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
+									</div>
+								</a>
+
+								<form name="connectForm" class="form-inline clearfix" ng-submit="doStoreConnect(store)" autocomplete="off">
+									<span class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+										<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
+											<input style="display:none" type="text">
+											<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
+											<label for="username{{store.id}}" class="floating-label">user</label>
+											<span class="material-input"></span>
+										</div>
+										<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
+											<input style="display:none" type="password">
+											<input id="password{{store.id}}" name="password{{store.id}}" type="password" ng-model="store.password" class="form-control empty" required autocomplete="off">
+											<label for="password{{store.id}}" class="floating-label">password</label>
+											<span class="material-input"></span>
+										</div>
+									</span>
+									<span class="col-xs-12 col-sm-6 col-md-6 col-lg-3 top-half-gutter" ng-show="!store.isWorking()">
+										<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="store.isWorking() || (store.userStore().credentials_status && store.userStore().credentials_status !== 'Invalid')" ng-show="!store.isConnected()">
+											<span class="fa fa-link fa-rotate-90" ng-class="store.isConnecting?'fa-spin':''" aria-hidden="true"></span> Connect
+										</button>
+										<button type="button" class="btn btn-default btn-flat btn-tight" ng-show="store.hasConnectionAttempt()" ng-disabled="store.isWorking() || store.userStore().status() === 'Connecting'" ng-click="doStoreDisconnect(store)">
+											<span class="fa fa-unlink" ng-class="store.isDisconnecting?'fa-spin':''" aria-hidden="true"></span> Disconnect
+										</button>
+									</span>
+								</form>
+							</div>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
 		<ul class="media-list">
 			<li class="media card" ng-repeat="store in stores | filter:storeSearch">
 				<div class="media-left">

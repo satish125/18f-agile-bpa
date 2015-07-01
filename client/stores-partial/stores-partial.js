@@ -13,7 +13,8 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	}
 
 	if (!productService.stores.length){
-		productService.getStores().then(setStores);
+		$scope.gettingStores = true;
+		productService.getStores().then(setStores).finally(function(){$scope.gettingStores = false;});
 	}else{ // it persisted in the service
 		setStores();
 	}
@@ -51,6 +52,10 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		.finally(function(){
 			store.isDisconnecting = false;
 		});
+	};
+
+	$scope.toggleStoreConnect = function(store){
+		store.expanded = true;
 	};
 
 }]);
