@@ -1,48 +1,56 @@
 angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService',  'productService',
-    function($scope, openfdaService, productService){
+    function($scope, openfdaService, productService){ //NOSONAR Functions should not have too many lines
 
         var dayLimit = 365;
         var minMatchingScore = 0.6;
         var minQualityScore = 0.5;
 
         function init(){
-            $scope.stores = null; //array of stores and purchases
-            $scope.matchResults = getCachedMatches(); //all results from open.fda
-            $scope.recalls = {}; //obj of purchase items with possible recalls
+            //array of stores and purchases
+            $scope.purchasesCollected = false;
 
-            $scope.purchaseCount = 0; //number of items purchased
-            $scope.orderCount = 0; //number of purchase events
-            $scope.checkCount = 0; //number of purchase items that were successfully checked
-            $scope.attemptCount = 0; //number of purchase items that we've attempted to check
+            //all results from open.fda
+            $scope.matchResults = getCachedMatches();
+
+            //if there are no matches, set the oldest cache time to now
+            if($scope.sizeOf($scope.matchResults) === 0){
+                localStorage['oldestRecallCacheTime'] = new Date().getTime();
+            }
+
+            //obj of purchase items with possible recalls
+            $scope.recalls = {};
+
+            //number of purchase events
+            $scope.purchaseCount = 0;
+
+            //number of purchase items that were successfully checked
+            $scope.checkCount = 0;
+
+            //number of purchase items that we've attempted to check
+            $scope.attemptCount = 0;
+
             $scope.progress = 0;
 
             getPageOfPurchases(1);
         }
 
         function getCachedMatches(){
-            var hasCache = !!localStorage['matches'];
-            var matchesDate = localStorage['matchesDate'];
-            var isExpired = matchesDate && (new Date() - new Date(matchesDate))/1000/60/60/24 > 1;
-
-            if(!hasCache || isExpired){
-                putCachedMatches({});
-            }
-
             try{
-                return JSON.parse(localStorage['matches']);
+                if (localStorage['oldestRecallCacheTime'] && (new Date() - new Date(Number(localStorage['oldestRecallCacheTime'])))/1000/60/60/24 < 1){
+                    return JSON.parse(localStorage['matches']) || {};
+            }
             }catch(e){
-                putCachedMatches({});
+                console.log('unable to parse cached matches');
+            }
                 return {};
             }
-        }
 
         function putCachedMatches(obj){
             localStorage['matches'] = JSON.stringify(obj);
-            localStorage['matchesDate'] = new Date().getTime();
         }
 
         function setProgress(){
-            $scope.progress = ($scope.attemptCount/$scope.purchaseCount)*100;
+            $scope.progress = (++$scope.attemptCount/$scope.purchaseCount)*100;
         }
 
         $scope.recheckAll = function(){
@@ -54,63 +62,45 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             return Object.keys(obj).length;
         };
 
-        /**
-         * @param page
-         */
         function getPageOfPurchases(page){
             return productService.getUserPurchases(dayLimit, page).then(function(response){
-                //instatiate an empty array, so we know we're done retrieving results
-                if($scope.stores === null){
-                    $scope.stores = [];
-                }
 
-                //no results found, leave the array empty
-                if(!response.result){
-                    $scope.progress = 100;
-                    return;
-                }
+                $scope.purchasesCollected = true;
 
-                //add this page of store purchases to our saved array
-                $scope.stores = $scope.stores.concat(response.result);
-
-                //loop through purchases and match
-                for(var i = 0, order; order = response.result[i]; i++){
-                    for(var j = 0, item; item = order.purchase_items[j]; j++){
+                if(response.result){
+                    for(var i = 0, order; i < response.result.length; i++){
+                        order = response.result[i];
+                        for(var j = 0, item; j < order.purchase_items.length; j++){
+                            item = order.purchase_items[j];
                         $scope.purchaseCount++;
-
-                        //pass the date to the php
-                        item.date = order.date;
-
-                        //pass the store to the product for display
-                        item.store = order.user_store.store_name;
-
-                        productMatch(item);
+                            productMatch($.extend(item,{date: order.date, store: order.user_store.store_name}));
                     }
                 }
-
-                //sum number of orders
-                $scope.orderCount += response.result.length;
-
-                //re-run this function if more pages to get
                 if(response.next_page){
                     getPageOfPurchases(page+1);
                 }
+                }
             });
-        }//end getPageOfPurchases
+        }
 
         function productMatch(item){
-            var product = item.product;
+            var cachedProduct = $scope.matchResults[item.product.id];
 
-            //check cached recalls for the product
-            var cachedProduct = $scope.matchResults[product.id];
+            //if there is a cached product
             if(typeof cachedProduct !== 'undefined'){
+                //if there are matches
                 if(cachedProduct !== null){
-                    $scope.recalls[product.id] = cachedProduct;
+                    $scope.recalls[item.product.id] = cachedProduct;
                 }
                 $scope.checkCount++;
-                $scope.attemptCount++;
                 setProgress();
-                return;
+            } else {
+                //no cached product, call matching api
+                openfdaService.productMatch(item, minScore).then(function(response){
+                    if(response.code === 'success' || response.code === 'NO_MATCH'){
+                        $scope.checkCount++;
+                        if($scope.sizeOf(response.payload.results) > 0){
+                            $scope.recalls[item.product.id] = response.payload;
             }
 
             return openfdaService.productMatch(item, minMatchingScore, minQualityScore).then(function(response){
@@ -118,28 +108,15 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                 if(response.code !== 'success' && response.code !== 'NO_MATCH'){
                     return;
                 }
-
-                //checked successfully
-                $scope.checkCount++;
-
-                //didn't find any matches
-                if(response.payload.results.length === 0){
-                    return;
-                }
-
-                //add recalls
-                $scope.recalls[product.id] = response.payload;
             }).finally(function(){
-                //set progress
-                $scope.attemptCount++;
                 setProgress();
 
-                //cache the results
-                $scope.matchResults[product.id] = $scope.recalls[product.id] ? $scope.recalls[product.id] : null;
+                    $scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
 
                 putCachedMatches($scope.matchResults);
             });
-        }//end productMatch
+            }
+        }
 
         $scope.toggleRecall = function(recall){
             recall.expanded = !recall.expanded;
