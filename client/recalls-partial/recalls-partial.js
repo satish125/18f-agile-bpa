@@ -1,7 +1,9 @@
 angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService',  'productService',
     function($scope, openfdaService, productService){ //NOSONAR Functions should not have too many lines
 
-        var dayLimit = 365, minScore = 0.6;
+        var dayLimit = 365;
+        var minMatchingScore = 0.6;
+        var minQualityScore = 0.5;
 
         function init(){
             //array of stores and purchases
@@ -36,12 +38,12 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             try{
                 if (localStorage['oldestRecallCacheTime'] && (new Date() - new Date(Number(localStorage['oldestRecallCacheTime'])))/1000/60/60/24 < 1){
                     return JSON.parse(localStorage['matches']) || {};
-                }
+            }
             }catch(e){
                 console.log('unable to parse cached matches');
             }
-            return {};
-        }
+                return {};
+            }
 
         function putCachedMatches(obj){
             localStorage['matches'] = JSON.stringify(obj);
@@ -70,13 +72,13 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                         order = response.result[i];
                         for(var j = 0, item; j < order.purchase_items.length; j++){
                             item = order.purchase_items[j];
-                            $scope.purchaseCount++;
+                        $scope.purchaseCount++;
                             productMatch($.extend(item,{date: order.date, store: order.user_store.store_name}));
-                        }
                     }
-                    if(response.next_page){
-                        getPageOfPurchases(page+1);
-                    }
+                }
+                if(response.next_page){
+                    getPageOfPurchases(page+1);
+                }
                 }
             });
         }
@@ -99,17 +101,20 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                         $scope.checkCount++;
                         if($scope.sizeOf(response.payload.results) > 0){
                             $scope.recalls[item.product.id] = response.payload;
-                        }
-                    }else if(response.code === 'system_failure'){
-                        console.log(response);
-                    }
-                }).finally(function(){
-                    setProgress();
+            }
+
+            return openfdaService.productMatch(item, minMatchingScore, minQualityScore).then(function(response){
+                //error
+                if(response.code !== 'success' && response.code !== 'NO_MATCH'){
+                    return;
+                }
+            }).finally(function(){
+                setProgress();
 
                     $scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
 
-                    putCachedMatches($scope.matchResults);
-                });
+                putCachedMatches($scope.matchResults);
+            });
             }
         }
 

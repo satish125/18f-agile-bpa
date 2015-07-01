@@ -14,7 +14,7 @@ angular.module('web').factory('openfdaService',['$q', '$http',
 
         var service = {};
 
-        service.productMatch = function(product, minScore){
+        service.productMatch = function(product, minMatchingScore, minQualityScore){
             var deferred = $q.defer();
 
             //TODO Future: Extend to more types and sources
@@ -22,7 +22,7 @@ angular.module('web').factory('openfdaService',['$q', '$http',
             var dayLimit = 365;
             product.source = "iamdata";
 
-            $http.post("/api/openFDA/productMatch/"+type+"/"+dayLimit+"/"+minScore, product).then(function(response) {
+            $http.post("/api/openFDA/productMatch/"+type+"/"+dayLimit+"/"+minMatchingScore+"/"+minQualityScore, product).then(function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
