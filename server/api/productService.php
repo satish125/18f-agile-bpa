@@ -146,7 +146,7 @@ class ProductService {
 
         $url = "https://api.iamdata.co:443/v1/users?id=" .self::$userId. "&".self::$iamdataKeys;
 
-        $context = stream_context_create(self::$getRequestOptions);
+        $context = stream_context_create(self::$deleteRequestOptions);
         $result = file_get_contents($url, false, $context);
 
         if ($result !== false) {
