@@ -128,7 +128,7 @@ function userRegister() {
 			$stmt->execute();
             
             // Auto register user in products service (iamdata)
-            $productAddUser = productsAddUserLocalAPI();
+            $productAddUser = ProductService::productsAddUserLocalAPI();
          
             if ($productAddUser->code !== "success") {
                 $response->set($productAddUser->code, $productAddUser->msg, $productAddUser->payload);

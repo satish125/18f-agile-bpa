@@ -50,17 +50,18 @@ $app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
 $app->post('/openFDA/productMatch/:type/:days/:minMatchingScore/:minQualityScore', 'openFDAProductMatch');
 
 // Product Services
-$app->get('/products/getUser', 'productsGetUser');
-$app->delete('/products/deleteUser', 'productsDeleteUser');
-$app->post('/products/addUser', 'productsAddUser');
-$app->get('/products/getStores', 'productsGetStores');
-$app->get('/products/getProduct/:productId', 'productsGetProduct');
-$app->get('/products/getUserStores/:page', 'productsGetUserStores');
-$app->get('/products/getUserStore/:userStoreId', 'productsGetUserStore');
-$app->get('/products/getUserPurchases/:dayLimit/:page', 'productsGetUserPurchases');
-$app->post('/products/addUserStore', 'productsAddUserStore');
-$app->delete('/products/deleteUserStore/:userStoreId','productsDeleteUserStore');
-$app->put('/products/updateUserStore', 'productsUpdateUserStore');
+$productService = new ProductService();
+$app->get('/products/getUser', 'ProductService::productsGetUser');
+$app->delete('/products/deleteUser', 'ProductService::productsDeleteUser');
+$app->post('/products/addUser', 'ProductService::productsAddUser');
+$app->get('/products/getStores', 'ProductService::productsGetStores');
+$app->get('/products/getProduct/:productId', 'ProductService::productsGetProduct');
+$app->get('/products/getUserStores/:page', 'ProductService::productsGetUserStores');
+$app->get('/products/getUserStore/:userStoreId', 'ProductService::productsGetUserStore');
+$app->get('/products/getUserPurchases/:dayLimit/:page', 'ProductService::productsGetUserPurchases');
+$app->post('/products/addUserStore', 'ProductService::productsAddUserStore');
+$app->delete('/products/deleteUserStore/:userStoreId','ProductService::productsDeleteUserStore');
+$app->put('/products/updateUserStore', 'ProductService::productsUpdateUserStore');
 
 $app->run();
 

@@ -2,7 +2,7 @@ describe('Test suite for SignupPartialCtrl', function() {
 
     beforeEach(module('web'));
 
-	var scope, ctrl, form, formElem, templateHtml, _userService;
+	var scope, ctrl, _userService;
 
 	describe('On user submitting a sign-up form', function() {
 		var $scope = scope;

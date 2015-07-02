@@ -2,7 +2,7 @@ describe('Test suite for RecallsPartialCtrl', function() {
 
 	beforeEach(module('web'));
 
-	var scope, ctrl, item, type, _openfdaService, _productService;
+	var scope, ctrl, _productService;
 
 	describe('On the recent recalls page', function() {
 		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, productService, openfdaService) { 
