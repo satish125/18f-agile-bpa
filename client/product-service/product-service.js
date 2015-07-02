@@ -18,7 +18,7 @@ angular.module('web').factory('productService',['$q', '$http',
 					return this.id in userStoreMap;
 				};
 				store.userStore = function(){
-					return userStoreMap[this.id] || {};
+					return userStoreMap[this.id] || {status: function(){return undefined;}};
 				};
 				store.isConnected = function(){
 					return this.userStore().credentials_status === 'Verified';
@@ -92,7 +92,7 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.get("/api/products/getStores").then(
 				function(response) {
                     for(var resultIndex in response.data.payload){
-						
+
                         service.stores.push(map.store(response.data.payload[resultIndex]));
                     }
                     response.data.payload = service.stores;
@@ -170,7 +170,7 @@ angular.module('web').factory('productService',['$q', '$http',
 				function(response) {
                     deferred.resolve(response.data);
                     response.data.payload.result.supermarket_id = storeid; // success response object model doesn't match userStore fetch
-					service.userStores.push(response.data.payload.result); // add to the userStore list
+					service.userStores.push(map.userStore(response.data.payload.result)); // add to the userStore list
 					userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
                 },
                 function(error) {

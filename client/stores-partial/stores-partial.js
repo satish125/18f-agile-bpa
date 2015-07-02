@@ -24,7 +24,8 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	};
 
 	$scope.refreshUserStores = function(){
-		return productService.getUserStores();
+		$scope.isRefreshing = true;
+		return productService.getUserStores().finally(function(){$scope.isRefreshing = false;});
 	};
 
 	$scope.refreshUserStores().then(function(){
