@@ -1,4 +1,4 @@
-<img src="/docs/images/CRGT-Logo.png" alt="CRGT Logo" width="150px">
+<img src="/docs/2 - how we work/process/CRGT-Logo.png" alt="CRGT Logo" width="150px">
 
 # RecallRodent
 ######https://recallrodent.crgt.com
