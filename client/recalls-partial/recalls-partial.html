@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="RecallsPartialCtrl">
     <button ng-show="progress==100" class="pull-right btn btn-default" ng-click="recheckAll()">
-        <i class="fa fa-undo"></i> Recheck All
+        <span class="fa fa-undo"></span> Recheck All
     </button>
     <h1>Recalls</h1>
     <p ng-hide="purchasesCollected">
@@ -14,7 +14,7 @@
     </div>
     <div class="row recallsGrid">
         <div class="recall" ng-repeat="(productId, recall) in recalls"
-            ng-click="toggleRecall(recall)" ng-class="{'expanded': recall.expanded}"recall-directive>
+            ng-click="toggleRecall(recall, $event)" ng-class="{'expanded': recall.expanded}" recall-directive>
             <div class="card shadow-z-1 row">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="productInfo">
@@ -24,9 +24,11 @@
 
                     <h1>{{recall.purchase.name}}</h1>
                     <div class="recalls-count">
-                        {{ sizeOf(recall.results) }} possible recalls
+                        {{ sizeOf(recall.results) }} possible recall matches
                     </div>
-                    <a class="amazon-link" href="{{recall.purchase.amazon_link}}">View on Amazon</a>
+                    <div ng-show="recall.purchase.amazon_link">
+                        <a class="amazon-link" href="{{recall.purchase.amazon_link}}">View on Amazon</a>
+                    </div>
                     <div class="share-links">
                         <span class='st_sharethis_large' displayText='ShareThis'></span>
                         <span class='st_facebook_large' displayText='Facebook'></span>
@@ -38,7 +40,7 @@
                     </div>
                 </div>
                 <div class="matchesList list-group">
-                    <h1>Possible recalls</h1>
+                    <h1>Possible recall matches</h1>
                     <div class="list-group-item" ng-repeat="match in recall.results | orderBy:matching_score">
                         <h1>{{match.product_description}}</h1>
                         <h2>{{match.recalling_firm}}</h2>

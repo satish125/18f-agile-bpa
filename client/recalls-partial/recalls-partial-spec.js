@@ -1,18 +1,30 @@
-describe('RecallsPartialCtrl', function() {
+describe('Test suite for RecallsPartialCtrl', function() {
 
 	beforeEach(module('web'));
 
-	var scope,ctrl;
+	var scope, ctrl, item, type, _openfdaService, _productService;
 
-    beforeEach(inject(function($rootScope, $controller) {
-      scope = $rootScope.$new();
-      ctrl = $controller('RecallsPartialCtrl', {$scope: scope});
-    }));	
+	describe('On the recent recalls page', function() {
+		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, productService, openfdaService) { 
+			scope = $rootScope.$new();
+			scope.dayLimit = 365;
 
-	it('should ...', inject(function() {
+			_productService = productService;
 
-		expect(1).toEqual(1);
+			spyOn(_productService, 'getUserPurchases').and.callThrough();
+
+			ctrl = $controller('RecallsPartialCtrl', {
+				$scope: scope,
+				productService: _productService
+			});		
+			
+		}));
 		
-	}));
-
+		it('should make user purchases request to the server with the passed day limit and page', function() {
+			expect(_productService.getUserPurchases).toHaveBeenCalled();
+			expect(_productService.getUserPurchases).toHaveBeenCalledWith(scope.dayLimit, 1);
+		});
+		
+	});
+	
 });

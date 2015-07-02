@@ -9,15 +9,8 @@ describe('recallDirective', function() {
     compile = $compile;
   }));
 
-  it('should ...', function() {
-
-    /* 
-    To test your directive, you need to create some html that would use your directive,
-    send that through compile() then compare the results.
-
-    var element = compile('<div mydirective name="name">hi</div>')(scope);
-    expect(element.text()).toBe('hello, world');
-    */
-
+  it('should populate the ShareThis button', function() {
+    var element = compile("<span class='st_sharethis_large' displayText='ShareThis'></span>")(scope);
+    expect(element.text().length > 0);
   });
 });
