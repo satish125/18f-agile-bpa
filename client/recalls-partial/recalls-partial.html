@@ -24,9 +24,11 @@
 
                     <h1>{{recall.purchase.name}}</h1>
                     <div class="recalls-count">
-                        {{ sizeOf(recall.results) }} possible recalls
+                        {{ sizeOf(recall.results) }} possible recall matches
                     </div>
-                    <a class="amazon-link" href="{{recall.purchase.amazon_link}}">View on Amazon</a>
+                    <div ng-show="recall.purchase.amazon_link">
+                        <a class="amazon-link" href="{{recall.purchase.amazon_link}}">View on Amazon</a>
+                    </div>
                     <div class="share-links">
                         <span class='st_sharethis_large' displayText='ShareThis'></span>
                         <span class='st_facebook_large' displayText='Facebook'></span>
@@ -38,7 +40,7 @@
                     </div>
                 </div>
                 <div class="matchesList list-group">
-                    <h1>Possible recalls</h1>
+                    <h1>Possible recall matches</h1>
                     <div class="list-group-item" ng-repeat="match in recall.results | orderBy:matching_score">
                         <h1>{{match.product_description}}</h1>
                         <h2>{{match.recalling_firm}}</h2>
