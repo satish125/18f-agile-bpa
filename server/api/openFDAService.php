@@ -121,6 +121,7 @@ function openFDAProductMatch($type, $days, $minMatchingScore, $minQualityScore) 
     $end = date("Ymd");
 
     $limit = 100;
+    $maxPieceCompare = 10;
 
     // Word exclusion list that will not be searched upon or scored upon
     $words = "about,above,across,after,against,around,at,before,behind,below,beneath,beside,besides,between,beyond,".
@@ -306,41 +307,46 @@ function openFDAProductMatch($type, $days, $minMatchingScore, $minQualityScore) 
             // Initialize Quality Score
             $qualityScore = 0;
             
-            // Determine size of quality match
-            if ( count($resultProductNamePieces) > 10) {
-                $cntResultProductNamePieces = 10; 
+            // Determine size of quality match for product names
+            if ( count($resultProductNamePieces) > $maxPieceCompare) {
+                $cntResultProductNamePieces = $maxPieceCompare; 
             } else {
                 $cntResultProductNamePieces = count($resultProductNamePieces);
             }
             
-            // Generate associative array to find product names
-            $flippedResultProductNamePieces = array_flip($resultProductNamePieces);
-            
-            // Calculate Quality Score on Product Names
-            foreach ($productNamePieces as $idx1 => &$value) {
-                if ( array_key_exists($value, $flippedResultProductNamePieces) && $idx1 <= 10 && $flippedResultProductNamePieces[$value] <= 10 ) {
-                    $qualityScore += ( $cntResultProductNamePieces - $flippedResultProductNamePieces[$value] ) * (1 / $cntResultProductNamePieces);
+            // Calculate Quality Score if product name pieces were found
+            if ($cntResultProductNamePieces > 0 ) {
+                // Generate associative array to find product names
+                $flippedResultProductNamePieces = array_flip($resultProductNamePieces);                
+                
+                foreach ($productNamePieces as $idx1 => &$value) {
+                    if ( array_key_exists($value, $flippedResultProductNamePieces) && $idx1 <= $maxPieceCompare && $flippedResultProductNamePieces[$value] <= $maxPieceCompare ) {
+                        $qualityScore += ( $cntResultProductNamePieces - $flippedResultProductNamePieces[$value] ) * (1 / $cntResultProductNamePieces);
+                    }
                 }
             }
-               
-            // Determine size of quality match
-            if ( count($resultProductUpcPieces) > 10) {
-                $cntResultProductUpcPieces = 10; 
+            
+            // Determine size of quality match on Product UPCs
+            if ( count($resultProductUpcPieces) > $maxPieceCompare) {
+                $cntResultProductUpcPieces = $maxPieceCompare;
             } else {
-                $cntResultProductNamePieces = count($resultProductUpcPieces);
+                $cntResultProductUpcPieces = count($resultProductUpcPieces);
             }   
             
-            // Generate associative array to find product upc codes
-            $flippedResultProductUpcPieces = array_flip($resultProductUpcPieces);
-            
-            // Calculate Quality Score on Product Upc codes
-            foreach ($productUpcPieces as $idx1 => &$value) {             
-                if ( array_key_exists($value, $flippedResultProductUpcPieces) && $idx1 <= 10 && $flippedResultProductUpcPieces[$value] <= 10 ) {
-                    $qualityScore += ( $cntMatchingProductUpcPieces - $flippedResultProductUpcPieces[$value] ) * (1 / $cntResultProductNamePieces);
+            // Calculate Quality Score if product upc pieces were found
+            if ($cntResultProductUpcPieces > 0 ) {
+                // Generate associative array to find product upc codes
+                $flippedResultProductUpcPieces = array_flip($resultProductUpcPieces);
+                
+                // Iterate thru all product upc pieces and calculate score based upon position of match
+                foreach ($productUpcPieces as $idx1 => &$value) {             
+                    if ( array_key_exists($value, $flippedResultProductUpcPieces) && $idx1 <= $maxPieceCompare && $flippedResultProductUpcPieces[$value] <= $maxPieceCompare ) {
+                        $qualityScore += ( $cntResultProductUpcPieces - $flippedResultProductUpcPieces[$value] ) * (1 / $cntResultProductUpcPieces);
+                    }
                 }
-            }                      
+            }
 	    
-            // Remove array entry if minimum score has not been met
+            // Remove array entry if minimum matching score has not been met
             if ($matchingScore >= $minMatchingScore && $qualityScore >= $minQualityScore) {
                 // Adding matching score to output and flag result as a match
                 $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
