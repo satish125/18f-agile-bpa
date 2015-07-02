@@ -153,5 +153,5 @@ The WAMP installation includes the MySQL console but MySQL Workbench is a user-f
 2.	From the pop-up menu, select “Stop All Services” and then select "Start All Services".<br>
 ![MySQL alt text](/docs/3 - what we use/install/images/wamp_server_restart.jpg)
 3.	Open the browser, refresh the page with "localhost" as the URL (without quotes), and confirm the RecallRodent application home page displays.<br>
-![RecallRodent alt text](/docs/3 - what we use/install/images/recallrodent_home.jpg)
+![RecallRodent alt text](/docs/3 - what we use/install/images/RecallRodent_desktop_Screenshot_1.png)
  
