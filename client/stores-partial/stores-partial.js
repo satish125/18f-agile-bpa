@@ -55,7 +55,16 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	};
 
 	$scope.toggleStoreConnect = function(store){
+		$scope.stores.map(function(obj){obj.expanded = false; return obj;});
 		store.expanded = true;
+	};
+
+	$scope.connectedStoresFilter = function(store){
+		return store.hasConnectionAttempt();
+	};
+
+	$scope.availableStoresFilter = function(store){
+		return !store.hasConnectionAttempt();
 	};
 
 }]);

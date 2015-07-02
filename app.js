@@ -63,7 +63,6 @@ angular.module('web').directive('ngFocus', [function() {
 	};
 }]);
 
-
 angular.module('web').run(['$rootScope','$state','$location','userService',function($rootScope,$state,$location,userService) {
 	$rootScope.$on('$locationChangeStart',
 		function(event) {
