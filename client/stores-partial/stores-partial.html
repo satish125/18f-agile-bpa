@@ -91,7 +91,7 @@
 								</div>
 							</a>
 
-							<form name="connectForm" class="form-inline clearfix" ng-submit="doStoreConnect(store)" autocomplete="off">
+							<form name="connectForm{{store.id}}" class="form-inline clearfix" ng-submit="doStoreConnect(store)" autocomplete="off">
 								<span class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
 									<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off">
 									<label for="username{{store.id}}" class="floating-label">user</label>
