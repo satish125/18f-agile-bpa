@@ -16,9 +16,14 @@
 	position:absolute;
 	top:0.5em;
 	right:1em;
+	z-index:1;
 }
 
 .recall .amazon-link{
+	display:none;
+}
+
+.recall .share-links{
 	display:none;
 }
 
@@ -98,13 +103,14 @@
 
 	.card{
 		height:auto;
+		cursor: default;
 		&:hover{
 			background-color:white;
 		}
 	}
 
 
-	.close{
+	.close, .share-links, .amazon-link{
 		display:block;
 	}
 
