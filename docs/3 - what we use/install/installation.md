@@ -2,7 +2,7 @@
 [![Dependency Status](https://www.versioneye.com/user/projects/55899654306662001d00017c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899654306662001d00017c)
 [![Dependency Status](https://www.versioneye.com/user/projects/55899725306662001e000242/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55899725306662001e000242)
 
-![Squirrel alt text](/docs/images/Squirrel.jpg)
+![Squirrel alt text](/docs/3 - what we use/install/images/arctic-ground-squirrel.jpg)
 
 
 ## Prerequisites
@@ -19,7 +19,7 @@
 
 ## Sample Windows Install
 
-[View Detailed Windows Installation Instructions](/docs/detailed-windows-installation.md)
+[View Detailed Windows Installation Instructions](/docs/3 - what we use/install/detailed-windows-installation.md)
 
 ## Commands
 
