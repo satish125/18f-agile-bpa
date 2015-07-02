@@ -6,13 +6,12 @@
 	   </div>
 	</div>
 	<div>
-		<div ng-show="gettingStores">
-			<span class="fa fa-spinner fa-pulse" aria-hidden="true"></span>
-			Loading Stores...
-		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<h2>My Stores</h2>
+				<h2>
+					My Stores
+					<span class="fa fa-spinner fa-pulse text-primary" aria-hidden="true" ng-show="gettingStores"></span>
+				</h2>
 				<div class="card clearfix">
 					<div ng-repeat="store in stores | filter:connectedStoresFilter" class="store connected-list">
 						<div class="store-card">
@@ -53,7 +52,10 @@
 				</div>
 			</div>
 			<div class="col-md-8">
-				<h2>Connect a Store</h2>
+				<h2>
+					Connect a Store
+					<span class="fa fa-spinner fa-pulse text-primary" aria-hidden="true" ng-show="gettingStores"></span>
+				</h2>
 				<form>
 					<div class="input-group search-group">
 						<label class="input-group-addon" id="basic-addon2">
