@@ -22,7 +22,7 @@ class ServiceTemplate {
         ),
     );
 
-    protected static function init($doCheckUserExists=true, $doCheckHasSession=true){
+    protected static function init($doCheckUserExists=true, $doCheckHasSession=true, $doCheckIAmDataKeys=true){
         static::$response = new restResponse;
         static::$sessionId = session_id();
 
@@ -31,7 +31,9 @@ class ServiceTemplate {
             if($doCheckHasSession){
                 static::getSessionData();
             }
-            static::getProductAPIKeys();
+            if($doCheckIAmDataKeys){
+                static::getProductAPIKeys();
+            }
             if($doCheckUserExists){
                 static::getUserData();
             }
@@ -68,7 +70,7 @@ class ServiceTemplate {
     /**
      * may throw error
      */
-    private static function getProductAPIKeys(){
+    protected static function getProductAPIKeys(){
         $sql = "SELECT client_id, client_secret FROM iamdata_properties";
         $stmt = static::$db->prepare($sql);
         $stmt->execute();
@@ -83,7 +85,7 @@ class ServiceTemplate {
     /**
      * may throw error
      */
-    private static function getUserData(){
+    protected static function getUserData(){
         $sql = "SELECT user_id, email, zip FROM user WHERE user_id=:user_id";
         $stmt = static::$db->prepare($sql);
         $stmt->bindParam("user_id", static::$sessionData->user_id);
@@ -115,6 +117,9 @@ class ServiceTemplate {
             if (!property_exists($body, $param)) {
                 static::$response->set("invalid_parameter","username parameter was not found", array());
             }
+        }
+        if(static::$response->$code == "invalid_parameter"){
+            return false;
         }
         return true;
     }

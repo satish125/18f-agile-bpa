@@ -4,7 +4,7 @@
 $session_name = 'SESSION_ID'; 
 
 // Set to true if using https else leave as false
-$secure = true;
+$secure = false;
 
 // This stops javascript being able to access the session id
 $httponly = true;
@@ -30,6 +30,7 @@ session_name($session_name);
 session_start();
 
 require 'Slim/Slim.php';
+\Slim\Slim::registerAutoloader();
 require 'service.php';
 require 'userService.php';
 require 'openFDAService.php';
@@ -38,20 +39,19 @@ require 'productService.php';
 ini_set('display_errors', '1');
 error_reporting(-1);
 
-$app = new Slim();
+$app = new \Slim\Slim();
 
 // User Services
-$app->post('/user/login', 'userLogin');
-$app->get('/user/get', 'userGet');
-$app->post('/user/register', 'userRegister');
-$app->get('/user/logout', 'userLogout');
+$app->post('/user/login', 'UserService::userLogin');
+$app->get('/user/get', 'UserService::userGet');
+$app->post('/user/register', 'UserService::userRegister');
+$app->get('/user/logout', 'UserService::userLogout');
 
 // openFDA Services
-$app->get('/openFDA/recentRecalls/:type/:days/:limit', 'openFDARecentRecalls');
-$app->post('/openFDA/productMatch/:type/:days/:minMatchingScore/:minQualityScore', 'openFDAProductMatch');
+$app->get('/openFDA/recentRecalls/:type/:days/:limit', 'OpenFDAService::openFDARecentRecalls');
+$app->post('/openFDA/productMatch/:type/:days/:minMatchingScore/:minQualityScore', 'OpenFDAService::openFDAProductMatch');
 
 // Product Services
-$productService = new ProductService();
 $app->get('/products/getUser', 'ProductService::productsGetUser');
 $app->delete('/products/deleteUser', 'ProductService::productsDeleteUser');
 $app->post('/products/addUser', 'ProductService::productsAddUser');

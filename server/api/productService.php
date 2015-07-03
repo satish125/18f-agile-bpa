@@ -74,9 +74,13 @@ class ProductService extends ServiceTemplate{
     }//productsAddUser
 
     public static function productsAddUserLocalAPI() {
-        if(!parent::init()){
-            return parent::$response;
-        }
+        parent::$response = new restResponse;
+
+        //get iamdata api keys
+        parent::getProductAPIKeys();
+
+        //build user id for iam data
+        parent::$userId = parent::$iamdata->client_id ."_". parent::$userData->user_id;
 
         $url = "https://api.iamdata.co:443/v1/users?".parent::$iamdataKeys;
 
@@ -192,10 +196,12 @@ class ProductService extends ServiceTemplate{
     
 
     public static function productsAddUserStore() {
-        $request = Slim::getInstance()->request();
+        $request = \Slim\Slim::getInstance()->request();
         $body = json_decode($request->getBody());
 
-        parent::checkParamsExist($body, ['store_id', 'username', 'password']);
+        if(!parent::checkParamsExist($body, ['store_id', 'username', 'password'])){
+            return;
+        }
 
         if(!parent::init()){
             return;
@@ -238,10 +244,12 @@ class ProductService extends ServiceTemplate{
     }//productsDeleteUserStore
 
     public static function productsUpdateUserStore() {
-        $request = Slim::getInstance()->request();
+        $request = \Slim\Slim::getInstance()->request();
         $body = json_decode($request->getBody());
 
-        parent::checkParamsExist($body, ['user_store_id', 'username', 'password']);
+        if(!parent::checkParamsExist($body, ['user_store_id', 'username', 'password'])){
+            return;
+        }
 
         if(!parent::init()){
             return;
