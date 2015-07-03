@@ -30,6 +30,7 @@ session_name($session_name);
 session_start();
 
 require 'Slim/Slim.php';
+require 'service.php';
 require 'userService.php';
 require 'openFDAService.php';
 require 'productService.php';
