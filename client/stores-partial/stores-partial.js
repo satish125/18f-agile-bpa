@@ -14,7 +14,9 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 
 	if (!productService.stores.length){
 		$scope.gettingStores = true;
-		productService.getStores().then(setStores).finally(function(){$scope.gettingStores = false;});
+		productService.getStores().then(setStores).finally(function(){
+			$scope.gettingStores = false;
+		});
 	}else{ // it persisted in the service
 		setStores();
 	}
@@ -25,7 +27,9 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 
 	$scope.refreshUserStores = function(){
 		$scope.isRefreshing = true;
-		return productService.getUserStores().finally(function(){$scope.isRefreshing = false;});
+		return productService.getUserStores().finally(function(){
+			$scope.isRefreshing = false;
+		});
 	};
 
 	$scope.refreshUserStores().then(function(){
@@ -56,7 +60,9 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 	};
 
 	$scope.toggleStoreConnect = function(store){
-		$scope.stores.map(function(obj){obj.expanded = false; return obj;});
+		$scope.stores.map(function(obj){
+			obj.expanded = false; return obj;
+		});
 		store.expanded = true;
 	};
 

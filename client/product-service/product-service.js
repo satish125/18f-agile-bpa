@@ -12,13 +12,17 @@ angular.module('web').factory('productService',['$q', '$http',
 			store: function(store){
 				store.isConnecting = false;
 				store.isDisconnecting = false;
-				store.isWorking = function(){return this.isConnecting || this.isDisconnecting;};
+				store.isWorking = function(){
+                    return this.isConnecting || this.isDisconnecting;
+                };
 				store.href = 'https://www.google.com/search?q='+encodeURIComponent(store.name)+'&btnI';
 				store.hasConnectionAttempt = function(){
 					return this.id in userStoreMap;
 				};
 				store.userStore = function(){
-					return userStoreMap[this.id] || {status: function(){return undefined;}};
+					return userStoreMap[this.id] || {status: function(){
+                        return undefined;
+                    }};
 				};
 				store.isConnected = function(){
 					return this.userStore().credentials_status === 'Verified';
