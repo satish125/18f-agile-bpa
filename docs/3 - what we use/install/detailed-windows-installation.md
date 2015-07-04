@@ -41,7 +41,7 @@ b. Copy the server.key file to ssl.key folder and server.crt file to ssl.crt
 a. In httpd.conf file, remove the comment '#' at the line which says: <br>
     LoadModule ssl_module modules/mod_ssl.so<br>
 b. In httpd.conf, remove the comment '#' at the line which says: <br>
- 	Include conf/extra/httpd_ssl.conf<br>
+ 	Include conf/extra/httpd-ssl.conf<br>
     Then move that line after this block:<br>
     &lt;IfModule ssl_module&gt;.... &lt;/IfModule&gt;<br>
 c. Open the php.ini file located in apache2.4.9\bin folder, remove the comment ';' at the line which says:<br> 
