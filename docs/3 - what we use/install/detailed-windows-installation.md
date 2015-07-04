@@ -47,10 +47,10 @@ b. In httpd.conf, remove the comment '#' at the line which says: <br>
 c. Open the php.ini file located in apache2.4.9\bin folder, remove the comment ';' at the line which says:<br> 
      extension=php_openssl.dll
 </li>
-<li>Edit the httpd_ssl.conf file in the folder name, “extra” within the conf folder:<br>
+<li>Edit the httpd-ssl.conf file in the folder name, “extra” within the conf folder:<br>
 a. Find the line which says "SSLMutex ...." and change it to "SSLMutex default" without quotes.<br>
      NOTE: If SSLMutex is not present in the file, disregard this step.<br>
-b. Find the line which says: &lt;VirtualHost _default_:443&gt;. Right after it, change the line which says "DocumentRoot ..." to DocumentRoot "C:/wamp/www/" with quotes. Change the line ErrorLog "c:/Apache24/logs/error.log" to Errorlog “logs/sslerror_log”. Change the line TransferLog "c:/Apache24/logs/access.log" to TransferLog logs/sslaccess_log<br>
+b. Find the line which says: &lt;VirtualHost _default_:443&gt;. Right after it, change the line which says "DocumentRoot ..." to DocumentRoot "C:/wamp/www/" with quotes. Change the line ErrorLog "c:/Apache24/logs/error.log" to Errorlog “logs/sslerror_log”. Change the line TransferLog "c:/Apache24/logs/access.log" to TransferLog "logs/sslaccess_log"<br>
 c. SSL crt file: Change the line SSLCertificateFile "c:/Apache24/conf/server.crt" to SSLCertificateFile "conf/ssl.crt/server.crt"<br>
 d. SSL key file: Change the line SSLCertificateKeyFile "c:/Apache24/conf/server.key" to SSLCertificateKeyFile "conf/ssl.key/server.key"<br>
 e. Change the line which says &lt;Directory "C:/Program Files/Apache Software Foundation/Apache2.4/cgi-bin"&gt; or something similar, to &lt;Directory "C:/wamp/www/"&gt; and add the following lines inside those &lt;Directory ... &gt;...&lt;/Directory&gt; tags:<br>
