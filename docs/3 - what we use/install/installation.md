@@ -23,7 +23,7 @@
 
 ## Commands
 
-* *npm install –g grunt-cli yo bower generator-cg-angular* - installs the following technologies to be called from the command line:
+* *npm install -g grunt-cli yo bower generator-cg-angular* - installs the following technologies to be called from the command line:
   * Grunt javascript task runner
   * Yeoman scaffolding tool
   * Bower package manager
