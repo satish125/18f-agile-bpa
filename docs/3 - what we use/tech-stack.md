@@ -28,6 +28,7 @@ For complete list, see [package.json](../package.json)
 *	[Apache] – application server
 *	[MySQL] – open source database
 *	[GitHub] – code repository
+*	[Slimphp] - powerful micro framework for hosting RESTful api services
 
 ## Jenkins build and deploy output
 ![Jenkins build and deploy output](/docs/images/Jenkins build and deploy screenshot.png)
