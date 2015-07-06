@@ -165,10 +165,8 @@ class OpenFDAService extends restService{
                 if (property_exists($body, 'upc')) {
                     $productUpc = $body->upc;
                 }
-                if (property_exists($body, 'product')) {
-                    if (property_exists($body->product, 'id')) {
-                        $productId = $body->product->id;
-                    }
+                if (property_exists($body, 'product') && property_exists($body->product, 'id')) {
+                    $productId = $body->product->id;
                 }
             } else {
                 $this->setResponse(static::SYSTEM_FAILURE_CODE, "No support exists for the product source provided", array());

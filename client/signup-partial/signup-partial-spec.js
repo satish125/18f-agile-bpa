@@ -21,12 +21,12 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 				$scope: scope,
 				$state: $state,
 				userService: _userService
-			});		
-			
+			});
+
 			scope.doSignup();
 
 		}));
-		
+
 		it('should make sign-up request to the server with the user passed email, zip, and password', function() {
 			expect(_userService.registerUser).toHaveBeenCalled();
 			expect(_userService.registerUser).toHaveBeenCalledWith(scope.signup.email, scope.signup.zip, scope.signup.pwd);
@@ -34,7 +34,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 	});
 
 	describe("On validating the sign-up fields", function() {
-		
+
 		function test(type, val){
 			var msge = "";
 			switch (type) {
@@ -64,12 +64,12 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 			}
 			return msge;
 		}
-		
+
 		function validateEmail(email) {
 			var len = email.length;
 			return len;
 		}
-		
+
 		function comparePwd(pwd1, pwd2) {
 			if (pwd1 === pwd2) {
 				return true;
@@ -77,7 +77,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 				return false;
 			}
 		}
-	
+
 		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, $stateParams, userService) {
 			scope.signup = {};
 			scope.signup.email = 'someuser@test.com';
@@ -96,7 +96,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 				userService: _userService
 			});	
 		}));
-		
+
 		it("should display a message if email is empty", function() {
 			scope.signup.email = "";
 			scope.doSignup();		
@@ -123,7 +123,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 			scope.doSignup();
 			expect(test("confirm",scope.signup.confirm)).toBe("A confirmation password is required");
 		});
-		
+
 		it('should display a message if password minimum length is below 8 characters', function() {
 			scope.signup.password = "pword";
 			scope.signup.confirm = "pword";
@@ -137,7 +137,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 			scope.doSignup();
 			expect(comparePwd(scope.signup.password,scope.signup.confirm)).toBeFalsy();
 		});			
-		
+
 	});
-	
+
 });
