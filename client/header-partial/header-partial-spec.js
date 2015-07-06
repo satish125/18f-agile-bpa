@@ -9,7 +9,7 @@ describe('Test suite for HeaderPartialCtrl', function() {
         beforeEach(inject(function($rootScope, $controller, $state, $location, userService) {
             scope = $rootScope.$new();
             $userService = userService;
-            
+
             ctrl = $controller('HeaderPartialCtrl', {
                 $scope: scope,
                 location: $location,

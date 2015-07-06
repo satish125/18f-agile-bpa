@@ -10,8 +10,8 @@ class ProductService extends RestService {
     function __construct() {
         // Establish Database Service
         $this->dbService = new DbService();
-        
-        $this->userData = $this->dbService->getUserBySessionId();             
+
+        $this->userData = $this->dbService->getUserBySessionId();
         $this->productApiData = $this->dbService->getProductApiKey();
 
         // Only populate when db service returns success
@@ -20,32 +20,32 @@ class ProductService extends RestService {
             $this->productApiKeys = "client_id=" .$this->productApiData->client_id. "&client_secret=" .$this->productApiData->client_secret;
         }
     }
-    
+
     function __destruct() {
         // Close database service
         $this->dbService = null;
     }
-    
+
     protected function init() {
         if ($this->userData->code !== DbService::SUCCESS_CODE) {
             $this->setResponse("not_logged_on", "You are not currently logged into the system", array());
             return false;
         }
-        
+
         if ($this->productApiData->code !== DbService::SUCCESS_CODE) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "Product api keys are not configured", array());
             return false;
         }
-        
+
         return true;
     }
-    
+
     public function productsGetUser() {
         try {
             if(!$this->init()){
                 return;
             }
-        
+
             $url = "https://api.iamdata.co:443/v1/users/".$this->productApiUserId."?".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
@@ -70,7 +70,7 @@ class ProductService extends RestService {
             if(!$this->init()){
                 return;
             }
-        
+
             $url = "https://api.iamdata.co:443/v1/users?id=" .$this->productApiUserId. "&".$this->productApiKeys;
 
             $context = stream_context_create($this->deleteRequestOptions());
@@ -128,7 +128,7 @@ class ProductService extends RestService {
     }//productsAddUser
 
     public function productsAddUserLocalAPI() {
-        try {        
+        try {
             if(!$this->init()){
                 return;
             }
@@ -155,7 +155,7 @@ class ProductService extends RestService {
     }//productsAddUserLocalAPI
 
     public function productsGetUserPurchases($daylimit="30", $page="1"){
-        try {        
+        try {
             if(!$this->init()){
                 return;
             }
@@ -185,7 +185,7 @@ class ProductService extends RestService {
     }//productsGetUserPurchases
 
     public function productsGetStores() {
-        try {        
+        try {
             if(!$this->init()){
                 return;
             }
@@ -222,7 +222,7 @@ class ProductService extends RestService {
             }
             $pageSize = 50;
             $pageNumber = trim($page);
-            
+
             $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
@@ -247,7 +247,7 @@ class ProductService extends RestService {
             if(!$this->init()){
                 return;
             }
-        
+
             $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
@@ -327,8 +327,8 @@ class ProductService extends RestService {
         try {
             if(!$this->init()){
                 return;
-            }            
-            
+            }
+
             $request = \Slim\Slim::getInstance()->request();
             $body = json_decode($request->getBody());
 
@@ -361,7 +361,7 @@ class ProductService extends RestService {
         try {
             if(!$this->init()){
                 return;
-            }   
+            }
             $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
@@ -377,14 +377,14 @@ class ProductService extends RestService {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to get product", array());
         } finally {
             $this->outputResponse();
-        }            
+        }
     }//productsGetProduct
 
     public function productsGetProductLocalAPI($productId) {
         try {
             if(!$this->init()){
                 return;
-            } 
+            }
 
             $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
 

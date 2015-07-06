@@ -1,22 +1,22 @@
 <?php
 
 class OpenFDAService extends RestService{
-    
-    protected $dbService;  
+
+    protected $dbService;
     protected $openFdaApiData;
 
     function __construct() {
         // Establish Database Service
         $this->dbService = new DbService();
-                    
+
         $this->openFdaApiData = $this->dbService->getOpenFdaApiKey();
     }
-    
+
     function __destruct() {
         // Close database service
         $this->dbService = null;
-    }    
-    
+    }
+
     /**
      * Pull recent enforcement data from open FDA interface.
      */
@@ -47,7 +47,7 @@ class OpenFDAService extends RestService{
     }
 
     /**
-     * Word parser that separates a text string containing the product name into an array.  All 
+     * Word parser that separates a text string containing the product name into an array.  All
      * special characters and words in the exclusion word list are removed from the array.
      */
 
@@ -55,16 +55,16 @@ class OpenFDAService extends RestService{
 
         // Build array of search terms for product name, filter out common words and special characters
         $wordList = array();
-        
+
         // Remove Special Characters, retain a-z, A-Z and spaces
         $text = preg_replace('/[^a-zA-Z ]+/', ' ', $text);
-        
+
         // Remove extra spaces
         $text = preg_replace('!\s{2,}!', ' ', $text);
-        
+
         // Exclude all words that are in the exclusion list
         $wordList = array_diff(explode(" ", $text), $exclusionWords);
-        
+
         // filter out words that are less than three characters in length
         $wordList = array_filter($wordList, function($obj){
             if (strlen($obj) < 3) {
@@ -73,13 +73,13 @@ class OpenFDAService extends RestService{
                 return true;
             }
         });
-        
-        // Return Unique list of words   
+
+        // Return Unique list of words
         return array_unique($wordList);
     }
 
     /**
-     * Word parser that separates a text string containing the product upc into an array.  All 
+     * Word parser that separates a text string containing the product upc into an array.  All
      * special characters and words in the exclusion word list are removed from the array.
      */
 
@@ -87,16 +87,16 @@ class OpenFDAService extends RestService{
 
         // Build array of search terms for product name, filter out common words and special characters
         $wordList = array();
-        
+
         // Remove Special Characters, retain 0-9 and spaces
         $text = preg_replace('/[^a-zA-Z0-9 ]+/', ' ', $text);
-        
+
         // Remove extra spaces
         $text = preg_replace('!\s{2,}!', ' ', $text);
-        
+
         // Exclude all words that are in the exclusion list
         $wordList = array_diff(explode(" ", $text), $exclusionWords);
-        
+
         // filter out words that are less than three characters in length
         $wordList = array_filter($wordList, function($obj){
             if (strlen($obj) < 3) {
@@ -105,8 +105,8 @@ class OpenFDAService extends RestService{
                 return true;
             }
         });
-        
-        // Return Unique list of words   
+
+        // Return Unique list of words
         return array_unique($wordList);
     }
 
@@ -129,7 +129,7 @@ class OpenFDAService extends RestService{
                  "excepting,excluding,following,minus,of,on,onto,opposite,past,per,plus,regarding,round,save,than,then,".
                  "towards,underneath,unlike,versus,via,within,oz,net,wt,inc,rd,city,no,is,it,fl,ml,us,size,lb,or,all,".
                  "count,ct,pk,all,feel,about,wegmans,food,you,feel,good,about,pack,world,finest,product,combination";
-        
+
         $exclusionWords = array_map('strtolower', explode(",", $words));
 
         try{
@@ -169,14 +169,14 @@ class OpenFDAService extends RestService{
                 }
             } else {
                 $this->setResponse(static::SYSTEM_FAILURE_CODE, "No support exists for the product source provided", array());
-                return; 
+                return;
             }
 
             // Replace all hyphens with a space in the product name and convert to lower case
             $productName = str_replace('-', ' ', strtolower($productName));
 
             // Build array of search terms for product name, filter out common words and special characters
-            $productNamePieces = $this->productNameParser($productName, $exclusionWords);  
+            $productNamePieces = $this->productNameParser($productName, $exclusionWords);
 
             // Remove all hyphens in the product upc and convert to lower case
             $productUpc = str_replace('-', '', strtolower($productUpc));
@@ -254,7 +254,7 @@ class OpenFDAService extends RestService{
                     $resultProductName =  str_replace('-', ' ', strtolower($idxVal['product_description']));
                     $resultProductNamePieces = $this->productNameParser($resultProductName, $exclusionWords);
                 }
-           
+
                 // Find matching terms for product upc
                 $matchingProductNamePieces = array_intersect ($resultProductNamePieces, $productNamePieces);
 
@@ -263,19 +263,19 @@ class OpenFDAService extends RestService{
                     $resultProductUpcPieces = array();
                 } else {
                     $resultProductUpc =  str_replace('-', ' ', strtolower($idxVal['code_info']));
-                    $resultProductUpcPieces = $this->productUpcParser($resultProductUpc, $exclusionWords);               
+                    $resultProductUpcPieces = $this->productUpcParser($resultProductUpc, $exclusionWords);
                 }
 
-                // Find matching terms          
+                // Find matching terms
                 $matchingProductUpcPieces = array_intersect ($resultProductUpcPieces, $productUpcPieces);
 
                 // Calculating matching score
                 $nameWeight = count($matchingProductNamePieces)*.5;
                 $upcWeight = 1000;
-                
+
                 // Initialize Matching Score
                 $matchingScore = 0;
-                
+
                 // Calculate the Product Name matching Score
                 if (count($productNamePieces) > 0) {
                     $matchingScore += ( count($matchingProductNamePieces) / count($productNamePieces) *  $nameWeight);
@@ -288,53 +288,53 @@ class OpenFDAService extends RestService{
 
                 // Initialize Quality Score
                 $qualityScore = 0;
-                
+
                 // Determine size of quality match for product names
                 if ( count($resultProductNamePieces) > $maxPieceCompare) {
-                    $cntResultProductNamePieces = $maxPieceCompare; 
+                    $cntResultProductNamePieces = $maxPieceCompare;
                 } else {
                     $cntResultProductNamePieces = count($resultProductNamePieces);
                 }
-                
+
                 // Calculate Quality Score if product name pieces were found
                 if ($cntResultProductNamePieces > 0 ) {
                     // Generate associative array to find product names
-                    $flippedResultProductNamePieces = array_flip($resultProductNamePieces);                
-                    
+                    $flippedResultProductNamePieces = array_flip($resultProductNamePieces);
+
                     foreach ($productNamePieces as $idx1 => &$value) {
                         if ( array_key_exists($value, $flippedResultProductNamePieces) && $idx1 <= $maxPieceCompare && $flippedResultProductNamePieces[$value] <= $maxPieceCompare ) {
                             $qualityScore += ( $cntResultProductNamePieces - $flippedResultProductNamePieces[$value] ) * (1 / $cntResultProductNamePieces);
                         }
                     }
                 }
-                
+
                 // Determine size of quality match on Product UPCs
                 if ( count($resultProductUpcPieces) > $maxPieceCompare) {
                     $cntResultProductUpcPieces = $maxPieceCompare;
                 } else {
                     $cntResultProductUpcPieces = count($resultProductUpcPieces);
-                }   
-                
+                }
+
                 // Calculate Quality Score if product upc pieces were found
                 if ($cntResultProductUpcPieces > 0 ) {
                     // Generate associative array to find product upc codes
                     $flippedResultProductUpcPieces = array_flip($resultProductUpcPieces);
-                    
+
                     // Iterate thru all product upc pieces and calculate score based upon position of match
-                    foreach ($productUpcPieces as $idx1 => &$value) {             
+                    foreach ($productUpcPieces as $idx1 => &$value) {
                         if ( array_key_exists($value, $flippedResultProductUpcPieces) && $idx1 <= $maxPieceCompare && $flippedResultProductUpcPieces[$value] <= $maxPieceCompare ) {
                             $qualityScore += ( $cntResultProductUpcPieces - $flippedResultProductUpcPieces[$value] ) * (1 / $cntResultProductUpcPieces);
                         }
                     }
                 }
-            
+
                 // Remove array entry if minimum matching score has not been met
                 if ($matchingScore >= $minMatchingScore && $qualityScore >= $minQualityScore) {
                     // Adding matching score to output and flag result as a match
                     $bigArr['results'][$idx]['matching_score']=round($matchingScore,2);
-                    $foundAMatch = true;      
-                } else {              
-                    unset($bigArr['results'][$idx]);       
+                    $foundAMatch = true;
+                } else {
+                    unset($bigArr['results'][$idx]);
                 }
             }
 
@@ -351,7 +351,7 @@ class OpenFDAService extends RestService{
                 try {
                     // Retrieve product id information thru product service
                     $productService = new productService();
-                    
+
                     $productQuery = $productService->productsGetProductLocalAPI($productId);
 
                     if ($productQuery->code === "success") {
@@ -380,7 +380,7 @@ class OpenFDAService extends RestService{
             $payload["purchase"]->brand=$productBrand;
             $payload["purchase"]->category=$productCategory;
 
-            $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $payload );        
+            $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $payload );
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, $e->getMessage(), array());
         } finally {

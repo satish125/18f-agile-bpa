@@ -5,7 +5,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 	var scope, ctrl, _userService;
 
 	describe('On user submitting a sign-up form', function() {
-		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, userService) { //$stateParams, 
+		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, userService) {
 			scope = $rootScope.$new();
 			scope.signup = {};
 			scope.signup.email = 'someuser@test.com';
@@ -94,12 +94,12 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 				$state: $state,
 				$stateParams: $stateParams,
 				userService: _userService
-			});	
+			});
 		}));
 
 		it("should display a message if email is empty", function() {
 			scope.signup.email = "";
-			scope.doSignup();		
+			scope.doSignup();
 			expect(test("email",scope.signup.email)).toBe("An email is required");
 		});
 
@@ -136,7 +136,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 			scope.signup.confirm = "testdemo";
 			scope.doSignup();
 			expect(comparePwd(scope.signup.password,scope.signup.confirm)).toBeFalsy();
-		});			
+		});
 
 	});
 
