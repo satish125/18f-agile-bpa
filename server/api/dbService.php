@@ -54,7 +54,7 @@ class dbService {
     function getOpenFdaApiKey() {
         try {            
             // Retrieve Open FDA api key
-            $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
+            $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA' ORDER BY rand() LIMIT 1";
             $stmt = $this->dbConnection->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchObject();
