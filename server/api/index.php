@@ -31,10 +31,12 @@ session_start();
 
 require 'Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
-require 'service.php';
+require 'restService.php';
+require 'dbService.php';
 require 'userService.php';
 require 'openFDAService.php';
 require 'productService.php';
+require 'passwordHash.php';
 
 ini_set('display_errors', '1');
 error_reporting(-1);
@@ -42,55 +44,29 @@ error_reporting(-1);
 $app = new \Slim\Slim();
 
 // User Services
-$app->post('/user/login', 'UserService::userLogin');
-$app->get('/user/get', 'UserService::userGet');
-$app->post('/user/register', 'UserService::userRegister');
-$app->get('/user/logout', 'UserService::userLogout');
+$app->post('/user/login', 'UserService:userLogin');
+$app->get('/user/get', 'UserService:userGet');
+$app->post('/user/register', 'UserService:userRegister');
+$app->get('/user/logout', 'UserService:userLogout');
 
 // openFDA Services
-$app->get('/openFDA/recentRecalls/:type/:days/:limit', 'OpenFDAService::openFDARecentRecalls');
-$app->post('/openFDA/productMatch/:type/:days/:minMatchingScore/:minQualityScore', 'OpenFDAService::openFDAProductMatch');
+$app->get('/openFDA/recentRecalls/:type/:days/:limit', 'OpenFDAService:openFDARecentRecalls');
+$app->post('/openFDA/productMatch/:type/:days/:minMatchingScore/:minQualityScore', 'OpenFDAService:openFDAProductMatch');
 
 // Product Services
-$app->get('/products/getUser', 'ProductService::productsGetUser');
-$app->delete('/products/deleteUser', 'ProductService::productsDeleteUser');
-$app->post('/products/addUser', 'ProductService::productsAddUser');
-$app->get('/products/getStores', 'ProductService::productsGetStores');
-$app->get('/products/getProduct/:productId', 'ProductService::productsGetProduct');
-$app->get('/products/getUserStores/:page', 'ProductService::productsGetUserStores');
-$app->get('/products/getUserStore/:userStoreId', 'ProductService::productsGetUserStore');
-$app->get('/products/getUserPurchases/:dayLimit/:page', 'ProductService::productsGetUserPurchases');
-$app->post('/products/addUserStore', 'ProductService::productsAddUserStore');
-$app->delete('/products/deleteUserStore/:userStoreId','ProductService::productsDeleteUserStore');
-$app->put('/products/updateUserStore', 'ProductService::productsUpdateUserStore');
+$app->get('/products/getUser', 'ProductService:productsGetUser');
+$app->delete('/products/deleteUser', 'ProductService:productsDeleteUser');
+$app->post('/products/addUser', 'ProductService:productsAddUser');
+$app->get('/products/getStores', 'ProductService:productsGetStores');
+$app->get('/products/getProduct/:productId', 'ProductService:productsGetProduct');
+$app->get('/products/getUserStores/:page', 'ProductService:productsGetUserStores');
+$app->get('/products/getUserStore/:userStoreId', 'ProductService:productsGetUserStore');
+$app->get('/products/getUserPurchases/:dayLimit/:page', 'ProductService:productsGetUserPurchases');
+$app->post('/products/addUserStore', 'ProductService:productsAddUserStore');
+$app->delete('/products/deleteUserStore/:userStoreId','ProductService:productsDeleteUserStore');
+$app->put('/products/updateUserStore', 'ProductService:productsUpdateUserStore');
 
 $app->run();
 
-class restResponse{
-	public $code = "";
-	public $msg = "";
-	public $payload = "";
-
-	function set($code, $msg, $payload){
-        $this->code = $code;
-		$this->msg = $msg;
-		$this->payload = $payload;
-    }
-
-	function toJSON() {
-		echo json_encode($this);
-	}
-
-}
-
-function getConnection() {
-	$dbhost="127.0.0.1";
-	$dbuser="4840w";
-	$dbpass="4840w";
-	$dbname="4840w";
-	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	return $dbh;
-}
 
 ?>

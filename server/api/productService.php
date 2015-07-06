@@ -1,312 +1,407 @@
 <?php
-class ProductService extends ServiceTemplate{
+
+class ProductService extends restService {
+    protected $dbService;
+    protected $userData;
+    protected $productApiData;
+    protected $productApiUserId;
+    protected $productApiKeys;
+
+    function __construct() {
+        // Establish Database Service
+        $this->dbService = new dbService();
+        
+        $this->userData = $this->dbService->getUserBySessionId();             
+        $this->productApiData = $this->dbService->getProductApiKey();
+
+        // Only populate when db service returns success
+        if ($this->userData->code == dbService::SUCCESS_CODE && $this->productApiData->code == dbService::SUCCESS_CODE) {
+            $this->productApiUserId = $this->productApiData->client_id ."_". $this->userData->user_id;
+            $this->productApiKeys = "client_id=" .$this->productApiData->client_id. "&client_secret=" .$this->productApiData->client_secret;
+        }
+    }
     
-    public static function productsGetUser() {
-        if(!parent::init()){
-            return;
+    function __destruct() {
+        // Close database service
+        $this->dbService = null;
+    }
+    
+    protected function init() {
+        if ($this->userData->code !== dbService::SUCCESS_CODE) {
+            $this->setResponse("not_logged_on", "You are not currently logged into the system", array());
+            return false;
+        }
+        
+        if ($this->productApiData->code !== dbService::SUCCESS_CODE) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "Product api keys are not configured", array());
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function productsGetUser() {
+        try {
+            if(!$this->init()){
+                return;
+            }
+        
+            $url = "https://api.iamdata.co:443/v1/users/".$this->productApiUserId."?".$this->productApiKeys;
+
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data ".$e->getMessage(), array());
+        } finally {
+            $this->outputResponse();
         }
 
-        $url = "https://api.iamdata.co:443/v1/users/".parent::$userId."?".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-
-        parent::$response->toJSON();
     }//productsGetUser
 
-    public static function productsDeleteUser() {
-        if(!parent::init()){
-            return;
-        }
+    public function productsDeleteUser() {
+        try {
+            if(!$this->init()){
+                return;
+            }
+        
+            $url = "https://api.iamdata.co:443/v1/users?id=" .$this->productApiUserId. "&".$this->productApiKeys;
 
-        $url = "https://api.iamdata.co:443/v1/users?id=" .parent::$userId. "&".parent::$iamdataKeys;
+            $context = stream_context_create($this->deleteRequestOptions());
 
-        $context = stream_context_create(parent::$deleteRequestOptions);
+            $result = file_get_contents($url, false, $context);
 
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            if (!property_exists($bigArr, 'result')) {
-                if (!property_exists($bigArr, 'message')) {
-                    parent::$response->set("service_failure","Service failed to return data", array());
-                    return;
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                if (!property_exists($bigArr, 'result')) {
+                    if (!property_exists($bigArr, 'message')) {
+                        $this->setResponse(self::SERVICE_FAILURE_CODE,"Service failed to return data", array());
+                        return;
+                    } else {
+                        $this->setResponse(self::SERVICE_FAILURE_CODE, $bigArr->message, array());
+                        return;
+                    }
                 } else {
-                    parent::$response->set("service_failure", $bigArr->message, array());
-                    return;
+                    $this->setResponse(self::SUCCESS_CODE, "User ID has been deleted", array() );
                 }
             } else {
-                parent::$response->set("success", "User ID has been deleted", array() );
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to delete user", array() );
             }
-        } else {
-            parent::$response->set("service_failure", "Service failed to delete data", array() );
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to delete user", array());
+        } finally {
+            $this->outputResponse();
         }
-        parent::$response->toJSON();
     }//productsDeleteUser
 
-    public static function productsAddUser() {
-        if(!parent::init()){
-            return;
+    public function productsAddUser() {
+        try {
+            if(!$this->init()){
+                return;
+            }
+
+            $url = "https://api.iamdata.co:443/v1/users?".$this->productApiKeys;
+
+            $data = array("email" => $this->userData->email, "zip" => $this->userData->zip, "user_id" =>$this->productApiUserId);
+
+            $options = $this->getJsonOptions(json_encode($data));
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "User successfully added in service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to add user", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/users?".parent::$iamdataKeys;
-
-        $data = array("email" => parent::$userData->email, "zip" => parent::$userData->zip, "user_id" => parent::$userId);
-
-        $options = parent::getJsonOptions(json_encode($data));
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully added in service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to add data", array() );
-        }
-        parent::$response->toJSON();
     }//productsAddUser
 
-    public static function productsAddUserLocalAPI() {
-        parent::$response = new restResponse;
+    public function productsAddUserLocalAPI() {
+        try {        
+            if(!$this->init()){
+                return;
+            }
 
-        //get iamdata api keys
-        parent::getProductAPIKeys();
+            $url = "https://api.iamdata.co:443/v1/users?".$this->productApiKeys;
 
-        //build user id for iam data
-        parent::$userId = parent::$iamdata->client_id ."_". parent::$userData->user_id;
+            $data = array("email" => $this->userData->email, "zip" => $this->userData->zip, "user_id" => $this->productApiUserId);
 
-        $url = "https://api.iamdata.co:443/v1/users?".parent::$iamdataKeys;
+            $options = $this->getJsonOptions(json_encode($data));
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
 
-        $data = array("email" => parent::$userData->email, "zip" => parent::$userData->zip, "user_id" => parent::$userId);
-
-        $options = parent::getJsonOptions(json_encode($data));
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully added in service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to add data", array() );
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "User successfully added in service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to add user", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+        } finally {
+            return $this->getResponse();
         }
-        return parent::$response;
     }//productsAddUserLocalAPI
 
-    public static function productsGetUserPurchases($daylimit="30", $page="1"){
-        if(!parent::init()){
-            return;
+    public function productsGetUserPurchases($daylimit="30", $page="1"){
+        try {        
+            if(!$this->init()){
+                return;
+            }
+
+            $pageSize = 50;
+            $pageNumber = trim($page);
+            $days = trim($daylimit);
+            $purchaseDateFrom = date("Ymd", strtotime("-".$days." days"));
+
+            //build the URL
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
+
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $pageSize = 50;
-        $pageNumber = trim($page);
-        $days = trim($daylimit);
-        $purchaseDateFrom = date("Ymd", strtotime("-".$days." days"));
-
-        //build the URL
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-        parent::$response->toJSON();
     }//productsGetUserPurchases
 
-    public static function productsGetStores() {
-        if(!parent::init(false)){
-            return;
+    public function productsGetStores() {
+        try {        
+            if(!$this->init()){
+                return;
+            }
+
+            $url = "https://api.iamdata.co:443/v1/stores/?".$this->productApiKeys;
+
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $results = $bigArr["result"];
+
+                //filter for objects with canScrape true
+                $results = array_filter($results, function($obj){
+                    return $obj["can_scrape"] != 0;
+                });
+
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $results );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/stores/?".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            $results = $bigArr["result"];
-
-            //filter for objects with canScrape true
-            $results = array_filter($results, function($obj){
-                return $obj["can_scrape"] != 0;
-            });
-
-            parent::$response->set("success", "Data successfully fetched from service", $results );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-        parent::$response->toJSON();
     }//productsGetStores
 
-    public static function productsGetUserStores($page="1") {
-        $pageSize = 50;
-        $pageNumber = trim($page);
+    public function productsGetUserStores($page="1") {
+        try {
+            if(!$this->init()){
+                return;
+            }
+            $pageSize = 50;
+            $pageNumber = trim($page);
+            
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
 
-        if(!parent::init()){
-            return;
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+            }
+
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to get user stores", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-
-        parent::$response->toJSON();
     }//productsGetUserStores
 
-    public static function productsGetUserStore($userStoreId) {
-        if(!parent::init()){
-            return;
+    public function productsGetUserStore($userStoreId) {
+        try {
+            if(!$this->init()){
+                return;
+            }
+        
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
+
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to get user store", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/stores/" .$userStoreId. "?".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            $response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            $response->set("service_failure", "Service failed to return data", array() );
-        }
-
-        parent::$response->toJSON();
     }//productsGetUserStore
 
-    
 
-    public static function productsAddUserStore() {
-        $request = \Slim\Slim::getInstance()->request();
-        $body = json_decode($request->getBody());
+    public function productsAddUserStore() {
+        try {
+            if(!$this->init()){
+                return;
+            }
+            $request = \Slim\Slim::getInstance()->request();
+            $body = json_decode($request->getBody());
 
-        if(!parent::checkParamsExist($body, ['store_id', 'username', 'password'])){
-            return;
+            if(!self::checkParamsExist($body, ['store_id' => null, 'username' => null, 'password' => null])) {
+                return;
+            }
+
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores?".$this->productApiKeys;
+
+            $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
+
+            $options = $this->getJsonOptions(json_encode($data));
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully added to service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to add user store", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to get add user store", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        if(!parent::init()){
-            return;
-        }
-
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/stores?".parent::$iamdataKeys;
-
-        $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
-
-        $options = parent::getJsonOptions(json_encode($data));
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully added to service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to add data", array() );
-        }
-        parent::$response->toJSON();
     }//productsAddUserStore
 
-    public static function productsDeleteUserStore($userStoreId) {
-        if(!parent::init()){
-            return;
+    public function productsDeleteUserStore($userStoreId) {
+        try {
+            if(!$this->init()){
+                return;
+            }
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
+
+            $context = stream_context_create($this->deleteRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully deleted from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to delete user store", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to delete user store", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/stores/" .$userStoreId. "?".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$deleteRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully deleted from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to delete data", array() );
-        }
-        parent::$response->toJSON();
     }//productsDeleteUserStore
 
-    public static function productsUpdateUserStore() {
-        $request = \Slim\Slim::getInstance()->request();
-        $body = json_decode($request->getBody());
+    public function productsUpdateUserStore() {
+        try {
+            if(!$this->init()){
+                return;
+            }            
+            
+            $request = \Slim\Slim::getInstance()->request();
+            $body = json_decode($request->getBody());
 
-        if(!parent::checkParamsExist($body, ['user_store_id', 'username', 'password'])){
-            return;
+            if(!self::checkParamsExist($body, ['user_store_id' => null, 'username' => null, 'password' => null])){
+                return;
+            }
+
+            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$body->user_store_id. "/?".$this->productApiKeys;
+
+            $data = array("username" => $body->username, "password" => $body->password);
+
+            $options = $this->getJsonOptions(json_encode($data), "PUT");
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully updated in service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to update user store", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to update user store", array());
+        } finally {
+            $this->outputResponse();
         }
-
-        if(!parent::init()){
-            return;
-        }
-
-        $url = "https://api.iamdata.co:443/v1/users/" .parent::$userId. "/stores/" .$body->user_store_id. "/?".parent::$iamdataKeys;
-
-        $data = array("username" => $body->username, "password" => $body->password);
-
-        $options = parent::getJsonOptions(json_encode($data), "PUT");
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully updated in service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to update data", array() );
-        }
-        parent::$response->toJSON();
     }//productsUpdateUserStore
 
-    public static function productsGetProduct($productId) {
-        if(!parent::init(false, false)){
-            return;
-        }
-        $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".parent::$iamdataKeys;
+    public function productsGetProduct($productId) {
+        try {
+            if(!$this->init()){
+                return;
+            }   
+            $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
 
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
 
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-        parent::$response->toJSON();
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to get product", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to get product", array());
+        } finally {
+            $this->outputResponse();
+        }            
     }//productsGetProduct
 
-    public static function productsGetProductLocalAPI($productId) {
-        if(!parent::init(false,false)){
-            return;
+    public function productsGetProductLocalAPI($productId) {
+        try {
+            if(!$this->init()){
+                return;
+            } 
+
+            $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
+
+            $context = stream_context_create($this->getRequestOptions());
+            $result = file_get_contents($url, false, $context);
+
+            if ($result !== false) {
+                $bigArr = json_decode($result, true, 20);
+                $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr['result'] );
+            } else {
+                $this->setResponse(self::SERVICE_FAILURE_CODE, "Service failed to get product", array() );
+            }
+        } catch(Exception $e) {
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to get product", array());
+        } finally {
+            return $this->getResponse();
         }
-
-        $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".parent::$iamdataKeys;
-
-        $context = stream_context_create(parent::$getRequestOptions);
-        $result = file_get_contents($url, false, $context);
-
-        if ($result !== false) {
-            $bigArr = json_decode($result, true, 20);
-            parent::$response->set("success", "Data successfully fetched from service", $bigArr );
-        } else {
-            parent::$response->set("service_failure", "Service failed to return data", array() );
-        }
-        return parent::$response;
     }//productsGetProductLocalAPI
 }
 ?>
