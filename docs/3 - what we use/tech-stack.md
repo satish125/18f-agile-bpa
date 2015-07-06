@@ -31,7 +31,7 @@ For complete list, see [package.json](../package.json)
 *	[Slimphp] - powerful micro framework for hosting RESTful api services
 
 ## Jenkins build and deploy output
-![Jenkins build and deploy output](/docs/images/Jenkins build and deploy screenshot.png)
+![Jenkins build and deploy output](/docs/Jenkins build and deploy screenshot.png)
 
 ## Sonar output 
-![Sonar output screenshot](/docs/images/Sonar output screenshot.png)
+![Sonar output screenshot](/docs/Sonar output screenshot.png)
