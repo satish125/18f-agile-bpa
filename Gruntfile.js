@@ -196,9 +196,18 @@ module.exports = function (grunt) {
       options: {
         frameworks: ['jasmine'],
         logLevel:'ERROR',
-        reporters:['mocha'],
+        reporters:['mocha','coverage'],
         autoWatch: false, //watching is handled by grunt-contrib-watch
-        singleRun: true
+        singleRun: true,
+        preprocessors: {
+          'client/**/*partial.js':['coverage'],
+          'client/**/*directive.js':['coverage'],
+          'client/**/*service.js':['coverage']
+        },
+        coverageReporter:{
+          type: 'html',
+          dir: 'dist/coverage/'
+        }
       },
       all_tests: {
         browsers: ['PhantomJS','Chrome','Firefox'],
