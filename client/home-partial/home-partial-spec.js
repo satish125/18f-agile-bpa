@@ -6,7 +6,7 @@ describe('Test suite for HomePartialCtrl', function() {
 
 	describe('On loading the home page', function() {
 
-		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, $stateParams, openfdaService, userService) {
+		beforeEach(inject(function($rootScope, $controller, $state, $stateParams, openfdaService, userService) {
 			_openfdaService = openfdaService;
 			_userService = userService;
 			scope = $rootScope.$new();

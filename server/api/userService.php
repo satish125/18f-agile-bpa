@@ -3,6 +3,8 @@
 class UserService extends RestService {
     protected $dbService;    
     protected $sessionId;
+
+    const UNABLE_TO_LOGIN_MSG = "System error occurred, unable to login";
     
     function __construct() {
         // Establish Database Service
@@ -41,16 +43,16 @@ class UserService extends RestService {
                     $doLogin = $this->dbService->doSessionLogin($userData->user_id);
                     
                     if ($doLogin->code !== DbService::SUCCESS_CODE) {
-                        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+                        $this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
                     } else {
                         $this->setResponse(static::SUCCESS_CODE, "User was authenticated", array("SESSION_ID" => $this->sessionId) );   
                     }
                 } catch(Exception $e) {
-                    $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+                    $this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
                 }
 	        }
 	    } catch(Exception $e) {
-			$this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+			$this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
 	    } finally {
             $this->outputResponse();
 		}
@@ -104,7 +106,7 @@ class UserService extends RestService {
 	    } finally {
 	        try {
 	            if ($this->code !== static::SUCCESS_CODE) {       
-                    $deleteUser = $this->dbService->deleteUser($registerUser->user_id);                
+                    $this->dbService->deleteUser($registerUser->user_id);                
 	            }
 	        } catch(Exception $e) {
 	            // Do nothing, we tried to clean up the account, so just give up at this point
@@ -132,7 +134,7 @@ class UserService extends RestService {
 
 	public function userLogout() {
 	    try {
-            $doLogout = $this->dbService->doSessionLogout();
+            $this->dbService->doSessionLogout();
 	    } catch(Exception $e) {
 			// Do nothing
 	    } finally {

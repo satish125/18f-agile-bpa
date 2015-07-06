@@ -1,4 +1,4 @@
-describe('Test suite for HeaderPartialCtrl', function(userService) {
+describe('Test suite for HeaderPartialCtrl', function() {
 
     beforeEach(module('web'));
 

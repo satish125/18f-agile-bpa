@@ -7,6 +7,9 @@ class RestService {
     const SERVICE_FAILURE_CODE = "service_failure";
     const SYSTEM_FAILURE_CODE = "system_failure";
     const NO_DATA_FOUND_CODE = "no_data_found";
+
+    // Messages
+    const SUCCESS_MESSAGE = "Data successfully fetched from service";
     
     // Rest Responses 
 	public $code = "";

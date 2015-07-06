@@ -37,7 +37,7 @@ class OpenFDAService extends RestService{
             $result = file_get_contents($url, false, $context);
             $bigArr = json_decode($result, true, 20);
 
-            $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr["results"] );
+            $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr["results"] );
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data", array());
         } finally {
@@ -119,7 +119,6 @@ class OpenFDAService extends RestService{
         $start = date("Ymd", strtotime("-".$days." days"));
         $end = date("Ymd");
 
-        $limit = 100;
         $maxPieceCompare = 10;
 
         // Word exclusion list that will not be searched upon or scored upon
@@ -381,7 +380,7 @@ class OpenFDAService extends RestService{
             $payload["purchase"]->brand=$productBrand;
             $payload["purchase"]->category=$productCategory;
 
-            $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $payload );        
+            $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $payload );        
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, $e->getMessage(), array());
         } finally {

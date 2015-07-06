@@ -53,7 +53,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
             }
@@ -173,7 +173,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
             }
@@ -204,7 +204,7 @@ class ProductService extends RestService {
                     return $obj["can_scrape"] != 0;
                 });
 
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $results );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $results );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
             }
@@ -230,7 +230,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
             }
@@ -255,7 +255,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
             }
@@ -369,7 +369,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to get product", array() );
             }
@@ -393,7 +393,7 @@ class ProductService extends RestService {
 
             if ($result !== false) {
                 $bigArr = json_decode($result, true, 20);
-                $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr['result'] );
+                $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr['result'] );
             } else {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to get product", array() );
             }

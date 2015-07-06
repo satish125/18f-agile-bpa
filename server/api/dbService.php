@@ -15,6 +15,9 @@ class DbService {
     const NO_DATA_FOUND_CODE = "no_data_found";
     const SUCCESS_CODE = "success";
     const INVALID_CREDENTIALS_CODE = "invald_credentials";
+
+    // Messages
+    const USER_NOT_FOUND_MSG = "User not found";
     
     function __construct() {
         // Open database connection
@@ -82,7 +85,7 @@ class DbService {
             $results = $stmt->fetchObject();
             if ($results == null) {
                 $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
-                                     'msg' => 'User not found'];
+                                     'msg' => static::USER_NOT_FOUND];
             } else {
                 $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved user';
@@ -105,7 +108,7 @@ class DbService {
             
             if ($results == null) {
                 $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
-                                     'msg' => 'User not found'];               
+                                     'msg' => static::USER_NOT_FOUND_MSG];               
             } else {
                 $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved user';                
@@ -129,7 +132,7 @@ class DbService {
 
             if ($sessionData == null) {
                 $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
-                                     'msg' => 'User not found1'];    
+                                     'msg' => static::USER_NOT_FOUND_MSG];    
             } else {
                 $sql = "SELECT user_id, email, zip FROM user where user_id=:user_id";
                 $stmt = $this->dbConnection->prepare($sql);
@@ -139,7 +142,7 @@ class DbService {
                 
                 if ($results == null) {
                     $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
-                                         'msg' => 'User not found2'];               
+                                         'msg' => static::USER_NOT_FOUND_MSG];               
                 } else {
                     $results->code = static::SUCCESS_CODE;
                     $results->msg = 'Retrieved user';                
