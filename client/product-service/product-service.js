@@ -1,6 +1,6 @@
 angular.module('web').factory('productService',['$q', '$http',
 
-    function($q, $http) {
+    function($q, $http) { //NOSONAR Functions should not have too many lines
         var userStoreMap = {};
 
         var service = {

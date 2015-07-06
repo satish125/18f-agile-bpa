@@ -1,6 +1,6 @@
 angular.module('web').factory('userService',['$q', '$http',
 
-    function($q, $http) {
+    function($q, $http) { //NOSONAR Functions should not have too many lines
         var service = {user:{},isLoggedIn:undefined};
 
         service.loginUser = function(email, password) {

@@ -90,7 +90,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                     console.log('there are no purchases.');
                     $scope.progress = 100;
                 }
-            }).finally(function(response){
+            }).finally(function(){
                 if(!$scope.purchasesCollected){
                     console.log('could not get list of purchases.');
                 }
