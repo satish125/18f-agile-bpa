@@ -61,10 +61,10 @@
 				</h2>
 				<form>
 					<div class="input-group search-group">
-						<label for="storeSearch" class="input-group-addon" id="basic-addon2">
+						<span class="input-group-addon" id="basic-addon2">
 							<span class="sr-only">Search</span>
-							<span class="fa fa-search"></span>
-						</label>
+							<span class="fa fa-search" aria-hidden="true"></span>
+						</span>
 						<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
 							<input id="storeSearch" name="username{{store.id}}" type="search" class="form-control empty" ng-model="storeSearch.name" autofocus tabindex="10">
 							<label for="storeSearch" class="floating-label">search for store</label>
