@@ -1,4 +1,4 @@
-describe('Test suite for SignupPartialCtrl', function() {
+describe('Test suite for SignupPartialCtrl', function(openfdaService) {
 
     beforeEach(module('web'));
 
