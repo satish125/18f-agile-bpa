@@ -12,14 +12,14 @@ angular.module('web').factory('userService',['$q', '$http',
             });
 
             $http.post("/api/user/login", postData).then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                     if (response.data.code === "success") {
-					    service.getUser();
-					    service.isLoggedIn = true;
-					} else {
-					    service.user = {};
-					    service.isLoggedIn = false;
+                        service.getUser();
+                        service.isLoggedIn = true;
+                    } else {
+                        service.user = {};
+                        service.isLoggedIn = false;
                     }
                 },
                 function(error) {
@@ -35,11 +35,11 @@ angular.module('web').factory('userService',['$q', '$http',
         service.logoutUser = function() {
             var deferred = $q.defer();
 
-			service.user = {};
-			service.isLoggedIn = false;
+            service.user = {};
+            service.isLoggedIn = false;
 
             $http.get("/api/user/logout").then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -62,14 +62,14 @@ angular.module('web').factory('userService',['$q', '$http',
             });
 
             $http.post("/api/user/register", postData).then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                     if (response.data.code === "success") {
-					    service.getUser();
-					    service.isLoggedIn = true;
-					} else {
-					    service.user = {};
-					    service.isLoggedIn = false;
+                        service.getUser();
+                        service.isLoggedIn = true;
+                    } else {
+                        service.user = {};
+                        service.isLoggedIn = false;
                     }
                 },
                 function(error) {
@@ -86,14 +86,14 @@ angular.module('web').factory('userService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.get("/api/user/get").then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                     if (response.data.code === "success") {
-					    service.user = response.data.payload;
-					    service.isLoggedIn = true;
-					} else {
-					    service.user = {};
-					    service.isLoggedIn = false;
+                        service.user = response.data.payload;
+                        service.isLoggedIn = true;
+                    } else {
+                        service.user = {};
+                        service.isLoggedIn = false;
                     }
                 },
                 function(error) {

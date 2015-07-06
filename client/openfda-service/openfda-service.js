@@ -1,16 +1,16 @@
 angular.module('web').factory('openfdaService',['$q', '$http',
 
     function($q, $http) {
-		var map = {
-			recentRecalls: function(recall){
-            	recall.recall_initiation_date = new Date(
-					recall.recall_initiation_date.substring(0,4),
-					(Number(recall.recall_initiation_date.substring(4,6))-1),
-					recall.recall_initiation_date.substring(6,8)
-				);
-				return recall;
-			}
-		};
+        var map = {
+            recentRecalls: function(recall){
+                recall.recall_initiation_date = new Date(
+                    recall.recall_initiation_date.substring(0,4),
+                    (Number(recall.recall_initiation_date.substring(4,6))-1),
+                    recall.recall_initiation_date.substring(6,8)
+                );
+                return recall;
+            }
+        };
 
         var service = {};
 
@@ -42,7 +42,7 @@ angular.module('web').factory('openfdaService',['$q', '$http',
             var myRecordLimit = (recordLimit === "") ? 100 : recordLimit;
 
             $http.get("/api/openFDA/recentRecalls/food/"+ myDayLimit + "/" + myRecordLimit ).then(
-				function(response) {
+                function(response) {
                     response.data.payload = response.data.payload.map(map.recentRecalls);
                     deferred.resolve(response.data);
                 },

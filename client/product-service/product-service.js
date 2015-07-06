@@ -4,46 +4,46 @@ angular.module('web').factory('productService',['$q', '$http',
         var userStoreMap = {};
 
         var service = {
-			stores: [],
-			userStores: []
-		};
+            stores: [],
+            userStores: []
+        };
 
-		var map = {
-			store: function(store){
-				store.isConnecting = false;
-				store.isDisconnecting = false;
-				store.isWorking = function(){
+        var map = {
+            store: function(store){
+                store.isConnecting = false;
+                store.isDisconnecting = false;
+                store.isWorking = function(){
                     return this.isConnecting || this.isDisconnecting;
                 };
-				store.href = 'https://www.google.com/search?q='+encodeURIComponent(store.name)+'&btnI';
-				store.hasConnectionAttempt = function(){
-					return this.id in userStoreMap;
-				};
-				store.userStore = function(){
-					return userStoreMap[this.id] || {status: function(){
+                store.href = 'https://www.google.com/search?q='+encodeURIComponent(store.name)+'&btnI';
+                store.hasConnectionAttempt = function(){
+                    return this.id in userStoreMap;
+                };
+                store.userStore = function(){
+                    return userStoreMap[this.id] || {status: function(){
                         return undefined;
                     }};
-				};
-				store.isConnected = function(){
-					return this.userStore().credentials_status === 'Verified';
-				};
-				return store;
-			},
-			userStore: function(userStore){
-				userStore.status = function(){
-					return this.credentials_status === 'Invalid' ? 'Invalid Credentials'
-						: this.credentials_status !== 'Verified' ? 'Connecting'
-						: this.scrape_status === 'Done' ? 'Ready' : 'Purchase Review';
-				};
-				return userStore;
-			}
-		};
+                };
+                store.isConnected = function(){
+                    return this.userStore().credentials_status === 'Verified';
+                };
+                return store;
+            },
+            userStore: function(userStore){
+                userStore.status = function(){
+                    return this.credentials_status === 'Invalid' ? 'Invalid Credentials'
+                        : this.credentials_status !== 'Verified' ? 'Connecting'
+                        : this.scrape_status === 'Done' ? 'Ready' : 'Purchase Review';
+                };
+                return userStore;
+            }
+        };
 
         service.getUser = function() {
             var deferred = $q.defer();
 
             $http.get("/api/products/getUser").then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -60,7 +60,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.delete("/api/products/deleteUser").then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -77,7 +77,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.post("/api/products/addUser", "{}").then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -94,7 +94,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.get("/api/products/getStores").then(
-				function(response) {
+                function(response) {
                     for(var resultIndex in response.data.payload){
 
                         service.stores.push(map.store(response.data.payload[resultIndex]));
@@ -114,24 +114,24 @@ angular.module('web').factory('productService',['$q', '$http',
 
         service.getUserStores = function(page) {
             if (!page){
-				service.userStores = [];
-			}
+                service.userStores = [];
+            }
             page = page || 1;
             var deferred = $q.defer();
 
             $http.get("/api/products/getUserStores/"+page).then(
-				function(response) {
-					Array.prototype.push.apply(service.userStores,response.data.payload.result.map(map.userStore));
+                function(response) {
+                    Array.prototype.push.apply(service.userStores,response.data.payload.result.map(map.userStore));
 
-					// for ease of lookup
-					userStoreMap = {};
-					for (var i = 0; i < service.userStores.length; i++){
-						userStoreMap[service.userStores[i].supermarket_id] = service.userStores[i];
-					}
+                    // for ease of lookup
+                    userStoreMap = {};
+                    for (var i = 0; i < service.userStores.length; i++){
+                        userStoreMap[service.userStores[i].supermarket_id] = service.userStores[i];
+                    }
 
-					if (response.data.payload.meta.next_page) {
-						service.getUserStores(response.data.payload.meta.next_page);
-					}
+                    if (response.data.payload.meta.next_page) {
+                        service.getUserStores(response.data.payload.meta.next_page);
+                    }
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -148,7 +148,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.get("/api/products/getUserStore/" + userStoreId).then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -171,10 +171,10 @@ angular.module('web').factory('productService',['$q', '$http',
             });
 
             $http.post("/api/products/addUserStore", postData).then(
-				function(response) {
+                function(response) {
                     response.data.payload.result.supermarket_id = storeid; // success response object model doesn't match userStore fetch
-					service.userStores.push(map.userStore(response.data.payload.result)); // add to the userStore list
-					userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
+                    service.userStores.push(map.userStore(response.data.payload.result)); // add to the userStore list
+                    userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -191,14 +191,14 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.delete("/api/products/deleteUserStore/" + userStoreId).then(
-				function(response) {
-					for(var i = 0; i < service.userStores.length; i++){
-						if(service.userStores[i].id === userStoreId){
-							delete userStoreMap[service.userStores[i].supermarket_id];
-							service.userStores.splice(i,1); // remove from userStore list
-							break;
-						}
-					}
+                function(response) {
+                    for(var i = 0; i < service.userStores.length; i++){
+                        if(service.userStores[i].id === userStoreId){
+                            delete userStoreMap[service.userStores[i].supermarket_id];
+                            service.userStores.splice(i,1); // remove from userStore list
+                            break;
+                        }
+                    }
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -221,16 +221,16 @@ angular.module('web').factory('productService',['$q', '$http',
             });
 
             $http.put("/api/products/updateUserStore", postData).then(
-				function(response) {
+                function(response) {
                     for(var i = 0; i < service.userStores.length; i++){
-						if(service.userStores[i].id === userStoreId){
-							// the payload result is only a string... "Updated"
-							// it doesn't return a store object like adding does
-							service.userStores[i].credentials_status = 'Not defined';
-							service.userStores[i].scrape_status = 'Not defined';
-							break;
-						}
-					}
+                        if(service.userStores[i].id === userStoreId){
+                            // the payload result is only a string... "Updated"
+                            // it doesn't return a store object like adding does
+                            service.userStores[i].credentials_status = 'Not defined';
+                            service.userStores[i].scrape_status = 'Not defined';
+                            break;
+                        }
+                    }
                     deferred.resolve(response.data);
                 },
                 function(error) {
@@ -247,7 +247,7 @@ angular.module('web').factory('productService',['$q', '$http',
             var deferred = $q.defer();
 
             $http.get("/api/products/getUserPurchases/" + dayLimit + "/" + page).then(
-				function(response) {
+                function(response) {
                     deferred.resolve(response.data.payload);
                 },
                 function(error) {
