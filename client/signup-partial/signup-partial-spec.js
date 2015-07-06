@@ -4,6 +4,45 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
 
     var scope, ctrl, _userService;
 
+    function test(type, val){
+        var msge = "";
+        switch (type) {
+            case 'email':
+                if (val === "") {
+                    msge = "An email is required";
+                }
+                break;
+            case 'zip':
+                if (val === "") {
+                    msge = "A zip code is required";
+                }
+                break;
+            case 'password':
+                if (val === "") {
+                    msge = "A password is required";
+                }
+                break;
+            case 'confirm':
+                if (val === "") {
+                    msge = "A confirmation password is required";
+                }
+                break;
+            default:
+                msge = "";
+                break;
+        }
+        return msge;
+    }
+
+    function validateEmail(email) {
+        var len = email.length;
+        return len;
+    }
+
+    function comparePwd(pwd1, pwd2) {
+        return pwd1 === pwd2;
+    }
+
     describe('On user submitting a sign-up form', function() {
         beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, userService) {
             scope = $rootScope.$new();
@@ -34,45 +73,6 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
     });
 
     describe("On validating the sign-up fields", function() {
-
-        function test(type, val){
-            var msge = "";
-            switch (type) {
-                case 'email':
-                    if (val === "") {
-                        msge = "An email is required";
-                    }
-                    break;
-                case 'zip':
-                    if (val === "") {
-                        msge = "A zip code is required";
-                    }
-                    break;
-                case 'password':
-                    if (val === "") {
-                        msge = "A password is required";
-                    }
-                    break;
-                case 'confirm':
-                    if (val === "") {
-                        msge = "A confirmation password is required";
-                    }
-                    break;
-                default:
-                    msge = "";
-                    break;
-            }
-            return msge;
-        }
-
-        function validateEmail(email) {
-            var len = email.length;
-            return len;
-        }
-
-        function comparePwd(pwd1, pwd2) {
-            return pwd1 === pwd2;
-        }
 
         beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, $stateParams, userService) {
             scope.signup = {};
@@ -133,7 +133,6 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
             scope.doSignup();
             expect(comparePwd(scope.signup.password,scope.signup.confirm)).toBeFalsy();
         });
-
     });
 
 });
