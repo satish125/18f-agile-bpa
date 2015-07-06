@@ -18,7 +18,7 @@
                             <span class="material-input"></span>
                         </div>
                         <br>
-                        <label class="control-label">{{login.errorMsg}}</label>
+                        <label ng-if="login.errorMsg" class="control-label">{{login.errorMsg}}</label>
                     </div>
                 </div>
                 <div class="card-footer buttons">
