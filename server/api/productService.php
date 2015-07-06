@@ -8,6 +8,7 @@ class ProductService extends RestService {
     protected $productApiKeys;
 
     const ADD_USER_ERROR_MSG = "System error occurred, unable to add user";
+    const IAMDATA_URL = "https://api.iamdata.co:443/";
 
     function __construct() {
         // Establish Database Service
@@ -48,7 +49,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users/".$this->productApiUserId."?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/".$this->productApiUserId."?".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -73,7 +74,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users?id=" .$this->productApiUserId. "&".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users?id=" .$this->productApiUserId. "&".$this->productApiKeys;
 
             $context = stream_context_create($this->deleteRequestOptions());
 
@@ -108,7 +109,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users?".$this->productApiKeys;
 
             $data = array("email" => $this->userData->email, "zip" => $this->userData->zip, "user_id" =>$this->productApiUserId);
 
@@ -135,7 +136,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users?".$this->productApiKeys;
 
             $data = array("email" => $this->userData->email, "zip" => $this->userData->zip, "user_id" => $this->productApiUserId);
 
@@ -168,7 +169,7 @@ class ProductService extends RestService {
             $purchaseDateFrom = date("Ymd", strtotime("-".$days." days"));
 
             //build the URL
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/purchases?full_resp=true&purchase_date_from=".$purchaseDateFrom."&page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -192,7 +193,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/stores/?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/stores/?".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -225,7 +226,7 @@ class ProductService extends RestService {
             $pageSize = 50;
             $pageNumber = trim($page);
 
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/stores?page=" .$pageNumber. "&per_page=" .$pageSize. "&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -250,7 +251,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -281,7 +282,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/stores?".$this->productApiKeys;
 
             $data = array("store_id" => $body->store_id, "username" => $body->username, "password" => $body->password);
 
@@ -307,7 +308,7 @@ class ProductService extends RestService {
             if(!$this->init()){
                 return;
             }
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/stores/" .$userStoreId. "?".$this->productApiKeys;
 
             $context = stream_context_create($this->deleteRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -338,7 +339,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/users/" .$this->productApiUserId. "/stores/" .$body->user_store_id. "/?".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/users/" .$this->productApiUserId. "/stores/" .$body->user_store_id. "/?".$this->productApiKeys;
 
             $data = array("username" => $body->username, "password" => $body->password);
 
@@ -364,7 +365,7 @@ class ProductService extends RestService {
             if(!$this->init()){
                 return;
             }
-            $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
@@ -388,7 +389,7 @@ class ProductService extends RestService {
                 return;
             }
 
-            $url = "https://api.iamdata.co:443/v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
+            $url = static::IAMDATA_URL."v1/products/" .$productId. "?full_resp=true&".$this->productApiKeys;
 
             $context = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
