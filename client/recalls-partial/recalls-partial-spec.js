@@ -5,7 +5,7 @@ describe('Test suite for RecallsPartialCtrl', function() {
 	var scope, ctrl, _productService;
 
 	describe('On the recent recalls page', function() {
-		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, productService, openfdaService) { 
+		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, productService) { 
 			scope = $rootScope.$new();
 			scope.dayLimit = 365;
 

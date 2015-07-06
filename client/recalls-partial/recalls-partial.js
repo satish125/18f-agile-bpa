@@ -84,7 +84,13 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                         getPageOfPurchases(page+1);
                     }
                 }
-            }).finally(function(response){
+
+                //no purchases, done.
+                if(!response.result || $scope.purchaseCount === 0){
+                    console.log('there are no purchases.');
+                    $scope.progress = 100;
+                }
+            }).finally(function(){
                 if(!$scope.purchasesCollected){
                     console.log('could not get list of purchases.');
                 }

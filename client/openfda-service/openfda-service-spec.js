@@ -1,8 +1,8 @@
-describe('Test suite for openfdaService', function(openfdaService) {
+describe('Test suite for openfdaService', function() {
 
     beforeEach(module('web'));
 
-    var scope, _openfdaService, promise, response;
+    var _openfdaService, promise;
 
     beforeEach(inject(function(openfdaService) {
 

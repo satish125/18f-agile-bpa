@@ -2,7 +2,7 @@ describe('Test suite for HeaderPartialCtrl', function(userService) {
 
     beforeEach(module('web'));
 
-    var scope, ctrl, location, $userService;
+    var scope, ctrl, $userService;
 
     describe('On getting the current location after setting to /#/home', function() {
 

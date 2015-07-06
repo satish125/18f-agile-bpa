@@ -1,11 +1,10 @@
-describe('Test suite for SignupPartialCtrl', function(openfdaService) {
+describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions should not have too many lines
 
     beforeEach(module('web'));
 
 	var scope, ctrl, _userService;
 
 	describe('On user submitting a sign-up form', function() {
-		var $scope = scope;
 		beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, userService) { //$stateParams, 
 			scope = $rootScope.$new();
 			scope.signup = {};
