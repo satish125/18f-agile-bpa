@@ -4,12 +4,6 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 
 	function setStores(){
 		$scope.stores = productService.stores;
-		if (productService.userStores.length){
-			orderStores();
-		}
-	}
-	function orderStores(){ // order is dependent on having both lists, stores and userStores
-		$scope.stores = $scope.$eval('stores | orderBy:[\'-hasConnectionAttempt()\',\'name\']'); // one-time orderBy on initial load
 	}
 
 	if (!productService.stores.length){
@@ -32,11 +26,7 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		});
 	};
 
-	$scope.refreshUserStores().then(function(){
-		if ($scope.stores.length) {
-			orderStores();
-		}
-	});
+	$scope.refreshUserStores();
 
 	$scope.doStoreConnect = function(store){
 		var action = {};
@@ -48,6 +38,8 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 		}
 		action.finally(function(){
 			store.isConnecting = false;
+			store.username = '';
+			store.password = '';
 		});
 	};
 
