@@ -32,7 +32,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             $scope.progress = 0;
 
             getPageOfPurchases(1);
-            
+
             //currently processing item
             $scope.itemName = "";
         }

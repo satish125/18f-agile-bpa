@@ -7,12 +7,15 @@ class RestService {
     const SERVICE_FAILURE_CODE = "service_failure";
     const SYSTEM_FAILURE_CODE = "system_failure";
     const NO_DATA_FOUND_CODE = "no_data_found";
-    
-    // Rest Responses 
+
+    // Messages
+    const SUCCESS_MESSAGE = "Data successfully fetched from service";
+
+    // Rest Responses
 	public $code = "";
 	public $msg = "";
 	public $payload = "";
-    
+
     // Request Options for HTTP GET
     protected function getRequestOptions() {
         return array(
@@ -20,9 +23,9 @@ class RestService {
                 "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
                 "method"  => "GET"
             ),
-        );  
+        );
     }
-    
+
     // Request Options for HTTP DELETE
     protected function deleteRequestOptions() {
         return array(
@@ -32,7 +35,7 @@ class RestService {
             ),
         );
     }
-    
+
     // Request Options for HTTP POST/PUT
     protected function getJsonOptions($jsonData, $method="POST"){
         return array(
@@ -47,18 +50,18 @@ class RestService {
             ),
         );
     }
-    
+
     // Setter for Rest Response
 	protected function setResponse($code, $msg, $payload){
         $this->code = $code;
 		$this->msg = $msg;
 		$this->payload = $payload;
     }
-    
+
     // Getter for Rest Response
 	protected function getResponse(){
         return (object) ['code' => $this->code, 'msg'=> $this->msg, 'payload'=> $this->payload];
-    }    
+    }
 
     // Output Rest Response in JSON format
 	protected function outputResponse() {
@@ -66,11 +69,11 @@ class RestService {
 
 		echo json_encode($responseObject);
 	}
-    
+
     // Validate request body parameters
     protected function checkParamsExist($body, $params){
         $parameterMissing = false;
-        
+
         foreach ($params as $parameterName => &$parameterErrorMsg) {
             if (!property_exists($body, $parameterName)) {
                 if ($parameterErrorMsg !== null) {
@@ -86,7 +89,7 @@ class RestService {
         } else {
             return true;
         }
-    }    
-    
+    }
+
 }
 ?>

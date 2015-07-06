@@ -2,15 +2,15 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParam
     function($scope, $state, $stateParams, userService) {
         $scope.loginInProgress = false;
         $scope.hasloginError = false;
-        
-        $scope.login = {};        
 
-        $scope.userLogin_model = null;        
-       
+        $scope.login = {};
+
+        $scope.userLogin_model = null;
+
         angular.element(document).ready(function () {
             $.material.ripples('.btn');
         });
-        
+
         $scope.doLogin = function() {
             $scope.loginInProgress = true;
             $scope.hasloginError = false;
@@ -18,7 +18,7 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParam
 
             userService.loginUser($scope.login.email, $scope.login.password).then(function(loginData) {
                 $scope.userLogin_model = loginData.payload;
-                
+
                 if (loginData.code === "success") {
                     //TODO: forward to recalls if connected stores > 0
                     $state.go('recalls-partial');

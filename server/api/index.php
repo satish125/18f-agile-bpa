@@ -1,7 +1,7 @@
 <?php
 
  // Set a custom session name
-$session_name = 'SESSION_ID'; 
+$session_name = 'SESSION_ID';
 
 // Set to true if using https else leave as false
 $secure = false;

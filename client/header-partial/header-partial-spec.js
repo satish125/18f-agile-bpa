@@ -1,4 +1,4 @@
-describe('Test suite for HeaderPartialCtrl', function(userService) {
+describe('Test suite for HeaderPartialCtrl', function() {
 
     beforeEach(module('web'));
 
@@ -9,7 +9,7 @@ describe('Test suite for HeaderPartialCtrl', function(userService) {
         beforeEach(inject(function($rootScope, $controller, $state, $location, userService) {
             scope = $rootScope.$new();
             $userService = userService;
-            
+
             ctrl = $controller('HeaderPartialCtrl', {
                 $scope: scope,
                 location: $location,
