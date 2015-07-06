@@ -1,4 +1,4 @@
-angular.module('web').controller('StoresPartialCtrl',['$scope','productService',function($scope,productService){
+angular.module('web').controller('StoresPartialCtrl',['$scope','productService','$timeout',function($scope,productService,$timeout){
 
 	$scope.stores = [];
 
@@ -64,6 +64,9 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
 			obj.expanded = false; return obj;
 		});
 		store.expanded = true;
+		$timeout(function(){
+			$('#username'+store.id).focus();
+		},500);
 	};
 
 	$scope.connectedStoresFilter = function(store){

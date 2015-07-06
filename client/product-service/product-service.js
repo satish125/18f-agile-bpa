@@ -172,10 +172,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             $http.post("/api/products/addUserStore", postData).then(
 				function(response) {
-                    deferred.resolve(response.data);
                     response.data.payload.result.supermarket_id = storeid; // success response object model doesn't match userStore fetch
 					service.userStores.push(map.userStore(response.data.payload.result)); // add to the userStore list
 					userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
+                    deferred.resolve(response.data);
                 },
                 function(error) {
                     deferred.reject(error);
@@ -192,7 +192,6 @@ angular.module('web').factory('productService',['$q', '$http',
 
             $http.delete("/api/products/deleteUserStore/" + userStoreId).then(
 				function(response) {
-                    deferred.resolve(response.data);
 					for(var i = 0; i < service.userStores.length; i++){
 						if(service.userStores[i].id === userStoreId){
 							delete userStoreMap[service.userStores[i].supermarket_id];
@@ -200,6 +199,7 @@ angular.module('web').factory('productService',['$q', '$http',
 							break;
 						}
 					}
+                    deferred.resolve(response.data);
                 },
                 function(error) {
                     deferred.reject(error);
@@ -222,7 +222,6 @@ angular.module('web').factory('productService',['$q', '$http',
 
             $http.put("/api/products/updateUserStore", postData).then(
 				function(response) {
-                    deferred.resolve(response.data);
                     for(var i = 0; i < service.userStores.length; i++){
 						if(service.userStores[i].id === userStoreId){
 							// the payload result is only a string... "Updated"
@@ -232,6 +231,7 @@ angular.module('web').factory('productService',['$q', '$http',
 							break;
 						}
 					}
+                    deferred.resolve(response.data);
                 },
                 function(error) {
                     deferred.reject(error);

@@ -61,7 +61,7 @@
 				</h2>
 				<form>
 					<div class="input-group search-group">
-						<label class="input-group-addon" id="basic-addon2">
+						<label for="storeSearch" class="input-group-addon" id="basic-addon2">
 							<span class="sr-only">Search</span>
 							<span class="fa fa-search"></span>
 						</label>
@@ -74,16 +74,16 @@
 				</form>
 				<div class="card clearfix">
 					<div ng-repeat="store in stores | filter:storeSearch | filter:availableStoresFilter" class="store" ng-class="store.expanded?'store-form':'store-small col-md-4 col-sm-6'">
-						<a href ng-class="store.expanded?'store-hidden':''" class="store-card" ng-click="toggleStoreConnect(store)" tabindex="20">
+						<a href ng-if="!store.expanded" class="store-card" ng-click="toggleStoreConnect(store)" tabindex="{{($index+1) * 10}}">
 							<div class="store-logo-container">
 								<img ng-src="{{store.image_link}}" alt="{{store.name}}" title="{{store.name}}">
 							</div>
 							<h4>{{store.name}}</h4>
 						</a>
 
-						<div ng-class="store.expanded?'':'store-hidden'" class="store-card" ng-if="!store.hasConnectionAttempt()">
+						<div ng-if="store.expanded" class="store-card" ng-if="!store.hasConnectionAttempt()">
 
-							<button class="pull-right btn btn-default btn-close" ng-click="store.expanded=false" tabindex="20">
+							<button class="pull-right btn btn-default btn-close" ng-click="store.expanded=false" tabindex="{{($index+1) * 10 + 4}}">
 								<span title="Close" class="fa fa-close" aria-hidden="true"></span>
 								<span class="sr-only">Close</span>
 							</button>
@@ -100,17 +100,17 @@
 
 							<form name="connectForm{{store.id}}" class="form-inline clearfix" ng-submit="doStoreConnect(store)" autocomplete="off">
 								<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
-									<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off" tabindex="20">
+									<input id="username{{store.id}}" name="username{{store.id}}" type="text" class="form-control empty" ng-model="store.username" required autocomplete="off" tabindex="{{($index+1) * 10 + 1}}">
 									<label for="username{{store.id}}" class="floating-label">user</label>
 									<span class="material-input"></span>
 								</div>
 								<div class="form-group form-control-wrapper floating-label-wrapper" ng-show="!store.isConnected() && store.userStore().status() !== 'Connecting'">
-									<input id="password{{store.id}}" name="password{{store.id}}" type="password" ng-model="store.password" class="form-control empty" required autocomplete="off" tabindex="20">
+									<input id="password{{store.id}}" name="password{{store.id}}" type="password" ng-model="store.password" class="form-control empty" required autocomplete="off" tabindex="{{($index+1) * 10 + 2}}">
 									<label for="password{{store.id}}" class="floating-label">password</label>
 									<span class="material-input"></span>
 								</div>
 								<span class="top-half-gutter" ng-show="!store.isWorking()">
-									<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="store.isWorking() || (store.userStore().credentials_status && store.userStore().credentials_status !== 'Invalid')" ng-show="!store.isConnected()" tabindex="20">
+									<button type="submit" class="btn btn-default btn-flat btn-tight" ng-disabled="store.isWorking() || (store.userStore().credentials_status && store.userStore().credentials_status !== 'Invalid')" ng-show="!store.isConnected()" tabindex="{{($index+1) * 10 + 3}}">
 										<span class="fa fa-link fa-rotate-90" ng-class="store.isConnecting?'fa-spin':''" aria-hidden="true"></span> Connect
 									</button>
 								</span>
