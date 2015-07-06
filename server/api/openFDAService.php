@@ -286,7 +286,7 @@ class OpenFDAService extends restService{
 
                 // Calculate the Product Upc matching Score
                 if (count($productUpcPieces) > 0) {
-                    $matchingScore += ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );;
+                    $matchingScore += ( count($matchingProductUpcPieces) / count($productUpcPieces) * $upcWeight );
                 }
 
                 // Initialize Quality Score
