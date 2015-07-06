@@ -16,16 +16,20 @@ To kick off the project, our team moved into the [“war room”] (http://4840we
 #####Our Process
 
 During Sprint 0, before we started reviewing the data in the openFDA API, we identified a set of goals we wanted to accomplish in order to determine a useful and relevant product idea.  Those goals were:
-•	The application should do more than just query and display the openFDA data
-•	The application should remix the data by either
-o	Collecting additional related data AND/OR
-o	Combining with an API that has related consumer data
-•	The application should be meaningful and useful to a broad consumer audience
-•	The application should fill an unmet user need.
+<ul>
+<li>The application should do more than just query and display the openFDA data</li>
+<li>The application should remix the data by either <br>
+ - Collecting additional related data AND/OR <br>
+ - Combining with an API that has related consumer data </li>
+<li>The application should be meaningful and useful to a broad consumer audience </li>
+<li>The application should fill an unmet user need.</li>
+</ul>
 
 With these goals in mind, our [brainstorming session] (/docs/2 - how we work/process/Brainstorming Product Ideas.JPG) began with the team discussing the openFDA data available and two main [product types] (/docs/2 - how we work/process/Product Types.JPG) began to emerge:
-1.	A product that collects a user’s purchases, then alerts them to recalls or adverse events
-2.	A mobile application that notifies a user of adverse events or recalls based on their current location, and allows them to file a report (for instance, if they got food poisoning) tied to their current location.  This would crowdsource adverse events and visualize things like salmonella outbreaks in real time.
+<ul>
+<li>1.	A product that collects a user’s purchases, then alerts them to recalls or adverse events </li>
+<li>2.	A mobile application that notifies a user of adverse events or recalls based on their current location, and allows them to file a report (for instance, if they got food poisoning) tied to their current location.  This would crowdsource adverse events and visualize things like salmonella outbreaks in real time. </li>
+</ul>
 
 When looking at the first idea in more depth, we knew right away that we didn’t want to force users to manually enter their purchases.  This would create a tedious barrier to entry for them.  We started searching for APIs to import purchases so that they would not have to be manually entered.  We considered popular applications like MyFitnessPal, BigOven, in addition to store-based APIs like those at Walgreens, before we discovered the [Information Machine API] (http://iamdata.co/).  According to their website, they “allow your users to passively collect their item level purchase data from the largest merchants in the world.”  
 
