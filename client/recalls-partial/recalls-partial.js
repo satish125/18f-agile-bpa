@@ -32,6 +32,9 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             $scope.progress = 0;
 
             getPageOfPurchases(1);
+            
+            //currently processing item
+            $scope.itemName = "";
         }
 
         function getCachedMatches(){
@@ -49,8 +52,9 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
             localStorage['matches'] = JSON.stringify(obj);
         }
 
-        function setProgress(){
+        function setProgress(itemName){
             $scope.progress = (++$scope.attemptCount/$scope.purchaseCount)*100;
+            $scope.itemName = itemName;
         }
 
         $scope.recheckAll = function(){
@@ -97,7 +101,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                     $scope.recalls[item.product.id] = cachedProduct;
                 }
                 $scope.checkCount++;
-                setProgress();
+                setProgress(item.name);
             } else {
                 //no cached product, call matching api
                 openfdaService.productMatch(item, minMatchingScore, minQualityScore).then(function(response){
@@ -110,7 +114,7 @@ angular.module('web').controller('RecallsPartialCtrl',['$scope', 'openfdaService
                         console.log(response);
                     }
                 }).finally(function(){
-                    setProgress();
+                    setProgress(item.name);
 
                     $scope.matchResults[item.product.id] = $scope.recalls[item.product.id] ? $scope.recalls[item.product.id] : null;
 
