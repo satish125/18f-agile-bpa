@@ -5,10 +5,10 @@ class dbService {
     protected $sessionId;
     
     // MySQL Connection constants
-    const dbHost = "127.0.0.1";
-    const dbName = "4840w";
-    const dbUserName = "4840w";    
-    const dbPassword = "4840w";
+    const DB_HOST = "127.0.0.1";
+    const DB_NAME = "4840w";
+    const DB_USERNAME = "4840w";    
+    const DB_PASSWORD = "4840w";
     
     // Status Codes
     const ERROR_CODE = "error";
@@ -18,7 +18,7 @@ class dbService {
     
     function __construct() {
         // Open database connection
-        $this->dbConnection = new PDO("mysql:host=" .static::dbHost. ";dbname=" .static::dbName, static::dbUserName, static::dbPassword);
+        $this->dbConnection = new PDO("mysql:host=" .static::DB_HOST. ";dbname=" .static::DB_NAME, static::DB_USERNAME, static::DB_PASSWORD);
         $this->dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $this->sessionId = session_id();
