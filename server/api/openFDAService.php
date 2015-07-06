@@ -67,11 +67,7 @@ class OpenFDAService extends RestService{
 
         // filter out words that are less than three characters in length
         $wordList = array_filter($wordList, function($obj){
-            if (strlen($obj) < 3) {
-                return false;
-            } else {
-                return true;
-            }
+            return strlen($obj) >= 3;
         });
 
         // Return Unique list of words
@@ -99,11 +95,7 @@ class OpenFDAService extends RestService{
 
         // filter out words that are less than three characters in length
         $wordList = array_filter($wordList, function($obj){
-            if (strlen($obj) < 3) {
-                return false;
-            } else {
-                return true;
-            }
+            return strlen($obj) >= 3;
         });
 
         // Return Unique list of words

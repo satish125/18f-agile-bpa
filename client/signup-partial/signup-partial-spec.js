@@ -71,11 +71,7 @@ describe('Test suite for SignupPartialCtrl', function() {//NOSONAR Functions sho
         }
 
         function comparePwd(pwd1, pwd2) {
-            if (pwd1 === pwd2) {
-                return true;
-            } else {
-                return false;
-            }
+            return pwd1 === pwd2;
         }
 
         beforeEach(inject(function($rootScope, $controller, $q, $httpBackend, $state, $stateParams, userService) {

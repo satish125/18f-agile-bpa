@@ -20,9 +20,7 @@ angular.module('web').controller('LoginCtrl', [ '$scope', '$state', '$stateParam
                 $scope.userLogin_model = loginData.payload;
 
                 if (loginData.code === "success") {
-                    //TODO: forward to recalls if connected stores > 0
                     $state.go('recalls-partial');
-                    //TODO: otherwise, forward to connect stores
                 } else {
                     $scope.login.errorMsg = loginData.msg;
                     $scope.hasloginError = true;

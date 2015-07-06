@@ -17,7 +17,6 @@ angular.module('web').factory('openfdaService',['$q', '$http',
         service.productMatch = function(product, minMatchingScore, minQualityScore){
             var deferred = $q.defer();
 
-            //TODO Future: Extend to more types and sources
             var type = "food";
             var dayLimit = 365;
             product.source = "iamdata";

@@ -84,12 +84,7 @@ class RestService {
                 $parameterMissing = true;
             }
         }
-        if($parameterMissing){
-            return false;
-        } else {
-            return true;
-        }
+        return !$parameterMissing;
     }
-
 }
 ?>
