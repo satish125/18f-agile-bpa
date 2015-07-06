@@ -7,6 +7,8 @@ class ProductService extends RestService {
     protected $productApiUserId;
     protected $productApiKeys;
 
+    const ADD_USER_ERROR_MSG = "System error occurred, unable to add user";
+
     function __construct() {
         // Establish Database Service
         $this->dbService = new DbService();
@@ -55,7 +57,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data ".$e->getMessage(), array());
@@ -81,7 +83,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 if (!property_exists($bigArr, 'result')) {
                     if (!property_exists($bigArr, 'message')) {
-                        $this->setResponse(static::SERVICE_FAILURE_CODE,"Service failed to return data", array());
+                        $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array());
                         return;
                     } else {
                         $this->setResponse(static::SERVICE_FAILURE_CODE, $bigArr->message, array());
@@ -121,7 +123,7 @@ class ProductService extends RestService {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to add user", array() );
             }
         } catch(Exception $e) {
-            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
         } finally {
             $this->outputResponse();
         }
@@ -148,7 +150,7 @@ class ProductService extends RestService {
                 $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to add user", array() );
             }
         } catch(Exception $e) {
-            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
         } finally {
             return $this->getResponse();
         }
@@ -175,10 +177,10 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
-            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
         } finally {
             $this->outputResponse();
         }
@@ -206,10 +208,10 @@ class ProductService extends RestService {
 
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $results );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
-            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to add user", array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
         } finally {
             $this->outputResponse();
         }
@@ -232,7 +234,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
             }
 
         } catch(Exception $e) {
@@ -257,7 +259,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, "Service failed to return data", array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to get user store", array());

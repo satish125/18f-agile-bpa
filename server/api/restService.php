@@ -10,6 +10,7 @@ class RestService {
 
     // Messages
     const SUCCESS_MESSAGE = "Data successfully fetched from service";
+    const SERVICE_FAILURE_MSG = "Service failed to return data";
 
     // Rest Responses
     public $code = "";
