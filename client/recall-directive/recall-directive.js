@@ -6,7 +6,6 @@ angular.module('web').directive('recallDirective', function() {
 			if(window.stButtons){
 				window.stButtons.makeButtons();
 			}
-
 		}
 	};
 });
