@@ -9,9 +9,6 @@ describe('Test suite for openfdaService', function() {
         _openfdaService = openfdaService;
         spyOn(openfdaService, "recentRecalls").and.callThrough();
         spyOn(openfdaService, "productMatch").and.callThrough();
-        //$httpBackend = $injector.get('$httpBackend');
-
-        //spyOn(openfdaService, "recentRecalls").and.callThrough();
     }));
 
     it('should call the recentRecalls method',inject(function() {
