@@ -1,6 +1,6 @@
 <?php
 
-class dbService {
+class DbService {
 	protected $dbConnection;
     protected $sessionId;
     

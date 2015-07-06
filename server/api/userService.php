@@ -1,12 +1,12 @@
 <?php
 
-class UserService extends restService {
+class UserService extends RestService {
     protected $dbService;    
     protected $sessionId;
     
     function __construct() {
         // Establish Database Service
-        $this->dbService = new dbService();        
+        $this->dbService = new DbService();        
         
         $this->sessionId = session_id();
     } 
@@ -34,13 +34,13 @@ class UserService extends restService {
             // Retrieve User data by email address
             $userData = $this->dbService->doValidatePassword($body->email, $body->password); 
 
-	        if ($userData->code !== dbService::SUCCESS_CODE) {
-				$this->setResponse(dbService::INVALID_CREDENTIALS_CODE, "Email address and/or password was invalid", array());
+	        if ($userData->code !== DbService::SUCCESS_CODE) {
+				$this->setResponse(DbService::INVALID_CREDENTIALS_CODE, "Email address and/or password was invalid", array());
 			} else {
                 try {
                     $doLogin = $this->dbService->doSessionLogin($userData->user_id);
                     
-                    if ($doLogin->code !== dbService::SUCCESS_CODE) {
+                    if ($doLogin->code !== DbService::SUCCESS_CODE) {
                         $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
                     } else {
                         $this->setResponse(static::SUCCESS_CODE, "User was authenticated", array("SESSION_ID" => $this->sessionId) );   
@@ -73,7 +73,7 @@ class UserService extends restService {
 	        // Check if the user already exists in the database
             $userData = $this->dbService->getUserByEmail($email);             
 	        
-            if ($userData->code == dbService::SUCCESS_CODE) {
+            if ($userData->code == DbService::SUCCESS_CODE) {
 				$this->setResponse(static::SYSTEM_FAILURE_CODE, "User with Email address already exists", array());
 			} else {
 	            
@@ -83,7 +83,7 @@ class UserService extends restService {
 	            // Register the user
                 $registerUser = $this->dbService->registerUser($body->email, $body->zipcode, $passwordHash);
                 
-                if ($registerUser->code !== dbService::SUCCESS_CODE || $registerUser->user_id == null) {
+                if ($registerUser->code !== DbService::SUCCESS_CODE || $registerUser->user_id == null) {
                     $this->setResponse(static::SYSTEM_FAILURE_CODE, "User registration has failed to complete - " .$registerUser->code, array());
                     return;
                 }
@@ -118,7 +118,7 @@ class UserService extends restService {
         try {
             $userData = $this->dbService->getUserBySessionId();
             
-            if ($userData->code == dbService::SUCCESS_CODE) {  
+            if ($userData->code == DbService::SUCCESS_CODE) {  
                 $this->setResponse(static::SUCCESS_CODE, "User is logged into the system", $userData); 
             } else {
                 $this->setResponse(static::NO_DATA_FOUND_CODE, "User is not logged into the system", $userData);

@@ -1,6 +1,6 @@
 <?php
 
-class restService {
+class RestService {
 
     // Status Codes
     const SUCCESS_CODE = "success";

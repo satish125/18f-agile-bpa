@@ -1,6 +1,6 @@
 <?php
 
-class ProductService extends restService {
+class ProductService extends RestService {
     protected $dbService;
     protected $userData;
     protected $productApiData;
@@ -9,13 +9,13 @@ class ProductService extends restService {
 
     function __construct() {
         // Establish Database Service
-        $this->dbService = new dbService();
+        $this->dbService = new DbService();
         
         $this->userData = $this->dbService->getUserBySessionId();             
         $this->productApiData = $this->dbService->getProductApiKey();
 
         // Only populate when db service returns success
-        if ($this->userData->code == dbService::SUCCESS_CODE && $this->productApiData->code == dbService::SUCCESS_CODE) {
+        if ($this->userData->code == DbService::SUCCESS_CODE && $this->productApiData->code == DbService::SUCCESS_CODE) {
             $this->productApiUserId = $this->productApiData->client_id ."_". $this->userData->user_id;
             $this->productApiKeys = "client_id=" .$this->productApiData->client_id. "&client_secret=" .$this->productApiData->client_secret;
         }
@@ -27,12 +27,12 @@ class ProductService extends restService {
     }
     
     protected function init() {
-        if ($this->userData->code !== dbService::SUCCESS_CODE) {
+        if ($this->userData->code !== DbService::SUCCESS_CODE) {
             $this->setResponse("not_logged_on", "You are not currently logged into the system", array());
             return false;
         }
         
-        if ($this->productApiData->code !== dbService::SUCCESS_CODE) {
+        if ($this->productApiData->code !== DbService::SUCCESS_CODE) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "Product api keys are not configured", array());
             return false;
         }

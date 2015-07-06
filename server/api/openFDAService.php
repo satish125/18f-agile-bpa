@@ -1,13 +1,13 @@
 <?php
 
-class OpenFDAService extends restService{
+class OpenFDAService extends RestService{
     
     protected $dbService;  
     protected $openFdaApiData;
 
     function __construct() {
         // Establish Database Service
-        $this->dbService = new dbService();
+        $this->dbService = new DbService();
                     
         $this->openFdaApiData = $this->dbService->getOpenFdaApiKey();
     }
@@ -26,7 +26,7 @@ class OpenFDAService extends restService{
         $end = date("Ymd");
 
         try {
-            if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
+            if ($this->openFdaApiData->code !== DbService::SUCCESS_CODE) {
                 $response->set(static::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
@@ -186,7 +186,7 @@ class OpenFDAService extends restService{
             $productUpcPieces = $this->productUpcParser($productUpc, $exclusionWords);
 
             //get openFDA api key
-            if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
+            if ($this->openFdaApiData->code !== DbService::SUCCESS_CODE) {
                 $response->set(static::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
