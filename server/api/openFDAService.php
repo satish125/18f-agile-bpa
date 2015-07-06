@@ -1,47 +1,47 @@
 <?php
 
-class OpenFDAService extends ServiceTemplate{
+class OpenFDAService extends restService{
+    
+    protected $dbService;  
+    protected $openFdaApiData;
+
+    function __construct() {
+        // Establish Database Service
+        $this->dbService = new dbService();
+                    
+        $this->openFdaApiData = $this->dbService->getOpenFdaApiKey();
+    }
+    
+    function __destruct() {
+        // Close database service
+        $this->dbService = null;
+    }    
+    
     /**
      * Pull recent enforcement data from open FDA interface.
      */
 
-    public static function openFDARecentRecalls($type, $days, $limit) {
-        $response = new restResponse;
-
+    public function openFDARecentRecalls($type, $days, $limit) {
         $start = date("Ymd", strtotime("-".$days." days"));
         $end = date("Ymd");
 
         try {
-            $db = getConnection();
-
-            //get openFDA api key
-            $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-            $apiData = $stmt->fetchObject();
-
-            if ($apiData == null) {
-                $response->set("service_failure","openFDA api keys are not configured", array());
+            if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
+                $response->set(self::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
 
-            $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$apiData->api_key. "&search=recall_initiation_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
+            $url = "https://api.fda.gov/".$type."/enforcement.json?api_key=" .$this->openFdaApiData->api_key. "&search=recall_initiation_date:[" .$start. "+TO+" .$end. "]&limit=".$limit;
 
-            $options = array(
-                    "http" => array(
-                    "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
-                    "method"  => "GET",
-                ),
-            );
-            $context  = stream_context_create($options);
+            $context  = stream_context_create($this->getRequestOptions());
             $result = file_get_contents($url, false, $context);
             $bigArr = json_decode($result, true, 20);
 
-            $response->set("success","Data successfully fetched from service", $bigArr["results"] );
+            $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr["results"] );
         } catch(Exception $e) {
-            $response->set("system_failure", "System error occurred, unable to return data", array());
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data", array());
         } finally {
-            $response->toJSON();
+            $this->outputResponse();
         }
 
     }
@@ -51,7 +51,7 @@ class OpenFDAService extends ServiceTemplate{
      * special characters and words in the exclusion word list are removed from the array.
      */
 
-    private static function productNameParser($text, $exclusionWords) {
+    private function productNameParser($text, $exclusionWords) {
 
         // Build array of search terms for product name, filter out common words and special characters
         $wordList = array();
@@ -83,7 +83,7 @@ class OpenFDAService extends ServiceTemplate{
      * special characters and words in the exclusion word list are removed from the array.
      */
 
-    private static function productUpcParser($text, $exclusionWords) {
+    private function productUpcParser($text, $exclusionWords) {
 
         // Build array of search terms for product name, filter out common words and special characters
         $wordList = array();
@@ -115,9 +115,7 @@ class OpenFDAService extends ServiceTemplate{
      * POST body - the purchase
      */
 
-    public static function openFDAProductMatch($type, $days, $minMatchingScore, $minQualityScore) {
-        $response = new restResponse;
-
+    public function openFDAProductMatch($type, $days, $minMatchingScore, $minQualityScore) {
         $start = date("Ymd", strtotime("-".$days." days"));
         $end = date("Ymd");
 
@@ -136,7 +134,6 @@ class OpenFDAService extends ServiceTemplate{
         $exclusionWords = array_map('strtolower', explode(",", $words));
 
         try{
-            $db = getConnection();
 
             // Initialize post request capture fields
             $productSource = "";
@@ -154,7 +151,7 @@ class OpenFDAService extends ServiceTemplate{
 
             // Fail if product source is not found
             if (!property_exists($body, 'source')) {
-                $response->set("missing_product_source","Product source is a required parameter", array());
+                $this->setResponse(self::SYSTEM_FAILURE_CODE, "Product source is a required parameter", array());
                 return;
             } else {
                 $productSource = $body->source;
@@ -174,30 +171,25 @@ class OpenFDAService extends ServiceTemplate{
                     }
                 }
             } else {
-                $response->set("source_not_supported","No support exists for the product source provided", array());
-                return;
+                $this->setResponse(self::SYSTEM_FAILURE_CODE, "No support exists for the product source provided", array());
+                return; 
             }
 
             // Replace all hyphens with a space in the product name and convert to lower case
             $productName = str_replace('-', ' ', strtolower($productName));
 
             // Build array of search terms for product name, filter out common words and special characters
-            $productNamePieces = static::productNameParser($productName, $exclusionWords);  
+            $productNamePieces = $this->productNameParser($productName, $exclusionWords);  
 
             // Remove all hyphens in the product upc and convert to lower case
             $productUpc = str_replace('-', '', strtolower($productUpc));
 
             // Build array of search terms for product name, filter out common words and special characters
-            $productUpcPieces = static::productUpcParser($productUpc, $exclusionWords);
+            $productUpcPieces = $this->productUpcParser($productUpc, $exclusionWords);
 
             //get openFDA api key
-            $sql = "SELECT api_key FROM api_key WHERE service_name='OPEN_FDA'";
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-            $apiData = $stmt->fetchObject();
-
-            if ($apiData == null) {
-                $response->set("service_failure","openFDA api keys are not configured", array());
+            if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
+                $response->set(self::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
 
@@ -233,18 +225,10 @@ class OpenFDAService extends ServiceTemplate{
             $searchParams .= ")+AND+report_date:[" .$start. "+TO+" .$end. "]";
 
             // Build the URL
-            $url = "https://api.fda.gov/".$type."/enforcement.json?search=" .$searchParams. "&limit=100&api_key=" .$apiData->api_key;
-
-            // HTTP options
-            $options = array(
-                    "http" => array(
-                    "header"  => "Accept: application/json; Content-type: application/x-www-form-urlencoded\r\n",
-                    "method"  => "GET",
-                ),
-            );
+            $url = "https://api.fda.gov/".$type."/enforcement.json?search=" .$searchParams. "&limit=100&api_key=" .$this->openFdaApiData->api_key;
 
             // Retrieve the content
-            $context  = stream_context_create($options);
+            $context  = stream_context_create($this->getRequestOptions());
 
             $result = file_get_contents($url, false, $context);
 
@@ -252,13 +236,13 @@ class OpenFDAService extends ServiceTemplate{
 
             // If the API call has returned an error then capture it and return the code/message to the caller
             if (array_key_exists('error',$bigArr)) {
-                $response->set($bigArr['error']['code'], $bigArr['error']['message'], array() );
+                $this->setResponse($bigArr['error']['code'], $bigArr['error']['message'], array() );
                 return;
             }
 
             // Exit with an error if the service did not contain a results array
             if (!array_key_exists('results',$bigArr)) {
-                $response->set("results_failure","The api did not contain any results", array());
+                $this->setResponse(self::NO_DATA_FOUND_CODE, "The api did not contain any results", array());
                 return;
             }
 
@@ -271,7 +255,7 @@ class OpenFDAService extends ServiceTemplate{
                     $resultProductNamePieces = array();
                 } else {
                     $resultProductName =  str_replace('-', ' ', strtolower($idxVal['product_description']));
-                    $resultProductNamePieces = static::productNameParser($resultProductName, $exclusionWords);
+                    $resultProductNamePieces = $this->productNameParser($resultProductName, $exclusionWords);
                 }
            
                 // Find matching terms for product upc
@@ -282,7 +266,7 @@ class OpenFDAService extends ServiceTemplate{
                     $resultProductUpcPieces = array();
                 } else {
                     $resultProductUpc =  str_replace('-', ' ', strtolower($idxVal['code_info']));
-                    $resultProductUpcPieces = static::productUpcParser($resultProductUpc, $exclusionWords);               
+                    $resultProductUpcPieces = $this->productUpcParser($resultProductUpc, $exclusionWords);               
                 }
 
                 // Find matching terms          
@@ -368,16 +352,19 @@ class OpenFDAService extends ServiceTemplate{
 
             if ($productId !== "" && $foundAMatch) {
                 try {
-                    $productQuery = productsGetProductLocalAPI($productId);
+                    // Retrieve product id information thru product service
+                    $productService = new productService();
+                    
+                    $productQuery = $productService->productsGetProductLocalAPI($productId);
 
                     if ($productQuery->code === "success") {
-                        $productAmazonLink = $productQuery->payload['result']['amazon_link'];
-                        $productManufacturer = $productQuery->payload['result']['manufacturer'];
-                        $productLargeImage = $productQuery->payload['result']['large_image'];
-                        $productSmallImage = $productQuery->payload['result']['small_image'];
-                        $productDescription = $productQuery->payload['result']['description'];
-                        $productBrand = $productQuery->payload['result']['brand'];
-                        $productCategory = $productQuery->payload['result']['category'];
+                        $productAmazonLink = $productQuery->payload['amazon_link'];
+                        $productManufacturer = $productQuery->payload['manufacturer'];
+                        $productLargeImage = $productQuery->payload['large_image'];
+                        $productSmallImage = $productQuery->payload['small_image'];
+                        $productDescription = $productQuery->payload['description'];
+                        $productBrand = $productQuery->payload['brand'];
+                        $productCategory = $productQuery->payload['category'];
                     }
                 } catch(Exception $e) {
                     // Nothing
@@ -396,12 +383,11 @@ class OpenFDAService extends ServiceTemplate{
             $payload["purchase"]->brand=$productBrand;
             $payload["purchase"]->category=$productCategory;
 
-            $response->set("success","Data successfully fetched from service", $payload );        
+            $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $payload );        
         } catch(Exception $e) {
-            $response->set("system_failure", $e->getMessage(), array());
+            $this->setResponse(self::SYSTEM_FAILURE_CODE, $e->getMessage(), array());
         } finally {
-            $db = null;
-            $response->toJSON();
+            $this->outputResponse();
         }
     }
 
