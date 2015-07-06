@@ -27,7 +27,7 @@ class OpenFDAService extends restService{
 
         try {
             if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
-                $response->set(self::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
+                $response->set(static::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
 
@@ -37,9 +37,9 @@ class OpenFDAService extends restService{
             $result = file_get_contents($url, false, $context);
             $bigArr = json_decode($result, true, 20);
 
-            $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $bigArr["results"] );
+            $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $bigArr["results"] );
         } catch(Exception $e) {
-            $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data", array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data", array());
         } finally {
             $this->outputResponse();
         }
@@ -151,7 +151,7 @@ class OpenFDAService extends restService{
 
             // Fail if product source is not found
             if (!property_exists($body, 'source')) {
-                $this->setResponse(self::SYSTEM_FAILURE_CODE, "Product source is a required parameter", array());
+                $this->setResponse(static::SYSTEM_FAILURE_CODE, "Product source is a required parameter", array());
                 return;
             } else {
                 $productSource = $body->source;
@@ -171,7 +171,7 @@ class OpenFDAService extends restService{
                     }
                 }
             } else {
-                $this->setResponse(self::SYSTEM_FAILURE_CODE, "No support exists for the product source provided", array());
+                $this->setResponse(static::SYSTEM_FAILURE_CODE, "No support exists for the product source provided", array());
                 return; 
             }
 
@@ -189,7 +189,7 @@ class OpenFDAService extends restService{
 
             //get openFDA api key
             if ($this->openFdaApiData->code !== dbService::SUCCESS_CODE) {
-                $response->set(self::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
+                $response->set(static::SYSTEM_FAILURE_CODE, "openFDA api keys are not configured", array());
                 return;
             }
 
@@ -242,7 +242,7 @@ class OpenFDAService extends restService{
 
             // Exit with an error if the service did not contain a results array
             if (!array_key_exists('results',$bigArr)) {
-                $this->setResponse(self::NO_DATA_FOUND_CODE, "The api did not contain any results", array());
+                $this->setResponse(static::NO_DATA_FOUND_CODE, "The api did not contain any results", array());
                 return;
             }
 
@@ -383,9 +383,9 @@ class OpenFDAService extends restService{
             $payload["purchase"]->brand=$productBrand;
             $payload["purchase"]->category=$productCategory;
 
-            $this->setResponse(self::SUCCESS_CODE, "Data successfully fetched from service", $payload );        
+            $this->setResponse(static::SUCCESS_CODE, "Data successfully fetched from service", $payload );        
         } catch(Exception $e) {
-            $this->setResponse(self::SYSTEM_FAILURE_CODE, $e->getMessage(), array());
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, $e->getMessage(), array());
         } finally {
             $this->outputResponse();
         }
