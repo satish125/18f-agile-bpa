@@ -57,7 +57,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to return data ".$e->getMessage(), array());
@@ -83,7 +83,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 if (!property_exists($bigArr, 'result')) {
                     if (!property_exists($bigArr, 'message')) {
-                        $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array());
+                        $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array());
                         return;
                     } else {
                         $this->setResponse(static::SERVICE_FAILURE_CODE, $bigArr->message, array());
@@ -177,7 +177,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
@@ -208,7 +208,7 @@ class ProductService extends RestService {
 
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $results );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, static::ADD_USER_ERROR_MSG, array());
@@ -234,7 +234,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array() );
             }
 
         } catch(Exception $e) {
@@ -259,7 +259,7 @@ class ProductService extends RestService {
                 $bigArr = json_decode($result, true, 20);
                 $this->setResponse(static::SUCCESS_CODE, static::SUCCESS_MESSAGE, $bigArr );
             } else {
-                $this->setResponse(static::SERVICE_FAILURE_CODE, static:SERVICE_FAILURE_MSG, array() );
+                $this->setResponse(static::SERVICE_FAILURE_CODE, static::SERVICE_FAILURE_MSG, array() );
             }
         } catch(Exception $e) {
             $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to get user store", array());
