@@ -172,8 +172,10 @@ angular.module('web').factory('productService',['$q', '$http',
 
             $http.post("/api/products/addUserStore", postData).then(
                 function(response) {
-                    response.data.payload.result.supermarket_id = storeid; // success response object model doesn't match userStore fetch
-                    service.userStores.push(map.userStore(response.data.payload.result)); // add to the userStore list
+                    // success response object model doesn't match userStore fetch
+                    response.data.payload.result.supermarket_id = storeid;
+                    // add to the userStore list
+                    service.userStores.push(map.userStore(response.data.payload.result));
                     userStoreMap[response.data.payload.result.supermarket_id] = response.data.payload.result;
                     deferred.resolve(response.data);
                 },
@@ -195,7 +197,8 @@ angular.module('web').factory('productService',['$q', '$http',
                     for(var i = 0; i < service.userStores.length; i++){
                         if(service.userStores[i].id === userStoreId){
                             delete userStoreMap[service.userStores[i].supermarket_id];
-                            service.userStores.splice(i,1); // remove from userStore list
+                            // remove from userStore list
+                            service.userStores.splice(i,1);
                             break;
                         }
                     }

@@ -11,7 +11,9 @@ angular.module('web').controller('StoresPartialCtrl',['$scope','productService',
         productService.getStores().then(setStores).finally(function(){
             $scope.gettingStores = false;
         });
-    }else{ // it persisted in the service
+    }
+    // it persisted in the service
+    else{
         setStores();
     }
 
