@@ -21,11 +21,11 @@ class UserService extends RestService {
         $this->dbService = null;
     }
 
-	public function userLogin() {
+    public function userLogin() {
 
-	    try {
-			$request = \Slim\Slim::getInstance()->request();
-			$body = json_decode($request->getBody());
+        try {
+            $request = \Slim\Slim::getInstance()->request();
+            $body = json_decode($request->getBody());
 
             // Validate request body has email and password parameters
             if(! static::checkParamsExist($body, ['email' => 'Email address is required',
@@ -36,9 +36,9 @@ class UserService extends RestService {
             // Retrieve User data by email address
             $userData = $this->dbService->doValidatePassword($body->email, $body->password);
 
-	        if ($userData->code !== DbService::SUCCESS_CODE) {
-				$this->setResponse(DbService::INVALID_CREDENTIALS_CODE, "Email address and/or password was invalid", array());
-			} else {
+            if ($userData->code !== DbService::SUCCESS_CODE) {
+                $this->setResponse(DbService::INVALID_CREDENTIALS_CODE, "Email address and/or password was invalid", array());
+            } else {
                 try {
                     $doLogin = $this->dbService->doSessionLogin($userData->user_id);
 
@@ -50,18 +50,18 @@ class UserService extends RestService {
                 } catch(Exception $e) {
                     $this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
                 }
-	        }
-	    } catch(Exception $e) {
-			$this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
-	    } finally {
+            }
+        } catch(Exception $e) {
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, static::UNABLE_TO_LOGIN_MSG, array());
+        } finally {
             $this->outputResponse();
-		}
-	}
+        }
+    }
 
-	public function userRegister() {
-	    try {
-			$request = \Slim\Slim::getInstance()->request();
-			$body = json_decode($request->getBody());
+    public function userRegister() {
+        try {
+            $request = \Slim\Slim::getInstance()->request();
+            $body = json_decode($request->getBody());
 
             // Validate request body has email, zipcode and password parameters
             if(! static::checkParamsExist($body, ['email' => 'Email address is required',
@@ -70,19 +70,19 @@ class UserService extends RestService {
                 return;
             }
 
-	        $email = strtoupper($body->email);
+            $email = strtoupper($body->email);
 
-	        // Check if the user already exists in the database
+            // Check if the user already exists in the database
             $userData = $this->dbService->getUserByEmail($email);
 
             if ($userData->code == DbService::SUCCESS_CODE) {
-				$this->setResponse(static::SYSTEM_FAILURE_CODE, "User with Email address already exists", array());
-			} else {
+                $this->setResponse(static::SYSTEM_FAILURE_CODE, "User with Email address already exists", array());
+            } else {
 
-	            // Has Password
-	            $passwordHash = createHashedPassword($body->password);
+                // Has Password
+                $passwordHash = createHashedPassword($body->password);
 
-	            // Register the user
+                // Register the user
                 $registerUser = $this->dbService->registerUser($body->email, $body->zipcode, $passwordHash);
 
                 if ($registerUser->code !== DbService::SUCCESS_CODE || $registerUser->user_id == null) {
@@ -90,33 +90,33 @@ class UserService extends RestService {
                     return;
                 }
 
-	            // Auto register user in products service (iamdata)
+                // Auto register user in products service (iamdata)
                 $productService = new productService();
 
-	            $productAddUser = $productService->productsAddUserLocalAPI();
+                $productAddUser = $productService->productsAddUserLocalAPI();
 
                 if ($productAddUser->code !== static::SUCCESS_CODE) {
-	                $this->setResponse($productAddUser->code, $productAddUser->msg, $productAddUser->payload);
-	            } else {
+                    $this->setResponse($productAddUser->code, $productAddUser->msg, $productAddUser->payload);
+                } else {
                     $this->setResponse(static::SUCCESS_CODE, "User was registered", array());
                 }
-	        }
-	    } catch(Exception $e) {
-	        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable save user", array());
-	    } finally {
-	        try {
-	            if ($this->code !== static::SUCCESS_CODE) {
+            }
+        } catch(Exception $e) {
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable save user", array());
+        } finally {
+            try {
+                if ($this->code !== static::SUCCESS_CODE) {
                     $this->dbService->deleteUser($registerUser->user_id);
-	            }
-	        } catch(Exception $e) {
-	            // Do nothing, we tried to clean up the account, so just give up at this point
-	        }
+                }
+            } catch(Exception $e) {
+                // Do nothing, we tried to clean up the account, so just give up at this point
+            }
             $this->outputResponse();
-		}
+        }
 
-	}
+    }
 
-	public function userGet() {
+    public function userGet() {
         try {
             $userData = $this->dbService->getUserBySessionId();
 
@@ -125,24 +125,24 @@ class UserService extends RestService {
             } else {
                 $this->setResponse(static::NO_DATA_FOUND_CODE, "User is not logged into the system", $userData);
             }
-	    } catch(Exception $e) {
-	        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable retrieve user", array());
-	    } finally {
+        } catch(Exception $e) {
+            $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable retrieve user", array());
+        } finally {
             $this->outputResponse();
         }
-	}
+    }
 
-	public function userLogout() {
-	    try {
+    public function userLogout() {
+        try {
             $this->dbService->doSessionLogout();
-	    } catch(Exception $e) {
-			// Do nothing
-	    } finally {
-	        // Always respond with success
-	        $this->setResponse(static::SUCCESS_CODE, "User logged out successfully", array());
-	    	$this->outputResponse();
-		}
-	}
+        } catch(Exception $e) {
+            // Do nothing
+        } finally {
+            // Always respond with success
+            $this->setResponse(static::SUCCESS_CODE, "User logged out successfully", array());
+            $this->outputResponse();
+        }
+    }
 
 }
 

@@ -12,9 +12,9 @@ class RestService {
     const SUCCESS_MESSAGE = "Data successfully fetched from service";
 
     // Rest Responses
-	public $code = "";
-	public $msg = "";
-	public $payload = "";
+    public $code = "";
+    public $msg = "";
+    public $payload = "";
 
     // Request Options for HTTP GET
     protected function getRequestOptions() {
@@ -52,23 +52,23 @@ class RestService {
     }
 
     // Setter for Rest Response
-	protected function setResponse($code, $msg, $payload){
+    protected function setResponse($code, $msg, $payload){
         $this->code = $code;
-		$this->msg = $msg;
-		$this->payload = $payload;
+        $this->msg = $msg;
+        $this->payload = $payload;
     }
 
     // Getter for Rest Response
-	protected function getResponse(){
+    protected function getResponse(){
         return (object) ['code' => $this->code, 'msg'=> $this->msg, 'payload'=> $this->payload];
     }
 
     // Output Rest Response in JSON format
-	protected function outputResponse() {
+    protected function outputResponse() {
         $responseObject = (object) ['code' => $this->code, 'msg'=> $this->msg, 'payload'=> $this->payload];
 
-		echo json_encode($responseObject);
-	}
+        echo json_encode($responseObject);
+    }
 
     // Validate request body parameters
     protected function checkParamsExist($body, $params){

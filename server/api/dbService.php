@@ -1,7 +1,7 @@
 <?php
 
 class DbService {
-	protected $dbConnection;
+    protected $dbConnection;
     protected $sessionId;
 
     // MySQL Connection constants
