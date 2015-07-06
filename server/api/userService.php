@@ -26,7 +26,7 @@ class UserService extends restService {
 			$body = json_decode($request->getBody());
             
             // Validate request body has email and password parameters
-            if(! self::checkParamsExist($body, ['email' => 'Email address is required',
+            if(! static::checkParamsExist($body, ['email' => 'Email address is required',
                                                 'password' => 'Password is required'])) {
                 return;
             }            
@@ -41,16 +41,16 @@ class UserService extends restService {
                     $doLogin = $this->dbService->doSessionLogin($userData->user_id);
                     
                     if ($doLogin->code !== dbService::SUCCESS_CODE) {
-                        $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+                        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
                     } else {
-                        $this->setResponse(self::SUCCESS_CODE, "User was authenticated", array("SESSION_ID" => $this->sessionId) );   
+                        $this->setResponse(static::SUCCESS_CODE, "User was authenticated", array("SESSION_ID" => $this->sessionId) );   
                     }
                 } catch(Exception $e) {
-                    $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+                    $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
                 }
 	        }
 	    } catch(Exception $e) {
-			$this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
+			$this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable to login", array());
 	    } finally {
             $this->outputResponse();
 		}
@@ -62,7 +62,7 @@ class UserService extends restService {
 			$body = json_decode($request->getBody());
             
             // Validate request body has email, zipcode and password parameters
-            if(! self::checkParamsExist($body, ['email' => 'Email address is required',
+            if(! static::checkParamsExist($body, ['email' => 'Email address is required',
                                                 'zipcode' => 'Zipcode is required',
                                                 'password' => 'Password is required'])) {
                 return;
@@ -74,7 +74,7 @@ class UserService extends restService {
             $userData = $this->dbService->getUserByEmail($email);             
 	        
             if ($userData->code == dbService::SUCCESS_CODE) {
-				$this->setResponse(self::SYSTEM_FAILURE_CODE, "User with Email address already exists", array());
+				$this->setResponse(static::SYSTEM_FAILURE_CODE, "User with Email address already exists", array());
 			} else {
 	            
 	            // Has Password
@@ -84,7 +84,7 @@ class UserService extends restService {
                 $registerUser = $this->dbService->registerUser($body->email, $body->zipcode, $passwordHash);
                 
                 if ($registerUser->code !== dbService::SUCCESS_CODE || $registerUser->user_id == null) {
-                    $this->setResponse(self::SYSTEM_FAILURE_CODE, "User registration has failed to complete - " .$registerUser->code, array());
+                    $this->setResponse(static::SYSTEM_FAILURE_CODE, "User registration has failed to complete - " .$registerUser->code, array());
                     return;
                 }
 
@@ -93,17 +93,17 @@ class UserService extends restService {
                 
 	            $productAddUser = $productService->productsAddUserLocalAPI();
 
-                if ($productAddUser->code !== self::SUCCESS_CODE) {                
+                if ($productAddUser->code !== static::SUCCESS_CODE) {                
 	                $this->setResponse($productAddUser->code, $productAddUser->msg, $productAddUser->payload);
 	            } else {
-                    $this->setResponse(self::SUCCESS_CODE, "User was registered", array());       
+                    $this->setResponse(static::SUCCESS_CODE, "User was registered", array());       
                 }     
 	        }
 	    } catch(Exception $e) {
-	        $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable save user", array());
+	        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable save user", array());
 	    } finally {
 	        try {
-	            if ($this->code !== self::SUCCESS_CODE) {       
+	            if ($this->code !== static::SUCCESS_CODE) {       
                     $deleteUser = $this->dbService->deleteUser($registerUser->user_id);                
 	            }
 	        } catch(Exception $e) {
@@ -119,12 +119,12 @@ class UserService extends restService {
             $userData = $this->dbService->getUserBySessionId();
             
             if ($userData->code == dbService::SUCCESS_CODE) {  
-                $this->setResponse(self::SUCCESS_CODE, "User is logged into the system", $userData); 
+                $this->setResponse(static::SUCCESS_CODE, "User is logged into the system", $userData); 
             } else {
-                $this->setResponse(self::NO_DATA_FOUND_CODE, "User is not logged into the system", $userData);
+                $this->setResponse(static::NO_DATA_FOUND_CODE, "User is not logged into the system", $userData);
             }
 	    } catch(Exception $e) {
-	        $this->setResponse(self::SYSTEM_FAILURE_CODE, "System error occurred, unable retrieve user", array());
+	        $this->setResponse(static::SYSTEM_FAILURE_CODE, "System error occurred, unable retrieve user", array());
 	    } finally {
             $this->outputResponse();
         }
@@ -137,7 +137,7 @@ class UserService extends restService {
 			// Do nothing
 	    } finally {
 	        // Always respond with success
-	        $this->setResponse(self::SUCCESS_CODE, "User logged out successfully", array());
+	        $this->setResponse(static::SUCCESS_CODE, "User logged out successfully", array());
 	    	$this->outputResponse();
 		}
 	}

@@ -18,7 +18,7 @@ class dbService {
     
     function __construct() {
         // Open database connection
-        $this->dbConnection = new PDO("mysql:host=" .self::dbHost. ";dbname=" .self::dbName, self::dbUserName, self::dbPassword);
+        $this->dbConnection = new PDO("mysql:host=" .static::dbHost. ";dbname=" .static::dbName, static::dbUserName, static::dbPassword);
         $this->dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $this->sessionId = session_id();
@@ -37,14 +37,14 @@ class dbService {
             $stmt->execute();
             $results = $stmt->fetchObject();
             if ($results == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'System configuration error, product api keys not found'];            
             } else {
-                $results->code = self::SUCCESS_CODE;
+                $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved product api keys';
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -59,14 +59,14 @@ class dbService {
             $stmt->execute();
             $results = $stmt->fetchObject();
             if ($results == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'System configuration error, openFDA api keys not found'];            
             } else {
-                $results->code = self::SUCCESS_CODE;
+                $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved openFDA api keys';
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -81,14 +81,14 @@ class dbService {
             $stmt->execute();
             $results = $stmt->fetchObject();
             if ($results == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'User not found'];
             } else {
-                $results->code = self::SUCCESS_CODE;
+                $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved user';
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -104,14 +104,14 @@ class dbService {
             $results = $stmt->fetchObject();
             
             if ($results == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'User not found'];               
             } else {
-                $results->code = self::SUCCESS_CODE;
+                $results->code = static::SUCCESS_CODE;
                 $results->msg = 'Retrieved user';                
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -128,7 +128,7 @@ class dbService {
             $sessionData = $stmt->fetchObject();      
 
             if ($sessionData == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'User not found1'];    
             } else {
                 $sql = "SELECT user_id, email, zip FROM user where user_id=:user_id";
@@ -138,15 +138,15 @@ class dbService {
                 $results = $stmt->fetchObject();
                 
                 if ($results == null) {
-                    $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                    $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                          'msg' => 'User not found2'];               
                 } else {
-                    $results->code = self::SUCCESS_CODE;
+                    $results->code = static::SUCCESS_CODE;
                     $results->msg = 'Retrieved user';                
                 }
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -162,20 +162,20 @@ class dbService {
             $results = $stmt->fetchObject();
             
             if ($results == null) {
-                $results = (object) ['code' => self::NO_DATA_FOUND_CODE, 
+                $results = (object) ['code' => static::NO_DATA_FOUND_CODE, 
                                      'msg' => 'User not found'];               
             } else {
                 if ($results->password == validateHashedPassword($password, $results->password)) {
-                    $results->code = self::SUCCESS_CODE;
+                    $results->code = static::SUCCESS_CODE;
                     $results->msg = 'Validated email and password';
                     $results->user_id = $results->user_id;
                 } else {
-                    $results->code = self::INVALID_CREDENTIALS_CODE;
+                    $results->code = static::INVALID_CREDENTIALS_CODE;
                     $results->msg = 'Email address and/or password was invalid';
                 }                
             }
         } catch(Exception $e) {
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -208,11 +208,11 @@ class dbService {
             
             $this->dbConnection->commit();
             
-            $results = (object) ['code' => self::SUCCESS_CODE,
+            $results = (object) ['code' => static::SUCCESS_CODE,
                                  'msg' => 'Updated last logon in user table'];
         } catch(Exception $e) {
             $this->dbConnection->rollBack();                             
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -244,13 +244,13 @@ class dbService {
              
             $this->dbConnection->commit();
             
-            $results = (object) ['code' => self::SUCCESS_CODE,
+            $results = (object) ['code' => static::SUCCESS_CODE,
                                  'msg' => 'User was registered in the database',
                                  'user_id' => $userId];
             
         } catch(Exception $e) {
             $this->dbConnection->rollBack();
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -273,12 +273,12 @@ class dbService {
 
             $this->dbConnection->commit();
 
-            $results = (object) ['code' => self::SUCCESS_CODE,
+            $results = (object) ['code' => static::SUCCESS_CODE,
                                  'msg' => 'User was deleted from the database'];    
             
         } catch(Exception $e) {
             $this->dbConnection->rollBack();
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
@@ -292,12 +292,12 @@ class dbService {
             $stmt->bindParam("session_id", $this->sessionId);
             $stmt->execute();
             
-            $results = (object) ['code' => self::SUCCESS_CODE,
+            $results = (object) ['code' => static::SUCCESS_CODE,
                                  'msg' => 'User was logged out of the system'];    
             
         } catch(Exception $e) {
             $this->dbConnection->rollBack();
-            $results = (object) ['code' => self::ERROR_CODE, 
+            $results = (object) ['code' => static::ERROR_CODE, 
                                  'msg' => $e->getMessage()]; 
         } finally {
             return $results;   
