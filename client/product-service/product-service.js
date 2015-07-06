@@ -96,8 +96,9 @@ angular.module('web').factory('productService',['$q', '$http',
             $http.get("/api/products/getStores").then(
                 function(response) {
                     for(var resultIndex in response.data.payload){
-
-                        service.stores.push(map.store(response.data.payload[resultIndex]));
+                        if (response.data.payload.hasOwnProperty(resultIndex)) {
+                            service.stores.push(map.store(response.data.payload[resultIndex]));
+                        }
                     }
                     response.data.payload = service.stores;
                     deferred.resolve(response.data);
