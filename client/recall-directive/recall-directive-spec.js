@@ -1,4 +1,4 @@
-describe('recallDirective', function() {
+describe('Test suite for recallDirective', function() {
 
   beforeEach(module('web'));
 
