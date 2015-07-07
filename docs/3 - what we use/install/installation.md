@@ -13,7 +13,6 @@
   * [WAMP(Windows)] (http://www.wampserver.com/en/)
   * [LAMP(Linux)] (https://www.turnkeylinux.org/lampstack)
   * [MAMP(Mac OS X)] (https://www.mamp.info/en/)
-* [MySQL Workbench (Optional)] (https://www.mysql.com/products/workbench/)
 * [OpenFDA API Key (requires sign-up for at least one API key)] (http://api.fda.gov)
 * [Information Machine API Key (requires sign-up)] (http://iamdata.co)
 
