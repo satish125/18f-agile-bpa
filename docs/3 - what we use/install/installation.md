@@ -21,16 +21,16 @@
 
 ## Commands
 
-* ``git clone https://github.com/CRGTMobile/18f-agile-bpa.git`` - retrieve the source code
+* ``git clone https://github.com/CRGTMobile/18f-agile-bpa.git`` - retrieve the RecallRodent source code
 * ``npm install -g grunt-cli yo bower generator-cg-angular`` - installs the following technologies to be called from the command line:
   * Grunt javascript task runner
   * Yeoman scaffolding tool
   * Bower package manager
   * [CG-Angular generator](https://github.com/cgross/generator-cg-angular) for Angular projects
-* ``npm install`` - installs dependencies in the /node_modules directory
-* ``bower install`` - installs the application libraries
-* ``grunt serve`` - runs a localhost server and listens to changes in files. This does not build the application into /dist.
-* ``grunt build`` - builds the application into /dist directory
+* ``npm install`` - installs development dependencies in the /node_modules directory
+* ``bower install`` - installs frontend dependencies in the /bower_components directory
+* ``grunt serve`` - runs a localhost server and listens to changes in files. This does not build RecallRodent into /dist.
+* ``grunt build`` - builds RecallRodent into /dist directory
 * ``grunt test`` - runs karma unit tests on angular code
 
 ## Apache Changes
