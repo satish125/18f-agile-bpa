@@ -21,16 +21,17 @@
 
 ## Commands
 
-* *npm install -g grunt-cli yo bower generator-cg-angular* - installs the following technologies to be called from the command line:
+* ``git clone https://github.com/CRGTMobile/18f-agile-bpa.git`` - retrieve the source code
+* ``npm install -g grunt-cli yo bower generator-cg-angular`` - installs the following technologies to be called from the command line:
   * Grunt javascript task runner
   * Yeoman scaffolding tool
   * Bower package manager
   * AngularJS framework
-* *npm install* - installs dependencies in the /node_modules directory
-* *bower install* - installs the application libraries
-* *grunt serve* - runs a localhost server and listens to changes in files. This does not build the application into /dist.
-* *grunt build* - builds the application into /dist directory
-* *grunt test* - runs karma unit tests on angular code
+* ``npm install`` - installs dependencies in the /node_modules directory
+* ``bower install`` - installs the application libraries
+* ``grunt serve`` - runs a localhost server and listens to changes in files. This does not build the application into /dist.
+* ``grunt build`` - builds the application into /dist directory
+* ``grunt test`` - runs karma unit tests on angular code
 
 ## Apache Changes
 
