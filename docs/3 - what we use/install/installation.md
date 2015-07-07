@@ -35,10 +35,12 @@
 
 ## Apache Changes
 
-* Turn on rewrite engine for .htaccess to hide index.php in /api
-* Modify /etc/apache2/sites-available/000-default.conf and rewrite directive for SSL redirect
-  * Redirect permanent / https://ec2-54-152-245-25.compute-1.amazonaws.com/
-
+* Enable mod_deflate module
+* Enable mod_rewrite module
+* Configure rewrite directive to redirect all non-HTTPS traffic to the HTTPS page
+* Configure SSL Certificate
+* Disable SSLv3, only retain TLS protocols
+* Configure mod deflate for html, php, js, css and png files in the SSL virtual host
 
 
 
