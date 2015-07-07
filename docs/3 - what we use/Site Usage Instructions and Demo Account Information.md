@@ -16,5 +16,5 @@ Password: demodemo <br>
 
 <i>*We do not store your store loyalty card login information in our system. They are stored in <a target="_blank" href="http://iamdata.co">Information Machine</a> – a site that passively collects and streams loyalty card purchases. Please follow these links to know more about their <a target="_blank" href="http://iamdata.co/security">security</a> and <a target="_blank" href="http://iamdata.co/privacy">privacy</a> information. We access your purchase information through Information Machine’s APIs.</i>
 
-<i>^The openFDA API only allows for 240 hits per minute, so if multiple users are testing at the same time, you may get a message stating that not all of the recalls have been checked.   We have discussed a number of methods for addressing this and were we to continue with a production product we are confident this issue can be resolved.</i>
+<i>^The openFDA API only allows for 240 hits per minute, so if multiple users are testing at the same time, you may get a message stating that not all of the recalls have been checked.   We have discussed a number of methods for addressing this and were we to continue with a production product, we are confident this issue can be resolved.</i>
 
