@@ -145,8 +145,7 @@ The WAMP installation includes the MySQL console but MySQL Workbench is a user-f
  
 ## Copy the Built Website Files to the WWW Directory
 1.	Open two Windows Explorer windows: one to view the contents of \18f-agile-bpa\server and the other view the contents of C:\wamp\www
-2.	Select the folder named “api” from the \18f-agile-bpa\server directory and copy it to C:\wamp\www.
-3.	In the \18f-agile-bpa\server window, go up one directory to \18f-agile-bpa, open the folder named “dist”, and copy it's contents directly into C:\wamp\www.
+2.	Copy all files and subdirectories in the folder named dist to the C:\wamp\www folder.
 
 ## Restart the WAMP Server
 1.	Click on the system tray arrow to display the application shortcuts and left-click the WAMP server icon.
