@@ -26,7 +26,7 @@
   * Grunt javascript task runner
   * Yeoman scaffolding tool
   * Bower package manager
-  * AngularJS framework
+  * [CG-Angular generator](https://github.com/cgross/generator-cg-angular) for Angular projects
 * ``npm install`` - installs dependencies in the /node_modules directory
 * ``bower install`` - installs the application libraries
 * ``grunt serve`` - runs a localhost server and listens to changes in files. This does not build the application into /dist.
