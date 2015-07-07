@@ -2,6 +2,8 @@
 
 # RecallRodent
 ######https://recallrodent.crgt.com
+<i><a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/3%20-%20what%20we%20use/install/installation.md">Installation Instructions</a></i>
+
 
 ###Who We Are
 
@@ -34,21 +36,27 @@ With these goals in mind, our <a target="_blank" href="https://github.com/CRGTMo
 When looking at the first idea in more depth, we knew right away that we didn’t want to force users to manually enter their purchases.  This would create a tedious barrier to entry for them.  We started searching for APIs to import purchases so that they would not have to be manually entered.  We considered popular applications like MyFitnessPal, BigOven, in addition to store-based APIs like those at Walgreens, before we discovered the <a target="_blank" href="http://iamdata.co/">Information Machine API</a>.  According to their website, they “allow your users to passively collect their item level purchase data from the largest merchants in the world.”  
 
 We felt like the second product idea was significant, but a problem emerged through further discussion: if users would report when they got food poisoning, they wouldn’t necessarily know the exact ingredient that caused the sickness.  Considering the impact of this problem, the Product Owner decided that this solution would not offer as much business value as the first.  Matching the Information Machine APIs dataset with that of the openFDA’s API became our major concept.
+
 <br>
 <img src="/docs/2 - how we work/process/matching_logic_algorithm.png" alt="Our Matching Algorithm Concept" width="600px"><br>
 <i><b>Figure 1. Our Matching Algorithm Concept</b></i>
 <br>
 
+
 Still needing proof of our concept, our UX designer set out immediately to create a <a target="_blank" href="https://shesjulie.typeform.com/to/GIFLnG">User Survey</a> that would find out more about people’s experiences with recalls (<a target="_blank" href="https://playbook.cio.gov/#play1">Play 1</a>).  This survey was sent out to over 100 individuals.  The <a target="_blank" href="https://docs.google.com/spreadsheets/d/1zPlxlUNLPEb91SXJnMjxPRLbYVaD931_kkfAVF8UJz8/edit#gid=0">results</a> confirmed our hypothesis that: (1) users struggle to find a single source for trustworthy information about recalls, and (2) that users only find out about recalls in reactive ways, such as hearing about it on the news or from a friend.  We white-boarded possible implementations of the concept that would move the process of finding out about recalls from a reactive one to a proactive and personalized one (where the user can automatically find out if they have purchased a recalled item) (<a target="_blank" href="https://playbook.cio.gov/#play2">Play 2</a>).  We then created two <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/process/Epics.JPG">Epics</a> to encapsulate the features that would deliver this functionality. 
+
 <br>
 <img src="/docs/3 - what we use/install/images/connectstoresbrainstormingdiagram.jpg" alt="Our Connect Stores Concept" width="600px"><br>
 <i><b>Figure 2. Our Process of Connecting Stores</b></i>
 <br>
+
 In decomposing the Epics, we wanted to make sure a login feature was included so that user profiles would stay protected.  We created <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/process/wireframes/Wireframes.pdf">wireframes</a> for our login page, and the first round of Usability Testing demonstrated that not all users necessarily wanted to register for the application without seeing something of value first.  This led to our first pivot in design: we originally intended to display a list of recent recalls on the landing page once the user logged in, but based on user feedback, we decided to display the list of recent recalls directly on the Home page.  This provides something of value for the non-registered user right away, and provides encouragement to register for the site.  Based on the survey results and this usability testing, we were able to utilize the Xtensio tool to finalize detailed and relevant <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/process/User%20Personas.pdf">User Personas</a>.
+
 <br>
 <img src="/docs/3 - what we use/install/images/recentrecallsbrainstormingdiagram.jpg" alt="Our Home Page Concept" width="600px"><br>
 <i><b>Figure 3. Our Process of Displaying Recalls</b></i>
 <br>
+
 After we created the login and home pages, we were ready to do our next round of <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/process/usability%20testing/Usability%20Testing%20Round%202.md">Usability Testing</a> with the application itself.  We collected feedback on the home page and the login page functionality.  The major takeaways were that users liked the display of recalls on the home page, but were confused about what the registration process would do. They also pointed out that the login page needed to feature validation error messages for incorrect credentials.  We took the second takeaway as an immediate pivot point, and the first we put into the backlog.
 
 The <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/process/usability%20testing/Usability%20Testing%20Round%203.md">third round</a> of Usability Testing focused on a user’s ability to register for a new account, and the login page was updated to include error messages for invalid credentials.  The main feedback we received from users was that the login page was user-friendly but the link needed to be more prominent, and that it was still not clear what the application did once the user registered for an account.  As a result, we prioritized both of those stories in the backlog and worked on a total UX redesign of the home page.
