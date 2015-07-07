@@ -1,6 +1,6 @@
 ####Asana Export
 
-This is the raw exported data from our Asana scrumboard.  Feel free to import it into Asana to get a detailed breakdown of our agile process.
+This is the raw exported <a target="_blank" href="https://github.com/CRGTMobile/18f-agile-bpa/blob/master/docs/2%20-%20how%20we%20work/agile/Asana%20Agile%20Tool%20Export_2015-07-02.json">data</a> from our Asana scrumboard.  Feel free to import it into Asana to get a detailed breakdown of our agile process.
 
 <img src="/docs/2 - how we work/agile/Asana_Screenshot_1.png" alt="Asana Screenshot" width="600px"><br>
 <i><b>Figure 3. Our Asana Feature Backlog</b></i>
